@@ -10,6 +10,12 @@ import fr.badblock.survival.PluginSurvival;
 public class KickRunnable extends BukkitRunnable {
 	private int time = 20;
 	
+	public KickRunnable() {
+		System.out.println("Debug: ");
+		for (StackTraceElement element : Thread.currentThread().getStackTrace())
+			System.out.println(element.toString());
+	}
+	
 	@Override
 	public void run(){
 		if(time <= 0 && time > -3){
