@@ -78,7 +78,7 @@ public class GameRunnable extends BukkitRunnable implements TimeProvider {
 
 	@Override
 	public int getTime(int num) {
-		return time - num == chestId ? CHEST_TIME : 0;
+		return num == chestId ? time - CHEST_TIME : time;
 	}
 
 	@Override

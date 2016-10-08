@@ -30,7 +30,7 @@ public class PvERunnable extends BukkitRunnable implements TimeProvider {
 
 		if( (time % 10 == 0 || time <= 5) && time > 0 && time <= 30){
 			ChatColor 		   color = StartRunnable.getColor(time);
-			TranslatableString title = new TranslatableString("survival.pvpin.title", time, color.getChar());
+			TranslatableString title = new TranslatableString("survival.pvein.title", time, color.getChar());
 
 			for(Player player : Bukkit.getOnlinePlayers()){
 				BadblockPlayer bPlayer = (BadblockPlayer) player;
@@ -42,7 +42,7 @@ public class PvERunnable extends BukkitRunnable implements TimeProvider {
 			cancel();
 			
 			pve = true;
-			TranslatableString title = new TranslatableString("survival.pvp.title");
+			TranslatableString title = new TranslatableString("survival.pve.title");
 
 			for(Player player : Bukkit.getOnlinePlayers()){
 				BadblockPlayer bPlayer = (BadblockPlayer) player;

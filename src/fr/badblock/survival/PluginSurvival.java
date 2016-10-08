@@ -98,8 +98,9 @@ public class PluginSurvival extends BadblockPlugin {
 			getAPI().getBadblockScoreboard().doBelowNameHealth();
 			getAPI().getBadblockScoreboard().doTabListHealth();
 			getAPI().getBadblockScoreboard().doGroupsPrefix();;
-			
-			getAPI().formatChat(true, true);
+			getAPI().getBadblockScoreboard().doOnDamageHologram();
+
+			getAPI().formatChat(true, false);
 			
 			getAPI().getJoinItems().registerKitItem(0, kits, new File(getDataFolder(), KITS_CONFIG_INVENTORY));
 			getAPI().getJoinItems().registerAchievementsItem(3, BadblockGame.SURVIVAL_GAMES);

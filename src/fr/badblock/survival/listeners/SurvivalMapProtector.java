@@ -87,7 +87,7 @@ public class SurvivalMapProtector implements MapProtector {
 
 	@Override
 	public boolean canEnchant(BadblockPlayer player, Block table) {
-		return false;
+		return true;
 	}
 
 	@Override

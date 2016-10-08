@@ -5,7 +5,7 @@ import fr.badblock.gameapi.achievements.PlayerAchievement;
 import fr.badblock.gameapi.run.BadblockGame;
 
 public class SGAchievementList {
-	public static AchievementList instance = new AchievementList(BadblockGame.RUSH);
+	public static AchievementList instance = new AchievementList(BadblockGame.SURVIVAL_GAMES);
 	
 	/*
 	 * Tuer X personnes
