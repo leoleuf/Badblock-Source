@@ -14,6 +14,7 @@ import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 import fr.badblock.survival.PluginSurvival;
 import fr.badblock.survival.configuration.SurvivalMapConfiguration;
+import fr.badblock.survival.players.SurvivalScoreboard;
 import fr.badblock.survival.runnables.BossBarRunnable;
 import fr.badblock.survival.runnables.PreStartRunnable;
 import fr.badblock.survival.runnables.StartRunnable;
@@ -29,6 +30,8 @@ public class JoinListener extends BadListener {
 		} else {
 			e.getPlayer().teleport(config.getSpawnLocation());
 		}
+		
+		new SurvivalScoreboard(e.getPlayer());
 	}
 	
 	@EventHandler
@@ -36,6 +39,8 @@ public class JoinListener extends BadListener {
 		e.setJoinMessage(null);
 		
 		if(inGame()){
+			new SurvivalScoreboard((BadblockPlayer) e.getPlayer());
+			
 			return;
 		}
 		
