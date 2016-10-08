@@ -12,8 +12,7 @@ public class KickRunnable extends BukkitRunnable {
 	
 	public KickRunnable() {
 		System.out.println("Debug: ");
-		for (StackTraceElement element : Thread.currentThread().getStackTrace())
-			System.out.println(element.toString());
+		new Exception().printStackTrace();
 	}
 	
 	@Override
