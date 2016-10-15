@@ -182,7 +182,7 @@ public class SurvivalMapProtector implements MapProtector {
 
 	@Override
 	public boolean canCombust(Entity entity) {
-		return false;
+		return true;
 	}
 
 	@Override
