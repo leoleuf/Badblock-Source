@@ -40,7 +40,6 @@ public class StartRunnable extends BukkitRunnable {
 			SurvivalMapConfiguration config = new SurvivalMapConfiguration(GameAPI.getAPI().loadConfiguration(file));
 			config.save(file);
 			PluginSurvival.getInstance().setMapConfiguration(config);
-			GameAPI.getAPI().balanceTeams(true);
 			
 			new NoMoveRunnable(config).runTaskTimer(GameAPI.getAPI(), 0, 20L);
 			cancel();
