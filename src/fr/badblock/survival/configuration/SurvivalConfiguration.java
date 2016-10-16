@@ -1,6 +1,7 @@
 package fr.badblock.survival.configuration;
 
 import fr.badblock.gameapi.configuration.values.MapLocation;
+import fr.badblock.gameapi.configuration.values.MapSelection;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -10,4 +11,5 @@ public class SurvivalConfiguration {
 	public MapLocation 		   spawn;
 	
 	public int				   addedCompassProb = 50;
+	public MapSelection		   zombieGame	    = new MapSelection();
 }

@@ -25,6 +25,7 @@ import fr.badblock.survival.listeners.DeathListener;
 import fr.badblock.survival.listeners.JoinListener;
 import fr.badblock.survival.listeners.MoveListener;
 import fr.badblock.survival.listeners.SurvivalMapProtector;
+import fr.badblock.survival.listeners.ZombieListener;
 import fr.badblock.survival.runnables.PreStartRunnable;
 import lombok.Getter;
 import lombok.Setter;
@@ -116,6 +117,7 @@ public class PluginSurvival extends BadblockPlugin {
 			new JoinListener();
 			new DamageListener();
 			new CraftListener();
+			new ZombieListener();
 			
 			File votesFile = new File(getDataFolder(), VOTES_CONFIG);
 

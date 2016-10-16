@@ -11,6 +11,7 @@ import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.servers.MapProtector;
+import fr.badblock.survival.PluginSurvival;
 import fr.badblock.survival.runnables.game.DeathmatchRunnable;
 import fr.badblock.survival.runnables.game.PvERunnable;
 import fr.badblock.survival.runnables.game.PvPRunnable;
@@ -92,7 +93,7 @@ public class SurvivalMapProtector implements MapProtector {
 
 	@Override
 	public boolean canBeingDamaged(BadblockPlayer player) {
-		return inGame() && PvPRunnable.pvp;
+		return (inGame() && PvPRunnable.pvp) || (!inGame() && PluginSurvival.getInstance().getConfiguration().zombieGame.getHandle().isInSelection(player));
 	}
 
 	@Override

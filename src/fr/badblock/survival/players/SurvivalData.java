@@ -17,6 +17,8 @@ public class SurvivalData implements InGameData {
 	
 	public boolean canSword		  = true;
 	
+	public boolean zombie = false;
+	
 	public int getScore(){
 		double ratio = givedDamage / (receivedDamage == 0 ? 1 : receivedDamage);
 		
