@@ -36,7 +36,7 @@ public class ZombieListener extends BadListener {
 			e.setCancelled(true);
 	}
 	
-	@EventHandler(priority=EventPriority.HIGHEST)
+	@EventHandler(priority=EventPriority.LOWEST)
 	public void onDamage(EntityDamageByEntityEvent e){
 		if(inGame() || e.getDamager().getType() != EntityType.PLAYER || e.getEntityType() != EntityType.PLAYER)
 			return;
