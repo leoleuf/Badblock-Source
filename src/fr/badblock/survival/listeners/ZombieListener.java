@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -24,7 +25,7 @@ import fr.badblock.survival.PluginSurvival;
 import fr.badblock.survival.players.SurvivalData;
 
 public class ZombieListener extends BadListener {
-	private boolean hasFirstZombie = false;
+	private int zombieCount = 0;
 	
 	@EventHandler
 	public void onDamage(EntityDamageEvent e){
@@ -34,6 +35,14 @@ public class ZombieListener extends BadListener {
 		
 		if(e.getCause() != DamageCause.ENTITY_ATTACK)
 			e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onDisconnect(PlayerQuitEvent e){
+		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
+		
+		if(player.isDisguised())
+			zombieCount--;
 	}
 	
 	@EventHandler(priority=EventPriority.LOWEST)
@@ -99,11 +108,10 @@ public class ZombieListener extends BadListener {
 			if(p.inGameData(SurvivalData.class).zombie)
 				return;
 			
-			if(hasFirstZombie){
+			if(zombieCount == 0){
 				asPlayer(p);
 				p.sendTranslatedMessage("survival.zombie.enter", p.getName());
 			} else {
-				hasFirstZombie = true;
 				p.sendTranslatedMessage("survival.zombie.enter-as-zombie", p.getName());
 				zombify(p);
 			}
@@ -117,6 +125,7 @@ public class ZombieListener extends BadListener {
 	}
 	
 	protected void zombify(BadblockPlayer p){
+		zombieCount++;
 		p.setMaxHealth(20.0d);
 		p.setHealth(20.0d);
 		p.disguise(new Disguise(EntityType.ZOMBIE, null, true, false));
