@@ -34,7 +34,7 @@ public class GameRunnable extends BukkitRunnable implements TimeProvider {
 		generalTime++;
 		int players = 0;
 
-		if(time == MAX_TIME - CHEST_TIME){
+		if(time == CHEST_TIME){
 			ChestGenerator gen = GameAPI.getAPI().getChestGenerator();
 			gen.addItemInConfiguration(new ItemStack(Material.COMPASS), PluginSurvival.getInstance().getConfiguration().addedCompassProb, false);
 			gen.resetChests();
