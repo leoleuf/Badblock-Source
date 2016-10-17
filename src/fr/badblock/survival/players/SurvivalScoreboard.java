@@ -88,11 +88,7 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 	}
 	
 	private int alivePlayers(){
-		return Bukkit.getOnlinePlayers().stream().mapToInt(player -> {
-			BadblockPlayer p = (BadblockPlayer) player;
-
-			return p.inGameData(SurvivalData.class).death ? 0 : 1;
-		} ).sum();
+		return (int) GameAPI.getAPI().getOnlinePlayers().stream().filter(player -> !player.inGameData(SurvivalData.class).death).count();
 	}
 	
 	private int stat(String name){
