@@ -41,7 +41,7 @@ public class ZombieListener extends BadListener {
 	public void onDisconnect(PlayerQuitEvent e){
 		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
 		
-		if(player.isDisguised())
+		if(player.inGameData(SurvivalData.class).zombie)
 			zombieCount--;
 	}
 	
@@ -108,7 +108,7 @@ public class ZombieListener extends BadListener {
 			if(p.inGameData(SurvivalData.class).zombie)
 				return;
 			
-			if(zombieCount == 0){
+			if(zombieCount > 0){
 				asPlayer(p);
 				p.sendTranslatedMessage("survival.zombie.enter", p.getName());
 			} else {
