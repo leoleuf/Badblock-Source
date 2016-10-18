@@ -73,7 +73,7 @@ public class SurvivalMapProtector implements MapProtector {
 
 	@Override
 	public boolean canInteract(BadblockPlayer player, Action action, Block block) {
-		return inGame() || player.hasAdminMode();
+		return inGame() || player.hasAdminMode() || block == null;
 	}
 
 	@Override
