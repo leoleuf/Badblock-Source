@@ -53,10 +53,12 @@ public class PluginSurvival extends BadblockPlugin {
 
 	@Override
 	public void onEnable(RunType runType){
+		AchievementList list = SGAchievementList.instance;
+		
 		BadblockGame.SURVIVAL_GAMES.setGameData(new BadblockGameData() {
 			@Override
 			public AchievementList getAchievements() {
-				return SGAchievementList.instance;
+				return list;
 			}
 		});
 		
