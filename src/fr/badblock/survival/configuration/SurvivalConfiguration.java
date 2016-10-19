@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SurvivalConfiguration {
 	public String 	   		   fallbackServer   = "lobby";
+	public int				   minPlayers		= 10;
 	public int    	   		   maxPlayers		= 24;
 	public MapLocation 		   spawn;
 	
