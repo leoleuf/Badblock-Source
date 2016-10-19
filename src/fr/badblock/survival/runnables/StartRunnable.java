@@ -104,9 +104,8 @@ public class StartRunnable extends BukkitRunnable {
 	public static void joinNotify(int currentPlayers, int maxPlayers){
 		int minPlayers = PluginSurvival.getInstance().getConfiguration().minPlayers;
 		
-		if(currentPlayers >= minPlayers) return;
-		
-		startGame();
+		if(currentPlayers >= minPlayers)
+			startGame();
 	}
 	
 	public static void startGame(){
