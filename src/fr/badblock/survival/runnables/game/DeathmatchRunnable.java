@@ -69,6 +69,23 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 						player.teleport(winnerLocation);
 						player.setAllowFlight(true);
 						player.setFlying(true);
+						
+						new BukkitRunnable() {
+							int count = 5;
+							
+							@Override
+							public void run() {
+								count--;
+								
+								player.teleport(winnerLocation);
+								player.setAllowFlight(true);
+								player.setFlying(true);
+								
+								if(count == 0)
+									cancel();
+							}
+						}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
+						
 						player.sendTranslatedTitle("survival.title-win", winner.getName());
 						player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.WINS);
 
