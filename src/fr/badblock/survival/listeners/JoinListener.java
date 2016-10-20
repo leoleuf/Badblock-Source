@@ -39,8 +39,6 @@ public class JoinListener extends BadListener {
 		e.setJoinMessage(null);
 		
 		if(inGame()){
-			new SurvivalScoreboard((BadblockPlayer) e.getPlayer());
-			
 			return;
 		}
 		
