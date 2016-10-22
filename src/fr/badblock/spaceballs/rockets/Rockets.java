@@ -14,7 +14,7 @@ public enum Rockets {
 	TELEPORT(new RocketTeleport(), 20),
 	TELEPORT_HERE(new RocketTeleportHere(), 5),
 	SWITCH(new RocketSwitch(), 10),
-	ANVIL_RAIN(new RocketTeleport(), 15),
+	//ANVIL_RAIN(new RocketTeleport(), 15),
 	PIGMEN(new RocketPigmen(), 5),
 	DIAMONDS_ERASE(new RocketDiamondsErase(), 2),
 	EXPLOSIVE(new RocketExplosive(), 15),
@@ -69,7 +69,7 @@ public enum Rockets {
 			else value -= prob;
 		}
 		
-		return Rockets.TELEPORT; // au cas où
+		return Rockets.TELEPORT; // au cas oï¿½
 	}
 
 	public static ItemStack changeLanguage(ItemStack is, Locale locale){
