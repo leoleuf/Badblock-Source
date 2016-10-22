@@ -55,17 +55,17 @@ public class PluginSB extends BadblockPlugin {
 	
 	@Getter
 	private Map<String, PlayerKit> kits;
-
-	private PlayerKit def;
 	
 	public void giveDefaultKit(BadblockPlayer player){
-		if(def == null){
+		if(kits.containsKey( configuration.defaultKit )){
 			player.clearInventory();
 			return;
 		}
 		
-		player.getPlayerData().unlockNextLevel(def);
-		def.giveKit(player);
+		PlayerKit kit = kits.get( configuration.defaultKit );
+		
+		player.getPlayerData().unlockNextLevel(kit);
+		kit.giveKit(player);
 	}
 	
 	@Override
@@ -113,9 +113,6 @@ public class PluginSB extends BadblockPlugin {
 			
 			maxPlayers = getAPI().getTeams().size() * configuration.maxPlayersInTeam;
 			kits	   = getAPI().loadKits(GameAPI.getInternalGameName());
-			
-			def        = kits.get(configuration.defaultKit);
-
 			
 			try { teams.save(teamsFile); } catch (IOException unused){}
 
