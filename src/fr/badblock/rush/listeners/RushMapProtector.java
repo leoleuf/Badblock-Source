@@ -58,7 +58,7 @@ public class RushMapProtector implements MapProtector {
 
 	@Override
 	public boolean canLostFood(BadblockPlayer player) {
-		return true;
+		return inGame();
 	}
 
 	@Override
