@@ -62,7 +62,8 @@ public class JoinListener extends BadListener {
 			for(CuboidSelection selec : toProtect){
 				if(selec.isInSelection(b)){
 					blocks.remove(i);
-					continue;
+					i--;
+					break;
 				}
 			}
 			
