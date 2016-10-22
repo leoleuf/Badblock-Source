@@ -128,7 +128,7 @@ public class SurvivalMapProtector implements MapProtector {
 
 	@Override
 	public boolean allowBlockPhysics(Block block) {
-		return false;
+		return true;
 	}
 
 	@Override
