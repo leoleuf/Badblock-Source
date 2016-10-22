@@ -123,7 +123,7 @@ public class SurvivalMapProtector implements MapProtector {
 
 	@Override
 	public boolean allowPistonMove(Block block) {
-		return false;
+		return true;
 	}
 
 	@Override
