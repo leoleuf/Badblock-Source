@@ -1,5 +1,7 @@
 package fr.badblock.survival.listeners;
 
+import java.util.Optional;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -9,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -24,8 +27,6 @@ import fr.badblock.survival.PluginSurvival;
 import fr.badblock.survival.players.SurvivalData;
 
 public class ZombieListener extends BadListener {
-	private boolean hasFirstZombie = false;
-	
 	@EventHandler
 	public void onDamage(EntityDamageEvent e){
 		if(inGame()){
@@ -91,6 +92,20 @@ public class ZombieListener extends BadListener {
 	}
 	
 	@EventHandler
+	public void onDisconnect(PlayerQuitEvent e){
+		boolean must = GameAPI.getAPI().getOnlinePlayers().stream().filter(player -> player.inGameData(SurvivalData.class).zombie && player != e.getPlayer()).count() == 0;
+		
+		if(must){
+			Optional<BadblockPlayer> opt = GameAPI.getAPI().getOnlinePlayers().stream().filter(player -> isIn(player.getLocation()) && player != e.getPlayer()).findAny();
+		
+			if(opt.isPresent()){
+				zombify(opt.get());
+			}
+		}
+	}
+	
+	
+	@EventHandler
 	public void onMove(PlayerMoveEvent e){
 		if(!isIn(e.getFrom()) && isIn(e.getTo())){
 			
@@ -99,11 +114,10 @@ public class ZombieListener extends BadListener {
 			if(p.inGameData(SurvivalData.class).zombie)
 				return;
 			
-			if(hasFirstZombie){
+			if(GameAPI.getAPI().getOnlinePlayers().stream().filter(player -> player.inGameData(SurvivalData.class).zombie).count() > 0){
 				asPlayer(p);
 				p.sendTranslatedMessage("survival.zombie.enter", p.getName());
 			} else {
-				hasFirstZombie = true;
 				p.sendTranslatedMessage("survival.zombie.enter-as-zombie", p.getName());
 				zombify(p);
 			}

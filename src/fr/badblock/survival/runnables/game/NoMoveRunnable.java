@@ -45,7 +45,11 @@ public class NoMoveRunnable extends BukkitRunnable implements TimeProvider {
 			BadblockPlayer p = (BadblockPlayer) player;
 
 			p.changePlayerDimension(BukkitUtils.getEnvironment( config.getDimension() ));
-
+			
+			p.undisguise();
+			p.setMaxHealth(20.0d);
+			p.heal();
+			
 			boolean good = true;
 
 

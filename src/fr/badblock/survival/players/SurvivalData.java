@@ -20,12 +20,12 @@ public class SurvivalData implements InGameData {
 	public boolean zombie = false;
 	
 	public int getScore(){
-		double ratio = givedDamage / (receivedDamage == 0 ? 1 : receivedDamage);
+		double ratio = (givedDamage * 5) / (receivedDamage == 0 ? 1 : receivedDamage);
 		
 		if(death)
 			ratio /= 5;
 		
-		return (int) ( (kills * 25) * ratio );
+		return (int) ( (kills * 5) * ratio );
 	}
 	
 	public void checkSword(Player p){

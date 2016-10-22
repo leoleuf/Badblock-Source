@@ -13,7 +13,7 @@ import fr.badblock.survival.SGAchievementList;
 public class CraftListener extends BadListener {
 	@EventHandler
 	public void onCraft(InventoryClickEvent e){
-		if(ItemStackUtils.isValid(e.getCurrentItem()) && e.getWhoClicked().getType() == EntityType.PLAYER){
+		if(inGame() && ItemStackUtils.isValid(e.getCurrentItem()) && e.getWhoClicked().getType() == EntityType.PLAYER){
 			BadblockPlayer player = (BadblockPlayer) e.getWhoClicked();
 			
 			if(e.getCurrentItem().getType() == Material.DIAMOND_SWORD){
