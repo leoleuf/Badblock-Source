@@ -1,0 +1,5 @@
+name: BadblockSpaceBalls
+main: fr.badblock.spaceballs.PluginSB
+version: 2.0
+depends: ['BadblockGameAPI']
+authors: ['LeLanN']
