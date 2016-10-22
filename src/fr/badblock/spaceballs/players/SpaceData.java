@@ -15,7 +15,7 @@ public class SpaceData implements InGameData {
 	boolean bejwelerIncremented = false;
 	
 	public int getScore(){
-		return (kills * 20 + diamonds * 5) / (deaths == 0 ? 1 : (10 * deaths));
+		return (kills * 20 + diamonds * 5) / (deaths == 0 ? 1 : (/*10 * */deaths));
 	}
 	
 	public void launchRocket(BadblockPlayer player){
