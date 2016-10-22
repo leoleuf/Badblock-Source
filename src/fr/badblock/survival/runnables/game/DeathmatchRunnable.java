@@ -2,7 +2,6 @@ package fr.badblock.survival.runnables.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.badblock.gameapi.GameAPI;
@@ -39,11 +38,10 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 		int 		   players = 0;
 		BadblockPlayer winner  = null;
 
-		for(Player p : Bukkit.getOnlinePlayers()){
-			BadblockPlayer player = (BadblockPlayer) p;
+		for(BadblockPlayer p : GameAPI.getAPI().getRealOnlinePlayers()){
 
-			if(!player.inGameData(SurvivalData.class).death){
-				winner = player;
+			if(!p.inGameData(SurvivalData.class).death){
+				winner = p;
 				players++;
 			}
 		}
