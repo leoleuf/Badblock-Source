@@ -62,8 +62,8 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 					player.clearInventory();
 					player.setInvulnerable(true);
 
-					double badcoins = player.inGameData(SurvivalData.class).getScore() / 10;
-					double xp	    = player.inGameData(SurvivalData.class).getScore() / 5;
+					double badcoins = player.inGameData(SurvivalData.class).getScore() / 4;
+					double xp	    = player.inGameData(SurvivalData.class).getScore() / 2;
 
 					if(winner != null && winner.equals(player)){
 						player.teleport(winnerLocation);
