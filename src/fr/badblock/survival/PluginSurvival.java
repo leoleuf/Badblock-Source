@@ -112,7 +112,7 @@ public class PluginSurvival extends BadblockPlugin {
 			
 			getAPI().setMapProtector(new SurvivalMapProtector());
 			
-			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.BACKUP);
+			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.SPECTATOR);
 			
 			new MoveListener();
 			new DeathListener();
