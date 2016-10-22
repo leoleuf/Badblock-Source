@@ -10,10 +10,12 @@ import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 import fr.badblock.survival.PluginSurvival;
 import fr.badblock.survival.configuration.SurvivalMapConfiguration;
+import fr.badblock.survival.players.SurvivalData;
 import fr.badblock.survival.players.SurvivalScoreboard;
 import fr.badblock.survival.runnables.BossBarRunnable;
 import fr.badblock.survival.runnables.PreStartRunnable;
@@ -38,12 +40,16 @@ public class JoinListener extends BadListener {
 	public void onJoin(PlayerJoinEvent e){
 		e.setJoinMessage(null);
 		
+		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
+		
 		if(inGame()){
+			if(player.inGameData(SurvivalData.class).death){
+				player.setBadblockMode(BadblockMode.SPECTATOR);
+			}
+			
 			return;
 		}
 		
-		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
-	
 		new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
 		
 		player.setGameMode(GameMode.SURVIVAL);
