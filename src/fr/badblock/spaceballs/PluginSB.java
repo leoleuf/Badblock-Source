@@ -57,7 +57,7 @@ public class PluginSB extends BadblockPlugin {
 	private Map<String, PlayerKit> kits;
 	
 	public void giveDefaultKit(BadblockPlayer player){
-		if(kits.containsKey( configuration.defaultKit )){
+		if(!kits.containsKey( configuration.defaultKit )){
 			player.clearInventory();
 			return;
 		}
