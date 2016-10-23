@@ -56,7 +56,6 @@ public class GameRunnable extends BukkitRunnable {
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			
 			Location location = team.teamData(RushTeamData.class).getRespawnLocation();
-			location.getChunk().load();
 			
 			for(BadblockPlayer p : team.getOnlinePlayers()){
 				p.changePlayerDimension(BukkitUtils.getEnvironment( config.getDimension() ));

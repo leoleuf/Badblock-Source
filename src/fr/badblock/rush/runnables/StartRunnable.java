@@ -47,6 +47,7 @@ public class StartRunnable extends BukkitRunnable {
 			
 			RushMapConfiguration config = new RushMapConfiguration(GameAPI.getAPI().loadConfiguration(file));
 			config.save(file);
+			
 			PluginRush.getInstance().setMapConfiguration(config);
 			GameAPI.getAPI().balanceTeams(true);
 			
@@ -58,12 +59,21 @@ public class StartRunnable extends BukkitRunnable {
 			sendTime(time);
 		}
 		
-		if(time == 3){
+		if(time == 5){
+			String winner = GameAPI.getAPI().getBadblockScoreboard().getWinner().getInternalName();
+			File   file   = new File(PluginRush.MAP, winner + ".json");
+			
+			RushMapConfiguration config = new RushMapConfiguration(GameAPI.getAPI().loadConfiguration(file));
+			config.save(file);
+			
 			GameAPI.getAPI().getBadblockScoreboard().endVote();
 			
 			for(Player player : Bukkit.getOnlinePlayers()){
 				new RushScoreboard((BadblockPlayer) player);
 			}
+			
+			GameAPI.getAPI().setEmptyChunks(config.getMapBounds(), true);
+			GameAPI.getAPI().loadChunks(config.getMapBounds(), time * 20);
 		}
 		
 		sendTimeHidden(time);
