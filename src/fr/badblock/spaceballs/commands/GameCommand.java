@@ -19,7 +19,7 @@ import fr.badblock.spaceballs.runnables.StartRunnable;
 
 public class GameCommand extends AbstractCommand {
 	public GameCommand() {
-		super("game", new TranslatableString("commands.gsb.usage"), GamePermission.BMODERATOR);
+		super("game", new TranslatableString("commands.gsb.usage"), GamePermission.BMODERATOR, GamePermission.BMODERATOR, GamePermission.BMODERATOR);
 		allowConsole(false);
 	}
 
