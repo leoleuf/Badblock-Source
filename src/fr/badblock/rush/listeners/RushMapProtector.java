@@ -58,7 +58,7 @@ public class RushMapProtector implements MapProtector {
 
 	@Override
 	public boolean canLostFood(BadblockPlayer player) {
-		return false;
+		return inGame();
 	}
 
 	@Override
@@ -147,12 +147,12 @@ public class RushMapProtector implements MapProtector {
 
 	@Override
 	public boolean canInteractEntity(BadblockPlayer player, Entity entity) {
-		return true; // à priori rien à bloquer ... :o
+		return true; // ï¿½ priori rien ï¿½ bloquer ... :o
 	}
 
 	@Override
 	public boolean canEnchant(BadblockPlayer player, Block table) {
-		return false; // à prioris pas d'enchant à faire :3
+		return false; // ï¿½ prioris pas d'enchant ï¿½ faire :3
 	}
 
 	@Override

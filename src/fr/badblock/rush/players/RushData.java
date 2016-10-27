@@ -10,6 +10,6 @@ public class RushData implements InGameData {
 	public int brokedBeds   = 0;
 	
 	public int getScore(){
-		return (kills * 20 + brokedBeds * 100) / (deaths == 0 ? 1 : (10 * deaths));
+		return (kills * 20 + brokedBeds * 100) / (deaths == 0 ? 1 : (/* 10 * */deaths));
 	}
 }

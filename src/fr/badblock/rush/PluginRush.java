@@ -124,7 +124,7 @@ public class PluginRush extends BadblockPlugin {
 			getAPI().setMapProtector(new RushMapProtector());
 			getAPI().enableAntiSpawnKill();
 			
-			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.BACKUP);
+			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.SPECTATOR);
 			
 			new MoveListener();
 			new DeathListener();

@@ -56,7 +56,6 @@ public class GameRunnable extends BukkitRunnable {
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			
 			Location location = team.teamData(RushTeamData.class).getRespawnLocation();
-			location.getChunk().load();
 			
 			for(BadblockPlayer p : team.getOnlinePlayers()){
 				p.changePlayerDimension(BukkitUtils.getEnvironment( config.getDimension() ));
@@ -138,8 +137,8 @@ public class GameRunnable extends BukkitRunnable {
 				bp.clearInventory();
 				bp.setInvulnerable(true);
 
-				double badcoins = bp.inGameData(RushData.class).getScore() / 10;
-				double xp	    = bp.inGameData(RushData.class).getScore() / 5;
+				double badcoins = bp.inGameData(RushData.class).getScore() / 4; // 10
+				double xp	    = bp.inGameData(RushData.class).getScore() / 2; // 5
 				
 				if(winner.equals(bp.getTeam())){
 					bp.teleport(winnerLocation);
