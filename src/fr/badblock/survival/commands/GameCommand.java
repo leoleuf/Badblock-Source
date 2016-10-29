@@ -10,7 +10,7 @@ import fr.badblock.survival.runnables.StartRunnable;
 
 public class GameCommand extends AbstractCommand {
 	public GameCommand() {
-		super("game", new TranslatableString("commands.gsurvival.usage"), GamePermission.BMODERATOR);
+		super("game", new TranslatableString("commands.gsurvival.usage"), GamePermission.BMODERATOR, GamePermission.BMODERATOR, GamePermission.BMODERATOR);
 		allowConsole(false);
 	}
 
