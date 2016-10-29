@@ -41,9 +41,7 @@ public class NoMoveRunnable extends BukkitRunnable implements TimeProvider {
 			});
 		});
 
-		for(Player player : Bukkit.getOnlinePlayers()){
-			BadblockPlayer p = (BadblockPlayer) player;
-
+		for(BadblockPlayer p : GameAPI.getAPI().getOnlinePlayers()){
 			p.changePlayerDimension(BukkitUtils.getEnvironment( config.getDimension() ));
 			
 			p.undisguise();

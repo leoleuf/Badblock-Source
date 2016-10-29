@@ -2,7 +2,6 @@ package fr.badblock.survival.runnables;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -44,10 +43,8 @@ public class GameRunnable extends BukkitRunnable implements TimeProvider {
 			
 		}
 		
-		for(Player p : Bukkit.getOnlinePlayers()){
-			BadblockPlayer player = (BadblockPlayer) p;
-
-			if(!player.inGameData(SurvivalData.class).death){
+		for(BadblockPlayer p : GameAPI.getAPI().getRealOnlinePlayers()){
+			if(!p.inGameData(SurvivalData.class).death){
 				players++;
 			}
 		}

@@ -88,7 +88,7 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 	}
 	
 	private int alivePlayers(){
-		return (int) GameAPI.getAPI().getOnlinePlayers().stream().filter(player -> !player.inGameData(SurvivalData.class).death).count();
+		return (int) GameAPI.getAPI().getRealOnlinePlayers().stream().filter(player -> !player.inGameData(SurvivalData.class).death).count();
 	}
 	
 	private int stat(String name){
