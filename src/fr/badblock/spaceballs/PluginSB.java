@@ -27,6 +27,7 @@ import fr.badblock.spaceballs.configuration.SpaceMapConfiguration;
 import fr.badblock.spaceballs.listeners.DeathListener;
 import fr.badblock.spaceballs.listeners.JoinListener;
 import fr.badblock.spaceballs.listeners.MoveListener;
+import fr.badblock.spaceballs.listeners.PartyJoinListener;
 import fr.badblock.spaceballs.listeners.PickupItemListener;
 import fr.badblock.spaceballs.listeners.SBMapProtector;
 import fr.badblock.spaceballs.runnables.PreStartRunnable;
@@ -138,6 +139,7 @@ public class PluginSB extends BadblockPlugin {
 			
 			new MoveListener();
 			new DeathListener();
+			new PartyJoinListener();
 			new JoinListener();
 			new PickupItemListener();
 			
