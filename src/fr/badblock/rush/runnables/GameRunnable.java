@@ -101,9 +101,9 @@ public class GameRunnable extends BukkitRunnable {
 		if(time == 2){
 			damage = true;
 			
-			for(Player player : Bukkit.getOnlinePlayers()){
-				BadblockPlayer bp = (BadblockPlayer) player;
-				bp.pseudoJail(bp.getTeam().teamData(RushTeamData.class).getRespawnLocation(), 300.0d);
+			for(BadblockPlayer player : GameAPI.getAPI().getRealOnlinePlayers()){
+				if(player.getTeam() != null)
+					player.pseudoJail(player.getTeam().teamData(RushTeamData.class).getRespawnLocation(), 300.0d);
 			}
 		}
 
