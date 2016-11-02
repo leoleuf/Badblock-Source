@@ -27,6 +27,7 @@ import fr.badblock.rush.listeners.DeathListener;
 import fr.badblock.rush.listeners.FakeEntityInteractListener;
 import fr.badblock.rush.listeners.JoinListener;
 import fr.badblock.rush.listeners.MoveListener;
+import fr.badblock.rush.listeners.PartyJoinListener;
 import fr.badblock.rush.listeners.RushMapProtector;
 import fr.badblock.rush.listeners.SheepListener;
 import fr.badblock.rush.runnables.PreStartRunnable;
@@ -129,6 +130,7 @@ public class PluginRush extends BadblockPlugin {
 			new MoveListener();
 			new DeathListener();
 			new JoinListener();
+			new PartyJoinListener();
 			new BedExplodeListener();	// 
 			new SheepListener();		// Gère les moutons en début de partie :3
 			new FakeEntityInteractListener();
