@@ -24,6 +24,7 @@ import fr.badblock.survival.listeners.DamageListener;
 import fr.badblock.survival.listeners.DeathListener;
 import fr.badblock.survival.listeners.JoinListener;
 import fr.badblock.survival.listeners.MoveListener;
+import fr.badblock.survival.listeners.PartyJoinListener;
 import fr.badblock.survival.listeners.SurvivalMapProtector;
 import fr.badblock.survival.listeners.ZombieListener;
 import fr.badblock.survival.runnables.PreStartRunnable;
@@ -116,6 +117,7 @@ public class PluginSurvival extends BadblockPlugin {
 			
 			new MoveListener();
 			new DeathListener();
+			new PartyJoinListener();
 			new JoinListener();
 			new DamageListener();
 			new CraftListener();
