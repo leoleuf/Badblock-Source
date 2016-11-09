@@ -7,14 +7,15 @@ import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.players.scoreboard.BadblockScoreboardGenerator;
 import fr.badblock.gameapi.players.scoreboard.CustomObjective;
 import fr.badblock.rush.entities.RushTeamData;
+import fr.badblock.rush.runnables.GameRunnable;
 
 public class RushScoreboard extends BadblockScoreboardGenerator {
 	public static final String WINS 	  = "wins",
-							   KILLS 	  = "kills",
-							   DEATHS 	  = "deaths",
-							   LOOSES 	  = "looses",
-							   BROKENBEDS = "brokenbeds";
-	
+			KILLS 	  = "kills",
+			DEATHS 	  = "deaths",
+			LOOSES 	  = "looses",
+			BROKENBEDS = "brokenbeds";
+
 	private CustomObjective objective;
 	private BadblockPlayer  player;
 
@@ -34,6 +35,11 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 		objective.changeLine(15, "&8&m----------------------");
 
 		int i = 14;
+
+		objective.changeLine(i--,  i18n("rush.scoreboard.time-desc"));
+		objective.changeLine(i--,  i18n("rush.scoreboard.time", time(GameRunnable.time) ));
+
+		objective.changeLine(i--, "");		
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			RushTeamData data = team.teamData(RushTeamData.class);
@@ -57,6 +63,18 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 			objective.removeLine(a);
 
 		objective.changeLine(2,  "&8&m----------------------");
+	}
+	
+	private String time(int time){
+		String res = "m";
+		int    sec = time % 60;
+		
+		res = (time / 60) + res;
+		if(sec < 10){
+			res += "0";
+		}
+		
+		return res + sec + "s";
 	}
 	
 	private int stat(String name){

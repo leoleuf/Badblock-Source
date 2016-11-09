@@ -35,7 +35,7 @@ import fr.badblock.rush.result.RushResults;
 public class GameRunnable extends BukkitRunnable {
 	public static boolean damage = false;
 	public boolean forceEnd = false;
-	private int    time 	= 0;
+	public static int    time 	= 0;
 
 	public GameRunnable(RushMapConfiguration config){
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
