@@ -37,7 +37,7 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 		int i = 14;
 
 		objective.changeLine(i--,  i18n("rush.scoreboard.time-desc"));
-		objective.changeLine(i--,  i18n("rush.scoreboard.time", time(GameRunnable.time) ));
+		objective.changeLine(i--,  i18n("rush.scoreboard.time", time(GameRunnable.time)));
 
 		objective.changeLine(i--, "");		
 
