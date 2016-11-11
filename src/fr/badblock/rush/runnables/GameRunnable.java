@@ -141,6 +141,7 @@ public class GameRunnable extends BukkitRunnable {
 				double xp	    = bp.inGameData(RushData.class).getScore() / 2; // 5
 				
 				if(winner.equals(bp.getTeam())){
+					bp.getPlayerData().addRankedPoints(3);
 					bp.teleport(winnerLocation);
 					bp.setAllowFlight(true);
 					bp.setFlying(true);
@@ -169,6 +170,7 @@ public class GameRunnable extends BukkitRunnable {
 						incrementAchievements(bp, RushAchievementList.RUSH_RUSHER_1, RushAchievementList.RUSH_RUSHER_2, RushAchievementList.RUSH_RUSHER_3, RushAchievementList.RUSH_RUSHER_4);
 					}
 				} else {
+					bp.getPlayerData().addRankedPoints(-2);
 					badcoins = ((double) badcoins) / 1.5d;
 					
 					bp.jailPlayerAt(looserLocation);
