@@ -64,6 +64,7 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 					double xp	    = player.inGameData(SurvivalData.class).getScore() / 2;
 
 					if(winner != null && winner.equals(player)){
+						player.getPlayerData().addRankedPoints(3);
 						player.teleport(winnerLocation);
 						player.setAllowFlight(true);
 						player.setFlying(true);
