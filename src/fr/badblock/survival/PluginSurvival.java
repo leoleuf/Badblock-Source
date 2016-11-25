@@ -13,6 +13,7 @@ import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.gameapi.run.BadblockGameData;
 import fr.badblock.gameapi.run.RunType;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.GameRules;
 import fr.badblock.gameapi.utils.general.JsonUtils;
 import fr.badblock.survival.commands.GameCommand;
@@ -91,6 +92,11 @@ public class PluginSurvival extends BadblockPlugin {
 			getAPI().setDefaultKitContentManager(true);
 			
 			maxPlayers = configuration.maxPlayers;
+			try {
+				BukkitUtils.setMaxPlayers(configuration.maxPlayers);
+			} catch (ReflectiveOperationException e) {
+				e.printStackTrace();
+			}
 			kits	   = getAPI().loadKits(GameAPI.getInternalGameName());
 			
 			// Chargement des fonctionnalités de l'API non utilisées par défaut
