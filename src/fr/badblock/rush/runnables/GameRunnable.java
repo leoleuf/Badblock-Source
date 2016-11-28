@@ -46,6 +46,11 @@ public class GameRunnable extends BukkitRunnable {
 		for(SpawnableItem item : PluginRush.getInstance().getConfiguration().items){
 			new ItemSpawnRunnable(Material.matchMaterial(item.item), item.ticks).start();
 		}
+		
+		if (!PluginRush.getInstance().getMapConfiguration().getAllowBows()) {
+			remove(Material.BOW);
+			remove(Material.ARROW);
+		}
 
 		Bukkit.getWorlds().forEach(world -> {
 			world.setTime(config.getTime());
