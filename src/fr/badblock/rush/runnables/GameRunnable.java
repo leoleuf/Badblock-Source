@@ -1,6 +1,7 @@
 package fr.badblock.rush.runnables;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -9,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.badblock.gameapi.GameAPI;
@@ -94,6 +96,19 @@ public class GameRunnable extends BukkitRunnable {
 		
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
+	}
+	
+	public void remove(Material m) {
+		Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
+		Recipe recipe;
+		while(it.hasNext())
+		{
+			recipe = it.next();
+			if (recipe != null && recipe.getResult().getType() == m)
+			{
+				it.remove();
+			}
+		}
 	}
 
 	@Override

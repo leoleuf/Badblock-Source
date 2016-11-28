@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.GameAPI;
@@ -86,4 +89,15 @@ public class JoinListener extends BadListener {
 	public void onQuit(PlayerQuitEvent e){
 		e.setQuitMessage(null);
 	}
+
+	@EventHandler
+	public void craftItem(PrepareItemCraftEvent e) {
+		if (!PluginRush.getInstance().getMapConfiguration().getAllowBows()) {
+			Material itemType = e.getRecipe().getResult().getType();
+			if (itemType == Material.BOW || itemType == Material.ARROW) {
+				e.getInventory().setResult(new ItemStack(Material.AIR));
+			}
+		}
+	}
+	
 }
