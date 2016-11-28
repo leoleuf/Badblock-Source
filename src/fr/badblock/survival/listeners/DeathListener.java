@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import fr.badblock.gameapi.BadListener;
+import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.events.fakedeaths.FakeDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent.FightingDeaths;
@@ -49,7 +50,7 @@ public class DeathListener extends BadListener {
 		player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.DEATHS);
 		player.inGameData(SurvivalData.class).death		= true;
 		player.inGameData(SurvivalData.class).deathTime = GameRunnable.generalTime;
-		player.getCustomObjective().generate();
+		GameAPI.getAPI().getOnlinePlayers().forEach(badblockPlayer -> badblockPlayer.getCustomObjective().generate());
 		
 		e.setLightning(true);
 			
