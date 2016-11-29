@@ -6,6 +6,7 @@ import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.players.scoreboard.BadblockScoreboardGenerator;
 import fr.badblock.gameapi.players.scoreboard.CustomObjective;
+import fr.badblock.rush.PluginRush;
 import fr.badblock.rush.entities.RushTeamData;
 import fr.badblock.rush.runnables.GameRunnable;
 
@@ -38,6 +39,12 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 
 		objective.changeLine(i--,  i18n("rush.scoreboard.time-desc"));
 		objective.changeLine(i--,  i18n("rush.scoreboard.time", time(GameRunnable.time)));
+		if (PluginRush.getInstance().getMapConfiguration() != null) {
+			i--;
+			if (PluginRush.getInstance().getMapConfiguration().getAllowBows())
+				objective.changeLine(i--,  i18n("rush.scoreboard.nobows"));
+			else objective.changeLine(i--,  i18n("rush.scoreboard.withbows"));
+		}
 
 		objective.changeLine(i--, "");		
 
@@ -64,19 +71,19 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 
 		objective.changeLine(2,  "&8&m----------------------");
 	}
-	
+
 	private String time(int time){
 		String res = "m";
 		int    sec = time % 60;
-		
+
 		res = (time / 60) + res;
 		if(sec < 10){
 			res += "0";
 		}
-		
+
 		return res + sec + "s";
 	}
-	
+
 	private int stat(String name){
 		return (int) player.getPlayerData().getStatistics("rush", name);
 	}
