@@ -73,6 +73,7 @@ public class NoMoveRunnable extends BukkitRunnable implements TimeProvider {
 			}
 			if (!PluginSurvival.getInstance().getMapConfiguration().isWithTeam()) {
 				p.sendTranslatedTitle("survival.title_withteam");
+				p.sendTimings(2, 20*5, 2);
 			}
 		}
 
