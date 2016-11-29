@@ -15,19 +15,19 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 
 	public static void setTimeProvider(TimeProvider provider){
 		timeProvider = provider;
-		
+
 		BukkitUtils.forEachPlayers(player -> {
 			if(player.getCustomObjective() == null){
 				new SurvivalScoreboard(player);
 			} else player.getCustomObjective().generate();
 		});
 	}
-	
+
 	public static final String WINS 	  = "wins",
-							   KILLS 	  = "kills",
-							   DEATHS 	  = "deaths",
-							   LOOSES 	  = "looses";
-	
+			KILLS 	  = "kills",
+			DEATHS 	  = "deaths",
+			LOOSES 	  = "looses";
+
 	private CustomObjective objective;
 	private BadblockPlayer  player;
 
@@ -47,25 +47,25 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 
 	public int doTime(){
 		int i = 14;
-		
+
 		if(timeProvider != null){
 			for(int y=0;y<timeProvider.getProvidedCount();y++){
 				String id = timeProvider.getId(y);
 				int  time = timeProvider.getTime(y);
-			
+
 				if(id == null)
 					continue;
-				
+
 				objective.changeLine(i, i18n("survival.scoreboard.time." + id));
 				objective.changeLine(i - 1, i18n("survival.scoreboard.time", time(time)));
-			
+
 				i -= 2;
 			}
 		}
-		
+
 		return i;
 	}
-	
+
 	@Override
 	public void generate(){
 		objective.changeLine(15, "&8&m----------------------");
@@ -73,8 +73,10 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 		int i = doTime();
 
 		objective.changeLine(i,  i18n("survival.scoreboard.aliveplayers", alivePlayers())); i--;
-		objective.changeLine(i,  i18n("survival.scoreboard.teams_" + PluginSurvival.getInstance().getMapConfiguration().isWithTeam())); i--;
-		
+		if (PluginSurvival.getInstance().getMapConfiguration() != null) {
+			objective.changeLine(i,  i18n("survival.scoreboard.teams_" + PluginSurvival.getInstance().getMapConfiguration().isWithTeam())); i--;
+		}
+
 		if(player.getBadblockMode() != BadblockMode.SPECTATOR){
 			objective.changeLine(i,  ""); i--;
 
@@ -88,24 +90,24 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 
 		objective.changeLine(2,  "&8&m----------------------");
 	}
-	
+
 	private int alivePlayers(){
 		return (int) GameAPI.getAPI().getRealOnlinePlayers().stream().filter(player -> !player.inGameData(SurvivalData.class).death).count();
 	}
-	
+
 	private int stat(String name){
 		return (int) player.getPlayerData().getStatistics("survival", name);
 	}
-	
+
 	private String time(int time){
 		String res = "m";
 		int    sec = time % 60;
-		
+
 		res = (time / 60) + res;
 		if(sec < 10){
 			res += "0";
 		}
-		
+
 		return res + sec + "s";
 	}
 
