@@ -119,6 +119,7 @@ public class NoMoveRunnable extends BukkitRunnable implements TimeProvider {
 				
 				bPlayer.sendTranslatedTitle(title.getKey(), title.getObjects());
 				bPlayer.sendTimings(2, 30, 2);
+				bPlayer.sendTranslatedMessage("survival.scoreboard.teams_message_" + PluginSurvival.getInstance().getMapConfiguration().isWithTeam());
 			}
 			
 			GameAPI.getAPI().getChestGenerator().beginJob();

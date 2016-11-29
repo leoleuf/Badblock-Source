@@ -8,6 +8,7 @@ import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.scoreboard.BadblockScoreboardGenerator;
 import fr.badblock.gameapi.players.scoreboard.CustomObjective;
 import fr.badblock.gameapi.utils.BukkitUtils;
+import fr.badblock.survival.PluginSurvival;
 
 public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 	private static TimeProvider timeProvider;
@@ -70,8 +71,9 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 		objective.changeLine(15, "&8&m----------------------");
 
 		int i = doTime();
-		
+
 		objective.changeLine(i,  i18n("survival.scoreboard.aliveplayers", alivePlayers())); i--;
+		objective.changeLine(i,  i18n("survival.scoreboard.teams_" + PluginSurvival.getInstance().getMapConfiguration().isWithTeam())); i--;
 		
 		if(player.getBadblockMode() != BadblockMode.SPECTATOR){
 			objective.changeLine(i,  ""); i--;

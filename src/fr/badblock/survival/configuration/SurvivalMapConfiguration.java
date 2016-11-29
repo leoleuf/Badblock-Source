@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.Location;
 
 import fr.badblock.gameapi.configuration.BadConfiguration;
+import fr.badblock.gameapi.configuration.values.MapBoolean;
 import fr.badblock.gameapi.configuration.values.MapLocation;
 import fr.badblock.gameapi.configuration.values.MapNumber;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class SurvivalMapConfiguration {
 	private List<Location>	  locations;
 	private List<Location>	  deathMatchs;
 	private Location		  specDeathmatch;
+	private boolean			  withTeam;
 	
 	private BadConfiguration  config;
 	
@@ -35,6 +37,7 @@ public class SurvivalMapConfiguration {
 		locations		= config.getValueList("spawns", MapLocation.class, new ArrayList<>()).getHandle();
 		deathMatchs		= config.getValueList("deathMatchs", MapLocation.class, new ArrayList<>()).getHandle();
 		specDeathmatch	= config.getValue("specDeathmatch", MapLocation.class, new MapLocation()).getHandle();
+		withTeam		= config.getValue("withTeam", MapBoolean.class, new MapBoolean(true)).getHandle();
 	}
 	
 	public void save(File file){
