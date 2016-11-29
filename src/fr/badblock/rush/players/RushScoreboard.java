@@ -41,7 +41,7 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 		objective.changeLine(i--,  i18n("rush.scoreboard.time", time(GameRunnable.time)));
 		if (PluginRush.getInstance().getMapConfiguration() != null) {
 			i--;
-			if (PluginRush.getInstance().getMapConfiguration().getAllowBows())
+			if (!PluginRush.getInstance().getMapConfiguration().getAllowBows())
 				objective.changeLine(i--,  i18n("rush.scoreboard.nobows"));
 			else objective.changeLine(i--,  i18n("rush.scoreboard.withbows"));
 		}
