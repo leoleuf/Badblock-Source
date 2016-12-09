@@ -45,6 +45,8 @@ public class DeathListener extends BadListener {
 	
 	private void death(FakeDeathEvent e, BadblockPlayer player, Entity killer, DamageCause last){
 		Location respawnPlace = null;
+		if (player.getOpenInventory() != null && player.getOpenInventory().getCursor() != null)
+			player.getOpenInventory().setCursor(null);
 
 		player.getPlayerData().addRankedPoints(-2);
 		player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.DEATHS);
