@@ -26,6 +26,8 @@ import fr.badblock.spaceballs.players.SpaceScoreboard;
 public class DeathListener extends BadListener {
 	@EventHandler
 	public void onRespawn(PlayerFakeRespawnEvent e){
+		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
+			e.getPlayer().getOpenInventory().setCursor(null);
 		PluginSB.getInstance().giveDefaultKit(e.getPlayer());
 	}
 	
@@ -52,6 +54,8 @@ public class DeathListener extends BadListener {
 
 	private void death(FakeDeathEvent e, BadblockPlayer player, Entity killer, DamageCause last){
 		if(player.getTeam() == null) return;
+		if (player.getOpenInventory() != null && player.getOpenInventory().getCursor() != null)
+			player.getOpenInventory().setCursor(null);
 
 		Location respawnPlace = null;
 
