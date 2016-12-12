@@ -55,7 +55,7 @@ public class DeathListener extends BadListener {
 				return;
 			}
 		}
-		lastDeath.put(player.getName(), 1000L);
+		lastDeath.put(player.getName(), System.currentTimeMillis() + 1000L);
 		Location respawnPlace = null;
 		if (player.getOpenInventory() != null && player.getOpenInventory().getCursor() != null)
 			player.getOpenInventory().setCursor(null);
