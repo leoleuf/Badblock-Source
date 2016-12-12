@@ -16,6 +16,7 @@ import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.gameapi.run.BadblockGameData;
 import fr.badblock.gameapi.run.RunType;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.GameRules;
 import fr.badblock.gameapi.utils.general.JsonUtils;
 import fr.badblock.rush.commands.GameCommand;
@@ -102,6 +103,11 @@ public class PluginRush extends BadblockPlugin {
 			getAPI().setDefaultKitContentManager(false);
 			
 			maxPlayers = getAPI().getTeams().size() * configuration.maxPlayersInTeam;
+			try {
+				BukkitUtils.setMaxPlayers(GameAPI.getAPI().getTeams().size() * configuration.maxPlayersInTeam);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			kits	   = getAPI().loadKits(GameAPI.getInternalGameName());
 			
 			try { teams.save(teamsFile); } catch (IOException unused){}
