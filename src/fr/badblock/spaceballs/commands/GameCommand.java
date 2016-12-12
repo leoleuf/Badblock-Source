@@ -11,6 +11,7 @@ import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.GamePermission;
 import fr.badblock.gameapi.players.BadblockTeam;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.general.StringUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.spaceballs.PluginSB;
@@ -68,6 +69,11 @@ public class GameCommand extends AbstractCommand {
 				
 				plug.getConfiguration().maxPlayersInTeam = perTeam;
 				plug.setMaxPlayers(GameAPI.getAPI().getTeams().size() * perTeam);
+				try {
+					BukkitUtils.setMaxPlayers(GameAPI.getAPI().getTeams().size() * perTeam);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
 				player.sendTranslatedMessage("commands.gsb.modifycount");
 			break;
