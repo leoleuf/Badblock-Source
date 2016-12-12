@@ -5,7 +5,9 @@ import org.bukkit.command.CommandSender;
 import fr.badblock.gameapi.command.AbstractCommand;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.GamePermission;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
+import fr.badblock.survival.PluginSurvival;
 import fr.badblock.survival.runnables.StartRunnable;
 
 public class GameCommand extends AbstractCommand {
@@ -40,6 +42,30 @@ public class GameCommand extends AbstractCommand {
 				} else msg += "-fail";
 				
 				player.sendTranslatedMessage(msg);
+			break;
+			case "players":
+				if(args.length != 2)
+					return false;
+				
+				int maxPlayers = 24;
+				
+				try {
+					maxPlayers = Integer.parseInt(args[1]);
+				} catch(Exception e){
+					return false;
+				}
+				
+				PluginSurvival plug = PluginSurvival.getInstance();
+				plug.getConfiguration().maxPlayers = maxPlayers;
+				plug.getConfiguration().minPlayers = maxPlayers / 2;
+				plug.setMaxPlayers(maxPlayers);
+				try {
+					BukkitUtils.setMaxPlayers(maxPlayers);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				player.sendTranslatedMessage("commands.grush.modifycount");
 			break;
 			default: return false;
 		}
