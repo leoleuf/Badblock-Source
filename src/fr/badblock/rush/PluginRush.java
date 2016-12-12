@@ -104,7 +104,7 @@ public class PluginRush extends BadblockPlugin {
 			
 			maxPlayers = getAPI().getTeams().size() * configuration.maxPlayersInTeam;
 			try {
-				BukkitUtils.setMaxPlayers(GameAPI.getAPI().getTeams().size() * configuration.maxPlayersInTeam);
+				BukkitUtils.setMaxPlayers(maxPlayers);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
