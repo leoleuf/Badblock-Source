@@ -62,46 +62,52 @@ public class GameRunnable extends BukkitRunnable {
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			
-			Location location = team.teamData(RushTeamData.class).getRespawnLocation();
 			
 			for(BadblockPlayer p : team.getOnlinePlayers()){
-				p.changePlayerDimension(BukkitUtils.getEnvironment( config.getDimension() ));
-				p.teleport(location);
-				p.setGameMode(GameMode.SURVIVAL);
-				p.getCustomObjective().generate();
-
-				boolean good = true;
-				
-				
-				for(PlayerKit toUnlock : PluginRush.getInstance().getKits().values()){
-					if(!toUnlock.isVIP()){
-						if(p.getPlayerData().getUnlockedKitLevel(toUnlock) < 2){
-							good = false; break;
-						}
-					}
-				}
-				
-				if(good && !p.getPlayerData().getAchievementState(RushAchievementList.RUSH_ALLKITS).isSucceeds()){
-					p.getPlayerData().getAchievementState(RushAchievementList.RUSH_ALLKITS).succeed();
-					RushAchievementList.RUSH_ALLKITS.reward(p);
-				}
-				
-				PlayerKit kit = p.inGameData(InGameKitData.class).getChoosedKit();
-				
-				if(kit != null){
-					if (PluginRush.getInstance().getMapConfiguration().getAllowBows())
-						kit.giveKit(p);
-					else
-						kit.giveKit(p, Material.BOW, Material.ARROW);
-				} else {
-					p.clearInventory();
-				}
+				handle(p);
 			}
 			
 		}
 		
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
+	}
+	
+	public static void handle(BadblockPlayer player) {
+		BadblockTeam team = player.getTeam();
+		if (team == null) return;
+		Location location = team.teamData(RushTeamData.class).getRespawnLocation();
+		player.changePlayerDimension(BukkitUtils.getEnvironment( PluginRush.getInstance().getMapConfiguration().getDimension() ));
+		player.teleport(location);
+		player.setGameMode(GameMode.SURVIVAL);
+		player.getCustomObjective().generate();
+
+		boolean good = true;
+		
+		
+		for(PlayerKit toUnlock : PluginRush.getInstance().getKits().values()){
+			if(!toUnlock.isVIP()){
+				if(player.getPlayerData().getUnlockedKitLevel(toUnlock) < 2){
+					good = false; break;
+				}
+			}
+		}
+		
+		if(good && !player.getPlayerData().getAchievementState(RushAchievementList.RUSH_ALLKITS).isSucceeds()){
+			player.getPlayerData().getAchievementState(RushAchievementList.RUSH_ALLKITS).succeed();
+			RushAchievementList.RUSH_ALLKITS.reward(player);
+		}
+		
+		PlayerKit kit = player.inGameData(InGameKitData.class).getChoosedKit();
+		
+		if(kit != null){
+			if (PluginRush.getInstance().getMapConfiguration().getAllowBows())
+				kit.giveKit(player);
+			else
+				kit.giveKit(player, Material.BOW, Material.ARROW);
+		} else {
+			player.clearInventory();
+		}
 	}
 	
 	public void remove(Material m) {

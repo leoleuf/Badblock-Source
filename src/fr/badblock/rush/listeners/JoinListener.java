@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.configuration.values.MapLocation;
+import fr.badblock.gameapi.events.PlayerGameInitEvent;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.entities.CustomCreature;
@@ -28,6 +29,7 @@ import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 import fr.badblock.rush.PluginRush;
 import fr.badblock.rush.players.RushScoreboard;
 import fr.badblock.rush.runnables.BossBarRunnable;
+import fr.badblock.rush.runnables.GameRunnable;
 import fr.badblock.rush.runnables.PreStartRunnable;
 import fr.badblock.rush.runnables.StartRunnable;
 
@@ -62,6 +64,11 @@ public class JoinListener extends BadListener {
 		GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginRush.getInstance().getMaxPlayers()).broadcast();
 		PreStartRunnable.doJob();
 		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), PluginRush.getInstance().getMaxPlayers());
+	}
+	
+	@EventHandler
+	public void onGameInit(PlayerGameInitEvent event) {
+		GameRunnable.handle(event.getPlayer());
 	}
 	
 	@EventHandler(priority=EventPriority.HIGHEST)

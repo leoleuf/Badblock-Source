@@ -56,6 +56,8 @@ public class DeathListener extends BadListener {
 		if(player.getTeam() == null) return; //WTF
 		if (lastDeath.containsKey(player.getName())) {
 			if (lastDeath.get(player.getName()) > System.currentTimeMillis()) {
+				e.setDeathMessage(null);
+				e.setDeathMessageEnd(null);
 				e.setCancelled(true);
 				return;
 			}
