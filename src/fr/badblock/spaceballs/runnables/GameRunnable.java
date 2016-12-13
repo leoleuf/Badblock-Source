@@ -56,38 +56,45 @@ public class GameRunnable extends BukkitRunnable {
 			location.getChunk().load();
 			
 			for(BadblockPlayer p : team.getOnlinePlayers()){
-				p.changePlayerDimension(BukkitUtils.getEnvironment( config.getDimension() ));
-				p.teleport(location);
-
-				boolean good = true;
-				
-				
-				for(PlayerKit toUnlock : PluginSB.getInstance().getKits().values()){
-					if(!toUnlock.isVIP()){
-						if(p.getPlayerData().getUnlockedKitLevel(toUnlock) < 2){
-							good = false; break;
-						}
-					}
-				}
-				
-				if(good && !p.getPlayerData().getAchievementState(SBAchievementList.SB_ALLKITS).isSucceeds()){
-					p.getPlayerData().getAchievementState(SBAchievementList.SB_ALLKITS).succeed();
-					SBAchievementList.SB_ALLKITS.reward(p);
-				}
-				
-				PlayerKit kit = p.inGameData(InGameKitData.class).getChoosedKit();
-				
-				if(kit != null){
-					kit.giveKit(p);
-				} else {
-					PluginSB.getInstance().giveDefaultKit(p);
-				}
+				handle(p);
 			}
 			
 		}
 		
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
+	}
+	
+	public static void handle(BadblockPlayer player) {
+		BadblockTeam team = player.getTeam();
+		if (team == null) return;
+		Location location = team.teamData(SpaceTeamData.class).getRespawnLocation();
+		player.changePlayerDimension(BukkitUtils.getEnvironment( PluginSB.getInstance().getMapConfiguration().getDimension() ));
+		player.teleport(location);
+
+		boolean good = true;
+		
+		
+		for(PlayerKit toUnlock : PluginSB.getInstance().getKits().values()){
+			if(!toUnlock.isVIP()){
+				if(player.getPlayerData().getUnlockedKitLevel(toUnlock) < 2){
+					good = false; break;
+				}
+			}
+		}
+		
+		if(good && !player.getPlayerData().getAchievementState(SBAchievementList.SB_ALLKITS).isSucceeds()){
+			player.getPlayerData().getAchievementState(SBAchievementList.SB_ALLKITS).succeed();
+			SBAchievementList.SB_ALLKITS.reward(player);
+		}
+		
+		PlayerKit kit = player.inGameData(InGameKitData.class).getChoosedKit();
+		
+		if(kit != null){
+			kit.giveKit(player);
+		} else {
+			PluginSB.getInstance().giveDefaultKit(player);
+		}
 	}
 
 	@Override
