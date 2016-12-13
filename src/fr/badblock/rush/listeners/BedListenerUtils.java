@@ -48,6 +48,8 @@ public class BedListenerUtils {
 					player.sendTranslatedTitle("rush.yourebed");
 			} else {
 				
+				team.die();
+				
 				Block other = team.teamData(RushTeamData.class).findOtherBedPart().getBlock();
 				
 				if(other.equals(block))
