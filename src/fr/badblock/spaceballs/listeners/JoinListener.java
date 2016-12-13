@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.GameAPI;
+import fr.badblock.gameapi.events.PlayerGameInitEvent;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
@@ -26,6 +27,7 @@ import fr.badblock.spaceballs.PluginSB;
 import fr.badblock.spaceballs.entities.SpaceTeamData;
 import fr.badblock.spaceballs.players.SpaceScoreboard;
 import fr.badblock.spaceballs.runnables.BossBarRunnable;
+import fr.badblock.spaceballs.runnables.GameRunnable;
 import fr.badblock.spaceballs.runnables.PreStartRunnable;
 import fr.badblock.spaceballs.runnables.StartRunnable;
 
@@ -104,6 +106,11 @@ public class JoinListener extends BadListener {
 		GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginSB.getInstance().getMaxPlayers()).broadcast();
 		PreStartRunnable.doJob();
 		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), PluginSB.getInstance().getMaxPlayers());
+	}
+	
+	@EventHandler
+	public void onGameInit(PlayerGameInitEvent event) {
+		GameRunnable.handle(event.getPlayer());
 	}
 	
 	@EventHandler
