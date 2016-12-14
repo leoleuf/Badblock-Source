@@ -26,43 +26,45 @@ public class JoinListener extends BadListener {
 	@EventHandler
 	public void onSpectatorJoin(SpectatorJoinEvent e){
 		SurvivalMapConfiguration config = PluginSurvival.getInstance().getMapConfiguration();
-		
+
 		if(DeathmatchRunnable.deathmatch){
 			e.getPlayer().teleport(config.getSpecDeathmatch());
 		} else {
 			e.getPlayer().teleport(config.getSpawnLocation());
 		}
-		
+
 		new SurvivalScoreboard(e.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e){
 		e.setJoinMessage(null);
-		
+
 		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
-		
+
 		if(inGame()){
 			if(player.inGameData(SurvivalData.class).death){
 				player.setBadblockMode(BadblockMode.SPECTATOR);
 			}
-			
+
 			return;
 		}
-		
-		new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
-		
-		player.setGameMode(GameMode.SURVIVAL);
-		player.sendTranslatedTitle("survival.join.title");
-		player.teleport(PluginSurvival.getInstance().getConfiguration().spawn.getHandle());
-		player.sendTimings(0, 80, 20);
-		player.sendTranslatedTabHeader(new TranslatableString("survival.tab.header"), new TranslatableString("survival.tab.footer"));
-		
-		GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginSurvival.getInstance().getMaxPlayers()).broadcast();
+
+		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR)) {
+			new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
+
+			player.setGameMode(GameMode.SURVIVAL);
+			player.sendTranslatedTitle("survival.join.title");
+			player.teleport(PluginSurvival.getInstance().getConfiguration().spawn.getHandle());
+			player.sendTimings(0, 80, 20);
+			player.sendTranslatedTabHeader(new TranslatableString("survival.tab.header"), new TranslatableString("survival.tab.footer"));
+
+			GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginSurvival.getInstance().getMaxPlayers()).broadcast();
+		}
 		PreStartRunnable.doJob();
 		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), PluginSurvival.getInstance().getMaxPlayers());
 	}
-	
+
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e){
 		e.setQuitMessage(null);
