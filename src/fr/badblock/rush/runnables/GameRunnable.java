@@ -125,6 +125,7 @@ public class GameRunnable extends BukkitRunnable {
 
 	@Override
 	public void run() {
+		GameAPI.setJoinable(GameRunnable.time < 900);
 		BukkitUtils.getPlayers().stream().filter(player -> player.getCustomObjective() != null).forEach(player -> player.getCustomObjective().generate());
 		if(time == 2){
 			damage = true;

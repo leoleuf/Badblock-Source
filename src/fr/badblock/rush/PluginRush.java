@@ -31,7 +31,6 @@ import fr.badblock.rush.listeners.MoveListener;
 import fr.badblock.rush.listeners.PartyJoinListener;
 import fr.badblock.rush.listeners.RushMapProtector;
 import fr.badblock.rush.listeners.SheepListener;
-import fr.badblock.rush.runnables.GameRunnable;
 import fr.badblock.rush.runnables.PreStartRunnable;
 import lombok.Getter;
 import lombok.Setter;
@@ -168,11 +167,6 @@ public class PluginRush extends BadblockPlugin {
 	public void saveJsonConfig(){
 		File configFile = new File(getDataFolder(), CONFIG);
 		JsonUtils.save(configFile, configuration, true);
-	}
-	
-	@Override
-	public boolean isJoinable() {
-		return GameRunnable.time >= 900;
 	}
 	
 }
