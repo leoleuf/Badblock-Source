@@ -30,6 +30,7 @@ public class GameRunnable extends BukkitRunnable implements TimeProvider {
 	
 	@Override
 	public void run() {
+		GameAPI.setJoinable(time > MAX_TIME / 2);
 		generalTime++;
 		int players = 0;
 
