@@ -151,7 +151,7 @@ public class GameRunnable extends BukkitRunnable {
 		
 		to.forEach(GameAPI.getAPI()::unregisterTeam);
 		
-		if(size == 1 || forceEnd){
+		if(GameAPI.getAPI().getTeams().stream().filter(team -> team.playersCurrentlyOnline() > 0).count() <= 1 || forceEnd){
 			cancel();
 			BadblockTeam winner = GameAPI.getAPI().getTeams().iterator().next();
 
