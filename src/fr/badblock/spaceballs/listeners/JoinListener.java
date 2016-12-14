@@ -20,6 +20,7 @@ import fr.badblock.gameapi.events.PlayerGameInitEvent;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
+import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 import fr.badblock.gameapi.utils.selections.CuboidSelection;
@@ -35,10 +36,10 @@ public class JoinListener extends BadListener {
 	@EventHandler
 	public void onSpectatorJoin(SpectatorJoinEvent e){
 		e.getPlayer().teleport(PluginSB.getInstance().getMapConfiguration().getSpawnLocation());
-		
+
 		new SpaceScoreboard(e.getPlayer());
 	}
-	
+
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void onInteract(PlayerInteractEvent e){
 		e.setCancelled(false);
@@ -48,19 +49,19 @@ public class JoinListener extends BadListener {
 	public void onExplode(EntityExplodeEvent e){
 		fix(e.blockList());
 	}
-	
+
 	@EventHandler
 	public void onExplode(BlockExplodeEvent e){
 		fix(e.blockList());
 	}
-	
+
 	private void fix(List<Block> blocks){
 		List<CuboidSelection> toProtect = toProtect();
-		
+
 		for(int i=0;i<blocks.size();i++){
-			
+
 			Block b = blocks.get(i);
-			
+
 			for(CuboidSelection selec : toProtect){
 				if(selec.isInSelection(b)){
 					blocks.remove(i);
@@ -68,10 +69,10 @@ public class JoinListener extends BadListener {
 					break;
 				}
 			}
-			
+
 		}
 	}
-	
+
 	private List<CuboidSelection> toProtect(){
 		List<CuboidSelection> toProtect = new ArrayList<>();
 
@@ -84,35 +85,37 @@ public class JoinListener extends BadListener {
 		return toProtect;
 	}
 
-	
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e){
 		e.setJoinMessage(null);
-		
+
 		if(inGame()){
 			return;
 		}
-		
+
 		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
-	
-		new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
-		
-		player.setGameMode(GameMode.SURVIVAL);
-		player.sendTranslatedTitle("spaceballs.join.title");
-		player.teleport(PluginSB.getInstance().getConfiguration().spawn.getHandle());
-		player.sendTimings(0, 80, 20);
-		player.sendTranslatedTabHeader(new TranslatableString("spaceballs.tab.header"), new TranslatableString("spaceballs.tab.footer"));
-		
-		GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginSB.getInstance().getMaxPlayers()).broadcast();
+
+		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR)) {
+			new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
+
+			player.setGameMode(GameMode.SURVIVAL);
+			player.sendTranslatedTitle("spaceballs.join.title");
+			player.teleport(PluginSB.getInstance().getConfiguration().spawn.getHandle());
+			player.sendTimings(0, 80, 20);
+			player.sendTranslatedTabHeader(new TranslatableString("spaceballs.tab.header"), new TranslatableString("spaceballs.tab.footer"));
+
+			GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginSB.getInstance().getMaxPlayers()).broadcast();
+		}
 		PreStartRunnable.doJob();
 		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), PluginSB.getInstance().getMaxPlayers());
 	}
-	
+
 	@EventHandler
 	public void onGameInit(PlayerGameInitEvent event) {
 		GameRunnable.handle(event.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e){
 		e.setQuitMessage(null);
