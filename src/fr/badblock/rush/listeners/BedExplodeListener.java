@@ -40,8 +40,6 @@ public class BedExplodeListener extends BadListener {
 
 	@EventHandler
 	public void onTNTExplose(EntityExplodeEvent e){
-		e.setYield((float)0.0);
-		
 		for(int i=0;i<e.blockList().size();i++){
 			if(e.blockList().get(i).getType() == Material.BED || e.blockList().get(i).getType() == Material.BED_BLOCK){
 				BadblockPlayer player = null;
