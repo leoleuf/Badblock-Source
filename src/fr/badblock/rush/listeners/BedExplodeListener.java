@@ -16,7 +16,9 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.configuration.values.MapMaterial;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.rush.PluginRush;
+import fr.badblock.rush.entities.RushTeamData;
 
 public class BedExplodeListener extends BadListener {
 	private Map<Block, UUID> placedTnts = new HashMap<>();
@@ -25,6 +27,14 @@ public class BedExplodeListener extends BadListener {
 	public void onPlaceBlock(BlockPlaceEvent e){
 		if(e.getBlock().getType() == Material.TNT){
 			placedTnts.put(e.getBlock(), e.getPlayer().getUniqueId());
+		}
+		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
+		BadblockTeam team = player.getTeam();
+		if (team == null) return;
+		Location location = team.teamData(RushTeamData.class).getRespawnLocation();
+		if (e.getBlock().getY() - location.getY() >= 15) {
+			e.setCancelled(true);
+			player.sendTranslatedMessage("rush.youcantplaceblockstoohigh");
 		}
 	}
 
