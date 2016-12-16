@@ -106,7 +106,9 @@ public class DeathListener extends BadListener {
 		} else {
 			e.setTimeBeforeRespawn(0);
 			respawnPlace = player.getTeam().teamData(RushTeamData.class).getRespawnLocation();
-			
+
+			player.setMaxHealth(20 + player.getTeam().teamData(RushTeamData.class).health);
+			player.setHealth(20 + player.getTeam().teamData(RushTeamData.class).health);
 			if(killer != null){
 				e.setWhileRespawnPlace(killer.getLocation());
 			} else if(last == DamageCause.VOID){

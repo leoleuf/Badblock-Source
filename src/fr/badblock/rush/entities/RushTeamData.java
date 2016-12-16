@@ -22,6 +22,7 @@ public class RushTeamData implements TeamData {
 	@Getter 	   private Location 	   	  respawnLocation;
 	@Getter@Setter private TranslatableString bed						   = new TranslatableString("rush.result.teams.bed-keeped");
 				   private boolean			  hasBed					   = true;
+				   public  int				  health;
 	
 	public void load(BadConfiguration config){
 		firstBedPart 	    = config.getValue("bed", MapLocation.class, new MapLocation()).getHandle();
