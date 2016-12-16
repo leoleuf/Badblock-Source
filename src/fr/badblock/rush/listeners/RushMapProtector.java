@@ -35,7 +35,7 @@ public class RushMapProtector implements MapProtector {
 		}
 
 		if(block.getType() == Material.BED_BLOCK){
-			return BedListenerUtils.onBreakBed(player, block, false);
+			player.sendTranslatedMessage("rush.youmustexplodetnttobreakthebed");
 		}
 
 		boolean can = false;
