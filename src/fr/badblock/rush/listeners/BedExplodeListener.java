@@ -32,7 +32,7 @@ public class BedExplodeListener extends BadListener {
 		BadblockTeam team = player.getTeam();
 		if (team == null) return;
 		Location location = team.teamData(RushTeamData.class).getRespawnLocation();
-		if (e.getBlock().getY() - location.getY() >= 8) {
+		if (e.getBlock().getY() - location.getY() >= 30) {
 			e.setCancelled(true);
 			player.sendTranslatedMessage("rush.youcantplaceblockstoohigh");
 		}
