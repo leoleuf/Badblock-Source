@@ -69,7 +69,11 @@ public class BedListenerUtils {
 					incrementAchievements(player, RushAchievementList.RUSH_BED_1, RushAchievementList.RUSH_BED_2, RushAchievementList.RUSH_BED_3, RushAchievementList.RUSH_BED_4, RushAchievementList.RUSH_BROKER);
 				}
 				
-				player.getTeam().teamData(RushTeamData.class).health+=2;
+				player.getTeam().teamData(RushTeamData.class).health+=4;
+				player.getTeam().getOnlinePlayers().forEach(pl -> {
+					pl.setMaxHealth(player.getMaxHealth() + 4);
+					pl.setHealth(player.getHealth() + 4);
+				});
 				
 				for(Player bukkitPlayer : Bukkit.getOnlinePlayers()){
 					BadblockPlayer bPlayer = (BadblockPlayer) bukkitPlayer;
