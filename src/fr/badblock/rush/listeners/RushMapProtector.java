@@ -36,6 +36,7 @@ public class RushMapProtector implements MapProtector {
 
 		if(block.getType() == Material.BED_BLOCK){
 			player.sendTranslatedMessage("rush.youmustexplodetnttobreakthebed");
+			return false;
 		}
 
 		boolean can = false;
