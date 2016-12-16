@@ -33,7 +33,7 @@ public class RushMapProtector implements MapProtector {
 		if(!inGame()){
 			return player.hasAdminMode();
 		}
-
+		
 		if(block.getType() == Material.BED_BLOCK){
 			player.sendTranslatedMessage("rush.youmustexplodetnttobreakthebed");
 			return false;
