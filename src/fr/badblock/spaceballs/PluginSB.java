@@ -17,6 +17,7 @@ import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.gameapi.run.BadblockGameData;
 import fr.badblock.gameapi.run.RunType;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.GameRules;
 import fr.badblock.gameapi.utils.general.JsonUtils;
 import fr.badblock.spaceballs.commands.GameCommand;
@@ -113,11 +114,16 @@ public class PluginSB extends BadblockPlugin {
 			getAPI().setKitContentManager(new SpaceKitContentManager(true));
 			
 			maxPlayers = getAPI().getTeams().size() * configuration.maxPlayersInTeam;
+			try {
+				BukkitUtils.setMaxPlayers(GameAPI.getAPI().getTeams().size() * configuration.maxPlayersInTeam);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			kits	   = getAPI().loadKits(GameAPI.getInternalGameName());
 			
 			try { teams.save(teamsFile); } catch (IOException unused){}
 
-			// Chargement des fonctionnalitÃ©s de l'API non utilisÃ©es par dÃ©faut
+			// Chargement des fonctionnalités de l'API non utilisées par défaut
 
 			getAPI().getBadblockScoreboard().doBelowNameHealth();
 			getAPI().getBadblockScoreboard().doTabListHealth();

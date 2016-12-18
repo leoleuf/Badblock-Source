@@ -1,5 +1,8 @@
 package fr.badblock.spaceballs.listeners;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -30,7 +33,7 @@ public class DeathListener extends BadListener {
 			e.getPlayer().getOpenInventory().setCursor(null);
 		PluginSB.getInstance().giveDefaultKit(e.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void onDeath(NormalDeathEvent e){
 		death(e, e.getPlayer(), null, e.getLastDamageCause());
@@ -52,8 +55,17 @@ public class DeathListener extends BadListener {
 		}
 	}
 
+	private Map<String, Long> lastDeath = new HashMap<>();
+
 	private void death(FakeDeathEvent e, BadblockPlayer player, Entity killer, DamageCause last){
-		if(player.getTeam() == null) return;
+		if(player.getTeam() == null) return; //WTF
+		if (lastDeath.containsKey(player.getName())) {
+			if (lastDeath.get(player.getName()) > System.currentTimeMillis()) {
+				e.setCancelled(true);
+				return;
+			}
+		}
+		lastDeath.put(player.getName(), System.currentTimeMillis() + 1000L);
 		if (player.getOpenInventory() != null && player.getOpenInventory().getCursor() != null)
 			player.getOpenInventory().setCursor(null);
 
@@ -79,24 +91,24 @@ public class DeathListener extends BadListener {
 
 			bKiller.getCustomObjective().generate();
 		}
-		
+
 		int diamonds = 0;
-		
+
 		for(int i=0;i<e.getDrops().size();i++){
 			ItemStack item = e.getDrops().get(i);
-			
+
 			if(item.getType() == Material.FIREWORK){
 				continue;
 			}
-			
+
 			if(item.getType() == Material.DIAMOND){
 				diamonds += item.getAmount();
 			}
-			
+
 			e.getDrops().remove(i);
 			i--;
 		}
-		
+
 		e.setDeathMessageEnd(new TranslatableString("spaceballs.death-message-end", diamonds));
 
 		player.getCustomObjective().generate();
