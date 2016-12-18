@@ -9,7 +9,6 @@ import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.command.AbstractCommand;
 import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.players.BadblockPlayer;
-import fr.badblock.gameapi.players.BadblockPlayer.GamePermission;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.utils.general.StringUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
@@ -19,7 +18,7 @@ import fr.badblock.spaceballs.runnables.StartRunnable;
 
 public class GameCommand extends AbstractCommand {
 	public GameCommand() {
-		super("game", new TranslatableString("commands.gsb.usage"), GamePermission.BMODERATOR, GamePermission.BMODERATOR, GamePermission.BMODERATOR);
+		super("game", new TranslatableString("commands.gsb.usage"), "animation.gamecommand");
 		allowConsole(false);
 	}
 
