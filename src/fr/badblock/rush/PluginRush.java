@@ -12,6 +12,7 @@ import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.AchievementList;
 import fr.badblock.gameapi.game.GameServer.WhileRunningConnectionTypes;
+import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.gameapi.run.BadblockGameData;
@@ -156,7 +157,7 @@ public class PluginRush extends BadblockPlugin {
 			new GameCommand();
 			
 			Bukkit.getWorlds().forEach(world -> {
-				world.setTime(2000L);
+				world.setTime(16000L);
 				world.getEntities().forEach(entity -> entity.remove());
 			});
 		} catch(Throwable e){
@@ -167,6 +168,19 @@ public class PluginRush extends BadblockPlugin {
 	public void saveJsonConfig(){
 		File configFile = new File(getDataFolder(), CONFIG);
 		JsonUtils.save(configFile, configuration, true);
+	}
+	
+	public void giveDefaultKit(BadblockPlayer player){
+		player.clearInventory();
+		PlayerKit kit = kits.get(configuration.defaultKit);
+		
+		if(kit == null){
+			player.clearInventory();
+			return;
+		}
+		
+		player.getPlayerData().unlockNextLevel(kit);
+		kit.giveKit(player);
 	}
 	
 }

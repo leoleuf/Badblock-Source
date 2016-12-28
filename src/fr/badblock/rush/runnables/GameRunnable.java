@@ -42,11 +42,11 @@ public class GameRunnable extends BukkitRunnable {
 	public GameRunnable(RushMapConfiguration config){
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
 		GameAPI.getAPI().getGameServer().saveTeamsAndPlayersForResult();
-		
+
 		for(SpawnableItem item : PluginRush.getInstance().getConfiguration().items){
 			new ItemSpawnRunnable(Material.matchMaterial(item.item), item.ticks).start();
 		}
-		
+
 		if (!PluginRush.getInstance().getMapConfiguration().getAllowBows()) {
 			remove(Material.BOW);
 			remove(Material.ARROW);
@@ -61,18 +61,18 @@ public class GameRunnable extends BukkitRunnable {
 		});
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
-			
-			
+
+
 			for(BadblockPlayer p : team.getOnlinePlayers()){
 				handle(p);
 			}
-			
+
 		}
-		
+
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
 	}
-	
+
 	public static void handle(BadblockPlayer player) {
 		BadblockTeam team = player.getTeam();
 		if (team == null) return;
@@ -80,11 +80,13 @@ public class GameRunnable extends BukkitRunnable {
 		player.changePlayerDimension(BukkitUtils.getEnvironment( PluginRush.getInstance().getMapConfiguration().getDimension() ));
 		player.teleport(location);
 		player.setGameMode(GameMode.SURVIVAL);
+		if (player.getCustomObjective() == null)
+			new RushScoreboard((BadblockPlayer) player);
 		player.getCustomObjective().generate();
 
 		boolean good = true;
-		
-		
+
+
 		for(PlayerKit toUnlock : PluginRush.getInstance().getKits().values()){
 			if(!toUnlock.isVIP()){
 				if(player.getPlayerData().getUnlockedKitLevel(toUnlock) < 2){
@@ -92,24 +94,24 @@ public class GameRunnable extends BukkitRunnable {
 				}
 			}
 		}
-		
+
 		if(good && !player.getPlayerData().getAchievementState(RushAchievementList.RUSH_ALLKITS).isSucceeds()){
 			player.getPlayerData().getAchievementState(RushAchievementList.RUSH_ALLKITS).succeed();
 			RushAchievementList.RUSH_ALLKITS.reward(player);
 		}
-		
+
 		PlayerKit kit = player.inGameData(InGameKitData.class).getChoosedKit();
-		
+
 		if(kit != null){
 			if (PluginRush.getInstance().getMapConfiguration().getAllowBows())
 				kit.giveKit(player);
 			else
 				kit.giveKit(player, Material.BOW, Material.ARROW);
 		} else {
-			player.clearInventory();
+			PluginRush.getInstance().giveDefaultKit(player);
 		}
 	}
-	
+
 	public void remove(Material m) {
 		Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
 		Recipe recipe;
@@ -129,7 +131,7 @@ public class GameRunnable extends BukkitRunnable {
 		BukkitUtils.getPlayers().stream().filter(player -> player.getCustomObjective() != null).forEach(player -> player.getCustomObjective().generate());
 		if(time == 2){
 			damage = true;
-			
+
 			for(BadblockPlayer player : GameAPI.getAPI().getRealOnlinePlayers()){
 				if(player.getTeam() != null)
 					player.pseudoJail(player.getTeam().teamData(RushTeamData.class).getRespawnLocation(), 300.0d);
@@ -139,18 +141,18 @@ public class GameRunnable extends BukkitRunnable {
 		int size = GameAPI.getAPI().getTeams().size();
 
 		List<BadblockTeam> to = new ArrayList<>();
-		
+
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			if(team.getOnlinePlayers().size() == 0){
 				GameAPI.getAPI().getGameServer().cancelReconnectionInvitations(team);
 				to.add(team);
-				
+
 				new TranslatableString("rush.team-loose", team.getChatName()).broadcast();;
 			}
 		}
-		
+
 		to.forEach(GameAPI.getAPI()::unregisterTeam);
-		
+
 		if(GameAPI.getAPI().getTeams().stream().filter(team -> team.playersCurrentlyOnline() > 0).count() <= 1 || forceEnd){
 			cancel();
 			BadblockTeam winner = GameAPI.getAPI().getTeams().iterator().next();
@@ -159,7 +161,7 @@ public class GameRunnable extends BukkitRunnable {
 
 			Location winnerLocation = PluginRush.getInstance().getMapConfiguration().getSpawnLocation();
 			Location looserLocation = winnerLocation.clone().add(0d, 7d, 0d);
-			
+
 			for(Player player : Bukkit.getOnlinePlayers()){
 				BadblockPlayer bp = (BadblockPlayer) player;
 				bp.heal();
@@ -168,43 +170,43 @@ public class GameRunnable extends BukkitRunnable {
 
 				double badcoins = bp.inGameData(RushData.class).getScore() / 4; // 10
 				double xp	    = bp.inGameData(RushData.class).getScore() / 2; // 5
-				
+
 				if(winner.equals(bp.getTeam())){
 					bp.getPlayerData().addRankedPoints(3);
 					bp.teleport(winnerLocation);
 					bp.setAllowFlight(true);
 					bp.setFlying(true);
-					
+
 					new BukkitRunnable() {
 						int count = 5;
-						
+
 						@Override
 						public void run() {
 							count--;
-							
+
 							bp.teleport(winnerLocation);
 							bp.setAllowFlight(true);
 							bp.setFlying(true);
-							
+
 							if(count == 0)
 								cancel();
 						}
 					}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
 					bp.sendTranslatedTitle("rush.title-win", winner.getChatName());
 					bp.getPlayerData().incrementStatistic("rush", RushScoreboard.WINS);
-					
+
 					incrementAchievements(bp, RushAchievementList.RUSH_WIN_1, RushAchievementList.RUSH_WIN_2, RushAchievementList.RUSH_WIN_3, RushAchievementList.RUSH_WIN_4);
-				
+
 					if(time <= 600){
 						incrementAchievements(bp, RushAchievementList.RUSH_RUSHER_1, RushAchievementList.RUSH_RUSHER_2, RushAchievementList.RUSH_RUSHER_3, RushAchievementList.RUSH_RUSHER_4);
 					}
 				} else {
 					bp.getPlayerData().addRankedPoints(-2);
 					badcoins = ((double) badcoins) / 1.5d;
-					
+
 					bp.jailPlayerAt(looserLocation);
 					bp.sendTranslatedTitle("rush.title-loose", winner.getChatName());
-					
+
 					if(bp.getBadblockMode() == BadblockMode.PLAYER)
 						bp.getPlayerData().incrementStatistic("rush", RushScoreboard.LOOSES);
 				}
@@ -215,21 +217,21 @@ public class GameRunnable extends BukkitRunnable {
 
 				int rbadcoins = badcoins < 2 ? 2 : (int) badcoins;
 				int rxp		  = xp < 5 ? 5 : (int) xp;
-				
+
 				bp.getPlayerData().addBadcoins(rbadcoins, true);
 				bp.getPlayerData().addXp(rxp, true);
-				
+
 				new BukkitRunnable(){
-					
+
 					@Override
 					public void run(){
 						if(bp.isOnline()){
 							bp.sendTranslatedActionBar("rush.win", rbadcoins, rxp);
 						}
 					}
-					
+
 				}.runTaskTimer(GameAPI.getAPI(), 0, 30L);
-				
+
 				bp.getCustomObjective().generate();
 			}
 
@@ -237,7 +239,7 @@ public class GameRunnable extends BukkitRunnable {
 			BukkitUtils.getPlayers().forEach(bp -> bp.sendTranslatedMessage("game.waitforbeingteleportedinanothergame", Bukkit.getServerName().split("_")[0]));
 			new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
 			new KickRunnable().runTaskTimer(GameAPI.getAPI(), 0, 20L);
-			
+
 		} else if(size == 0){
 			cancel();
 			Bukkit.shutdown();

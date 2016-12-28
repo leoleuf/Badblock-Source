@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RushConfiguration {
 	public String 	   		   fallbackServer   = "lobby";
+	public String 	   		   defaultKit		= "defaultKit";
 	public int    	   		   maxPlayersInTeam = 4;
 	public MapLocation 		   spawn;
 	

@@ -16,6 +16,7 @@ import fr.badblock.gameapi.events.fakedeaths.FakeDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent.FightingDeaths;
 import fr.badblock.gameapi.events.fakedeaths.NormalDeathEvent;
+import fr.badblock.gameapi.events.fakedeaths.PlayerFakeRespawnEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
@@ -126,6 +127,13 @@ public class DeathListener extends BadListener {
 		
 		player.getCustomObjective().generate();
 		e.setRespawnPlace(respawnPlace);
+	}
+	
+	@EventHandler
+	public void onRespawn(PlayerFakeRespawnEvent e){
+		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
+			e.getPlayer().getOpenInventory().setCursor(null);
+		PluginRush.getInstance().giveDefaultKit(e.getPlayer());
 	}
 	
 	private void incrementAchievements(BadblockPlayer player, PlayerAchievement... achievements){
