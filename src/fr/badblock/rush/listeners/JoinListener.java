@@ -22,6 +22,7 @@ import fr.badblock.gameapi.events.PlayerGameInitEvent;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.entities.CustomCreature;
 import fr.badblock.gameapi.utils.entities.CustomCreature.CreatureBehaviour;
 import fr.badblock.gameapi.utils.entities.CustomCreature.CreatureFlag;
@@ -42,6 +43,7 @@ public class JoinListener extends BadListener {
 		e.getPlayer().teleport(PluginRush.getInstance().getMapConfiguration().getSpawnLocation());
 
 		new RushScoreboard(e.getPlayer());
+		e.getPlayer().changePlayerDimension(BukkitUtils.getEnvironment( PluginRush.getInstance().getMapConfiguration().getDimension() ));
 	}
 
 	@EventHandler
