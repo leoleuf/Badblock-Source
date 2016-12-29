@@ -14,6 +14,7 @@ public class RushConfiguration {
 	public String 	   		   fallbackServer   = "lobby";
 	public String 	   		   defaultKit		= "defaultKit";
 	public int    	   		   maxPlayersInTeam = 4;
+	public int    	   		   minPlayers	    = 4;
 	public MapLocation 		   spawn;
 	
 	public List<MapLocation>   sheeps		    = new ArrayList<>();
