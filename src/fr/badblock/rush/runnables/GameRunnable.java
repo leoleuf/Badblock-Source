@@ -151,11 +151,15 @@ public class GameRunnable extends BukkitRunnable {
 			}
 		}
 
-		to.forEach(GameAPI.getAPI()::unregisterTeam);
+		if (GameAPI.getAPI().getTeams().size() > 1) {
+			to.forEach(GameAPI.getAPI()::unregisterTeam);
+		}
 
 		if(GameAPI.getAPI().getTeams().stream().filter(team -> team.playersCurrentlyOnline() > 0).count() <= 1 || forceEnd){
 			cancel();
-			BadblockTeam winner = GameAPI.getAPI().getTeams().iterator().next();
+			Iterator<BadblockTeam> iterator = GameAPI.getAPI().getTeams().iterator();
+			BadblockTeam winner = null;
+			if (iterator.hasNext()) winner = iterator.next();
 
 			GameAPI.getAPI().getGameServer().setGameState(GameState.FINISHED);
 
@@ -171,44 +175,46 @@ public class GameRunnable extends BukkitRunnable {
 				double badcoins = bp.inGameData(RushData.class).getScore() / 4; // 10
 				double xp	    = bp.inGameData(RushData.class).getScore() / 2; // 5
 
-				if(winner.equals(bp.getTeam())){
-					bp.getPlayerData().addRankedPoints(3);
-					bp.teleport(winnerLocation);
-					bp.setAllowFlight(true);
-					bp.setFlying(true);
+				if (winner != null) {
+					if(winner.equals(bp.getTeam())){
+						bp.getPlayerData().addRankedPoints(3);
+						bp.teleport(winnerLocation);
+						bp.setAllowFlight(true);
+						bp.setFlying(true);
 
-					new BukkitRunnable() {
-						int count = 5;
+						new BukkitRunnable() {
+							int count = 5;
 
-						@Override
-						public void run() {
-							count--;
+							@Override
+							public void run() {
+								count--;
 
-							bp.teleport(winnerLocation);
-							bp.setAllowFlight(true);
-							bp.setFlying(true);
+								bp.teleport(winnerLocation);
+								bp.setAllowFlight(true);
+								bp.setFlying(true);
 
-							if(count == 0)
-								cancel();
+								if(count == 0)
+									cancel();
+							}
+						}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
+						bp.sendTranslatedTitle("rush.title-win", winner.getChatName());
+						bp.getPlayerData().incrementStatistic("rush", RushScoreboard.WINS);
+
+						incrementAchievements(bp, RushAchievementList.RUSH_WIN_1, RushAchievementList.RUSH_WIN_2, RushAchievementList.RUSH_WIN_3, RushAchievementList.RUSH_WIN_4);
+
+						if(time <= 600){
+							incrementAchievements(bp, RushAchievementList.RUSH_RUSHER_1, RushAchievementList.RUSH_RUSHER_2, RushAchievementList.RUSH_RUSHER_3, RushAchievementList.RUSH_RUSHER_4);
 						}
-					}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
-					bp.sendTranslatedTitle("rush.title-win", winner.getChatName());
-					bp.getPlayerData().incrementStatistic("rush", RushScoreboard.WINS);
+					} else {
+						bp.getPlayerData().addRankedPoints(-2);
+						badcoins = ((double) badcoins) / 1.5d;
 
-					incrementAchievements(bp, RushAchievementList.RUSH_WIN_1, RushAchievementList.RUSH_WIN_2, RushAchievementList.RUSH_WIN_3, RushAchievementList.RUSH_WIN_4);
+						bp.jailPlayerAt(looserLocation);
+						bp.sendTranslatedTitle("rush.title-loose", winner.getChatName());
 
-					if(time <= 600){
-						incrementAchievements(bp, RushAchievementList.RUSH_RUSHER_1, RushAchievementList.RUSH_RUSHER_2, RushAchievementList.RUSH_RUSHER_3, RushAchievementList.RUSH_RUSHER_4);
+						if(bp.getBadblockMode() == BadblockMode.PLAYER)
+							bp.getPlayerData().incrementStatistic("rush", RushScoreboard.LOOSES);
 					}
-				} else {
-					bp.getPlayerData().addRankedPoints(-2);
-					badcoins = ((double) badcoins) / 1.5d;
-
-					bp.jailPlayerAt(looserLocation);
-					bp.sendTranslatedTitle("rush.title-loose", winner.getChatName());
-
-					if(bp.getBadblockMode() == BadblockMode.PLAYER)
-						bp.getPlayerData().incrementStatistic("rush", RushScoreboard.LOOSES);
 				}
 				if(badcoins > 20)
 					badcoins = 20;
@@ -235,9 +241,11 @@ public class GameRunnable extends BukkitRunnable {
 				bp.getCustomObjective().generate();
 			}
 
-			new RushResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
+			if (winner != null)
+				new RushResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
 			BukkitUtils.getPlayers().forEach(bp -> bp.sendTranslatedMessage("game.waitforbeingteleportedinanothergame", Bukkit.getServerName().split("_")[0]));
-			new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
+			if (winner != null)
+				new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
 			new KickRunnable().runTaskTimer(GameAPI.getAPI(), 0, 20L);
 
 		} else if(size == 0){
