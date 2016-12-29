@@ -59,7 +59,10 @@ public class StartRunnable extends BukkitRunnable {
 		}
 		
 		sendTimeHidden(time);
-		
+
+		boolean ok = time > 10;
+		time = TIME_BEFORE_START / Bukkit.getMaxPlayers();
+		if (time < 10 && ok) time = 10;
 		time--;
 	}
 	
@@ -105,7 +108,7 @@ public class StartRunnable extends BukkitRunnable {
 	}
 
 	public static void joinNotify(int currentPlayers, int maxPlayers){
-		if(currentPlayers != maxPlayers) return;
+		if(currentPlayers < PluginSB.getInstance().getConfiguration().minPlayers) return;
 		
 		startGame(false);
 	}

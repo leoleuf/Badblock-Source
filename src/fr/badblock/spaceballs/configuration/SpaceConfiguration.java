@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 public class SpaceConfiguration {
 	public String 	   		   fallbackServer   = "lobby";
 	public String			   defaultKit		= "defaultkit";
+	public int    	   		   minPlayers		= 2;
 	public int    	   		   maxPlayersInTeam = 4;
 	public MapLocation 		   spawn;
 }
