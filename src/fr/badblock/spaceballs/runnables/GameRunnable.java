@@ -202,7 +202,6 @@ public class GameRunnable extends BukkitRunnable {
 			}
 
 			new SBResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
-			BukkitUtils.getPlayers().forEach(bp -> bp.sendTranslatedMessage("game.waitforbeingteleportedinanothergame", Bukkit.getServerName().split("_")[0]));
 			new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
 			new KickRunnable().runTaskTimer(GameAPI.getAPI(), 0, 20L);
 			
