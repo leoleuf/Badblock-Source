@@ -8,7 +8,6 @@ import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.data.PlayerAchievementState;
-import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.general.TimeUnit;
 import fr.badblock.survival.PluginSurvival;
 import fr.badblock.survival.SGAchievementList;
@@ -148,7 +147,6 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 			}
 
 			new SurvivalResults(TimeUnit.SECOND.toShort(GameRunnable.generalTime, TimeUnit.SECOND, TimeUnit.HOUR));
-			BukkitUtils.getPlayers().forEach(bp -> bp.sendTranslatedMessage("game.waitforbeingteleportedinanothergame", Bukkit.getServerName().split("_")[0]));
 			new EndEffectRunnable(winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
 			new KickRunnable().runTaskTimer(GameAPI.getAPI(), 0, 20L);
 		} else if(players == 0){
