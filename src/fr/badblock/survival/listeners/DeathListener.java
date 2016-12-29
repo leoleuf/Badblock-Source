@@ -64,7 +64,7 @@ public class DeathListener extends BadListener {
 		player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.DEATHS);
 		player.inGameData(SurvivalData.class).death		= true;
 		player.inGameData(SurvivalData.class).deathTime = GameRunnable.generalTime;
-		GameAPI.getAPI().getOnlinePlayers().forEach(badblockPlayer -> badblockPlayer.getCustomObjective().generate());
+		GameAPI.getAPI().getOnlinePlayers().stream().filter(badblockPlayer -> badblockPlayer.getCustomObjective() != null).forEach(badblockPlayer -> badblockPlayer.getCustomObjective().generate());
 		
 		e.setLightning(true);
 			
