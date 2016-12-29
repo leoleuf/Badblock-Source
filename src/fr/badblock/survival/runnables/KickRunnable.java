@@ -16,7 +16,7 @@ public class KickRunnable extends BukkitRunnable {
 
 	@Override
 	public void run(){
-		if(time <= 0 && time > -3){
+		if(time == 0){
 
 			for(BadblockPlayer player : BukkitUtils.getPlayers()){
 				player.sendTranslatedMessage("game.nonewgamefound");
@@ -28,7 +28,7 @@ public class KickRunnable extends BukkitRunnable {
 			for(BadblockPlayer player : BukkitUtils.getPlayers()){
 				GameAPI.getAPI().getRabbitSpeaker().sendAsyncUTF8Publisher("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), Bukkit.getServerName().split("_")[0], true)), 5000, false);
 			}
-		}else if(time == -3){
+		}else if(time == -15){
 			Bukkit.shutdown();
 		}
 
