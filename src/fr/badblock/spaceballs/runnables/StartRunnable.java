@@ -123,7 +123,9 @@ public class StartRunnable extends BukkitRunnable {
 	public static void stopGame(){
 		if(gameTask != null){
 			gameTask.forceEnd = true;
+			task.time = TIME_BEFORE_START;
 		} else if(task != null){
+			task.time = TIME_BEFORE_START;
 			task.cancel();
 		}
 		
