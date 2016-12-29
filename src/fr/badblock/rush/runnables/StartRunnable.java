@@ -84,6 +84,7 @@ public class StartRunnable extends BukkitRunnable {
 
 		sendTimeHidden(time);
 
+		time--;
 	}
 
 	protected void start(){
