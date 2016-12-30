@@ -12,18 +12,16 @@ public class KickRunnable extends BukkitRunnable {
 
 	@Override
 	public void run(){
-		if(time <= 5){
+		if(time == -3){
+			Bukkit.shutdown();
+		}else if(time <= 5){
 
 			for(BadblockPlayer player : BukkitUtils.getPlayers()){
 				player.sendPlayer(PluginSurvival.getInstance().getConfiguration().fallbackServer);
 			}
 
-		}else if(time == -3){
-			Bukkit.shutdown();
-		}
+		} 
 
 		time--;
 	}
 }
-
-
