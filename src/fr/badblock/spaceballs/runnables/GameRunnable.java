@@ -1,6 +1,7 @@
 package fr.badblock.spaceballs.runnables;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -127,7 +128,16 @@ public class GameRunnable extends BukkitRunnable {
 		
 		if(size == 1 || forceEnd){
 			cancel();
-			BadblockTeam winner = GameAPI.getAPI().getTeams().iterator().next();
+			Iterator<BadblockTeam> teams = GameAPI.getAPI().getTeams().iterator();
+			BadblockTeam winner = null;
+			while (teams.hasNext()) {
+				BadblockTeam team = teams.next();
+				if (team != null) {
+					if (winner == null || (team.teamData(SpaceTeamData.class) != null && team.teamData(SpaceTeamData.class).getDiamondsCount() < winner.teamData(SpaceTeamData.class).getDiamondsCount()))
+						winner = team;
+				}
+			}
+			
 
 			GameAPI.getAPI().getGameServer().setGameState(GameState.FINISHED);
 
