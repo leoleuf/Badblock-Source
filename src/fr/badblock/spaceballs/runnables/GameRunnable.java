@@ -133,7 +133,7 @@ public class GameRunnable extends BukkitRunnable {
 			while (teams.hasNext()) {
 				BadblockTeam team = teams.next();
 				if (team != null) {
-					if (winner == null || (team.teamData(SpaceTeamData.class) != null && team.teamData(SpaceTeamData.class).getDiamondsCount() < winner.teamData(SpaceTeamData.class).getDiamondsCount()))
+					if (winner == null || (team.teamData(SpaceTeamData.class) != null && team.teamData(SpaceTeamData.class).getDiamondsCount() > winner.teamData(SpaceTeamData.class).getDiamondsCount()))
 						winner = team;
 				}
 			}
