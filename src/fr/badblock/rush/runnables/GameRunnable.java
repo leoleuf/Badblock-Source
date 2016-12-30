@@ -216,13 +216,13 @@ public class GameRunnable extends BukkitRunnable {
 							bp.getPlayerData().incrementStatistic("rush", RushScoreboard.LOOSES);
 					}
 				}
-				if(badcoins > 20)
+				if(badcoins > 20 * bp.getPlayerData().getBadcoinsMultiplier())
 					badcoins = 20;
-				if(xp > 50)
-					xp = 50;
+				if(xp > 50 * bp.getPlayerData().getXpMultiplier())
+					xp = 50 * bp.getPlayerData().getXpMultiplier();
 
-				int rbadcoins = badcoins < 2 ? 2 : (int) badcoins;
-				int rxp		  = xp < 5 ? 5 : (int) xp;
+				int rbadcoins = badcoins < 2 * bp.getPlayerData().getXpMultiplier() ? (int) (2 * bp.getPlayerData().getXpMultiplier()) : (int) badcoins;
+				int rxp		  = xp < 5 * bp.getPlayerData().getXpMultiplier() ? (int) (5 * bp.getPlayerData().getXpMultiplier()) : (int) xp;
 
 				bp.getPlayerData().addBadcoins(rbadcoins, true);
 				bp.getPlayerData().addXp(rxp, true);
