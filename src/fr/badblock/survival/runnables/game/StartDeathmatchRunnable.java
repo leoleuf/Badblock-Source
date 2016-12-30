@@ -11,6 +11,7 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.survival.PluginSurvival;
+import fr.badblock.survival.SGAchievementList;
 import fr.badblock.survival.configuration.SurvivalMapConfiguration;
 import fr.badblock.survival.players.SurvivalData;
 import fr.badblock.survival.players.TimeProvider;
@@ -57,6 +58,7 @@ public class StartDeathmatchRunnable extends BukkitRunnable implements TimeProvi
 				});
 
 				if(!player.inGameData(SurvivalData.class).death){
+					player.getPlayerData().incrementAchievements(player, SGAchievementList.SG_SURVI_1, SGAchievementList.SG_SURVI_2, SGAchievementList.SG_SURVI_3, SGAchievementList.SG_SURVI_4);
 					player.heal();
 				}
 			}

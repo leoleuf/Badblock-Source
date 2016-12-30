@@ -96,7 +96,6 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 							state.progress(1000.0d);
 							state.trySucceed(player, SGAchievementList.SG_BSURVIVOR);
 						}
-
 						if(player.inGameData(SurvivalData.class).kills >= 5){
 							player.getPlayerData().incrementAchievements(player, SGAchievementList.SG_FEERL_1, SGAchievementList.SG_FEERL_2, SGAchievementList.SG_FEERL_3, SGAchievementList.SG_FEERL_4);
 						}
