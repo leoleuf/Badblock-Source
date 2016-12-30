@@ -68,23 +68,23 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 						player.teleport(winnerLocation);
 						player.setAllowFlight(true);
 						player.setFlying(true);
-						
+
 						new BukkitRunnable() {
 							int count = 5;
-							
+
 							@Override
 							public void run() {
 								count--;
-								
+
 								player.teleport(winnerLocation);
 								player.setAllowFlight(true);
 								player.setFlying(true);
-								
+
 								if(count == 0)
 									cancel();
 							}
 						}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
-						
+
 						player.sendTranslatedTitle("survival.title-win", winner.getName());
 						player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.WINS);
 
@@ -107,11 +107,11 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 						player.sendTranslatedTitle("survival.title-loose", winner.getName());
 						player.getPlayerData().incrementAchievements(player, SGAchievementList.SG_LOOSER);
 					}
-
-					if(badcoins > 20)
-						badcoins = 20;
-					if(xp > 50)
-						xp = 50;
+					
+					if(badcoins > 20 * player.getPlayerData().getBadcoinsMultiplier())
+						badcoins = 20 * player.getPlayerData().getBadcoinsMultiplier();
+					if(xp > 50 * player.getPlayerData().getXpMultiplier())
+						xp = 50 * player.getPlayerData().getXpMultiplier();
 
 					int rbadcoins = badcoins < 2 ? 2 : (int) badcoins;
 					int rxp		  = xp < 5 ? 5 : (int) xp;
