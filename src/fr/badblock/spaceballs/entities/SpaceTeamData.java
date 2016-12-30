@@ -65,7 +65,7 @@ public class SpaceTeamData implements TeamData {
 				player.removeItems(Material.DIAMOND, (byte) 0, -1);
 				diamonds += count;
 				
-				player.inGameData(SpaceData.class).launchRocket(player);
+				player.inGameData(SpaceData.class).putDiamant(player, count);
 				
 				GameAPI.getAPI().getOnlinePlayers().forEach(p -> {
 					p.sendTranslatedMessage("spaceballs.diamond.put", player.getTeam().getChatName(), player.getName(), count );
