@@ -24,14 +24,14 @@ public class BedListenerUtils {
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			Location teamBed = team.teamData(RushTeamData.class).getFirstBedPart();
-			
+
 			if(teamBed == null) continue;
-			
+
 			Location teamBed2  = team.teamData(RushTeamData.class).findOtherBedPart();
 
 			if(teamBed2 == null)
 				teamBed2 = teamBed;
-			
+
 			if(teamBed.distance(bed.getLocation()) == 0 || teamBed2.distance(bed.getLocation()) == 0)
 				result = team;
 		}
@@ -41,58 +41,55 @@ public class BedListenerUtils {
 
 	public static boolean onBreakBed(BadblockPlayer player, Block block, boolean explosion){
 		BadblockTeam team = parseBedTeam(block);
-		
+
 		if(team != null && player.getTeam() != null){
 			if(team.equals(player.getTeam())){
 				if(!explosion)
 					player.sendTranslatedTitle("rush.yourebed");
 			} else {
-				
+
 				team.die();
-				
+
 				Block other = team.teamData(RushTeamData.class).findOtherBedPart().getBlock();
-				
+
 				if(other.equals(block))
 					other = team.teamData(RushTeamData.class).getFirstBedPart().getBlock();
-				
+
 				block.setType(Material.AIR);
 				other.setType(Material.AIR);
-				
+
 				team.teamData(RushTeamData.class).broked(explosion, player.getName());
-				
+
 				player.getPlayerData().incrementStatistic("rush", RushScoreboard.BROKENBEDS);
 				player.inGameData(RushData.class).brokedBeds++;
-				
-				if(explosion){
-					incrementAchievements(player, RushAchievementList.RUSH_EBED_1, RushAchievementList.RUSH_EBED_2, RushAchievementList.RUSH_EBED_3, RushAchievementList.RUSH_EBED_4, RushAchievementList.RUSH_EXPLODER);
-				} else {
-					incrementAchievements(player, RushAchievementList.RUSH_BED_1, RushAchievementList.RUSH_BED_2, RushAchievementList.RUSH_BED_3, RushAchievementList.RUSH_BED_4, RushAchievementList.RUSH_BROKER);
-				}
-				
+
+				incrementAchievements(player, RushAchievementList.RUSH_EBED_1, RushAchievementList.RUSH_EBED_2, RushAchievementList.RUSH_EBED_3, RushAchievementList.RUSH_EBED_4, RushAchievementList.RUSH_EXPLODER);
+				incrementAchievements(player, RushAchievementList.RUSH_BED_1, RushAchievementList.RUSH_BED_2, RushAchievementList.RUSH_BED_3, RushAchievementList.RUSH_BED_4, RushAchievementList.RUSH_BROKER);
+
 				player.getTeam().teamData(RushTeamData.class).health+=4;
 				player.getTeam().getOnlinePlayers().forEach(pl -> {
 					pl.setMaxHealth(player.getMaxHealth() + 4);
 					pl.setHealth(player.getHealth() + 4);
 				});
-				
+
 				for(Player bukkitPlayer : Bukkit.getOnlinePlayers()){
 					BadblockPlayer bPlayer = (BadblockPlayer) bukkitPlayer;
 					bPlayer.getCustomObjective().generate();
-					
+
 					String type = explosion ? "rush.explodeBed" : "rush.breakBed";
-					
+
 					bPlayer.sendTranslatedTitle(type, player.getName(), player.getTeam().getChatName(), team.getChatName());
 					bPlayer.sendTimings(10, 40, 10);
 				}
-				
+
 			}
-			
+
 			return false;
 		}
-		
+
 		return false;
 	}
-	
+
 	private static void incrementAchievements(BadblockPlayer player, PlayerAchievement... achievements){
 		for(PlayerAchievement achievement : achievements){
 			PlayerAchievementState state = player.getPlayerData().getAchievementState(achievement);

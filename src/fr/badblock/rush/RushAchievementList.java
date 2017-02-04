@@ -48,36 +48,36 @@ public class RushAchievementList {
 	public static final PlayerAchievement RUSH_RUSHER_4  = instance.addAchievement(new PlayerAchievement("rush_rusher_4", 500, 250, 5000));
 	
 	/*
-	 * Tuer 10 joueurs dans une même partie
+	 * Tuer 10 joueurs dans une mï¿½me partie
 	 */
 	public static final PlayerAchievement RUSH_KILLER = instance.addAchievement(new PlayerAchievement("rush_killer", 100, 50, 10, true));
 	/*
-	 * Tuer 20 joueurs dans une même partie
+	 * Tuer 20 joueurs dans une mï¿½me partie
 	 */
 	public static final PlayerAchievement RUSH_UKILLER = instance.addAchievement(new PlayerAchievement("rush_ukiller", 250, 100, 25, true));
 
 	/*
-	 * Tuer 15 à l'arc joueurs dans une même partie
+	 * Tuer 15 ï¿½ l'arc joueurs dans une mï¿½me partie
 	 */
 	public static final PlayerAchievement RUSH_SHOOTER = instance.addAchievement(new PlayerAchievement("rush_shooter", 100, 50, 15, true));
 	
 	/*
-	 * Ne frapper les adverseraires qu'à l'arc et faire 20 kills
+	 * Ne frapper les adverseraires qu'ï¿½ l'arc et faire 20 kills
 	 */
 	public static final PlayerAchievement RUSH_USHOOTER = instance.addAchievement(new PlayerAchievement("rush_ushooter", 250, 150, 25, true));
 	
 	/**
-	 * Casser 3 lits dans une même partie
+	 * Casser 3 lits dans une mï¿½me partie
 	 */
 	public static final PlayerAchievement RUSH_BROKER = instance.addAchievement(new PlayerAchievement("rush_broker", 100, 50, 3, true));
 
 	/**
-	 * Exploser 3 lits dans une même partie
+	 * Exploser 3 lits dans une mï¿½me partie
 	 */
 	public static final PlayerAchievement RUSH_EXPLODER = instance.addAchievement(new PlayerAchievement("rush_exploder", 150, 75, 3, true));
 
 	/**
-	 * Exploser 3 lits dans une même partie
+	 * Exploser 3 lits dans une mï¿½me partie
 	 */
 	public static final PlayerAchievement RUSH_ALLKITS = instance.addAchievement(new PlayerAchievement("rush_allkits", 300, 150, 3, true));
 }
