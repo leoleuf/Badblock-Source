@@ -42,7 +42,7 @@ public class GameRunnable extends BukkitRunnable {
 	public GameRunnable(SpaceMapConfiguration config){
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
 		GameAPI.getAPI().getGameServer().saveTeamsAndPlayersForResult();
-		
+
 		Bukkit.getWorlds().forEach(world -> {
 			world.setTime(config.getTime());
 			world.getEntities().forEach(entity -> {
@@ -52,20 +52,20 @@ public class GameRunnable extends BukkitRunnable {
 		});
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
-			
+
 			Location location = team.teamData(SpaceTeamData.class).getRespawnLocation();
 			location.getChunk().load();
-			
+
 			for(BadblockPlayer p : team.getOnlinePlayers()){
 				handle(p);
 			}
-			
+
 		}
-		
+
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
 	}
-	
+
 	public static void handle(BadblockPlayer player) {
 		BadblockTeam team = player.getTeam();
 		if (team == null) return;
@@ -74,8 +74,8 @@ public class GameRunnable extends BukkitRunnable {
 		player.teleport(location);
 
 		boolean good = true;
-		
-		
+
+
 		for(PlayerKit toUnlock : PluginSB.getInstance().getKits().values()){
 			if(!toUnlock.isVIP()){
 				if(player.getPlayerData().getUnlockedKitLevel(toUnlock) < 2){
@@ -83,14 +83,14 @@ public class GameRunnable extends BukkitRunnable {
 				}
 			}
 		}
-		
+
 		if(good && !player.getPlayerData().getAchievementState(SBAchievementList.SB_ALLKITS).isSucceeds()){
 			player.getPlayerData().getAchievementState(SBAchievementList.SB_ALLKITS).succeed();
 			SBAchievementList.SB_ALLKITS.reward(player);
 		}
-		
+
 		PlayerKit kit = player.inGameData(InGameKitData.class).getChoosedKit();
-		
+
 		if(kit != null){
 			kit.giveKit(player);
 		} else {
@@ -103,7 +103,7 @@ public class GameRunnable extends BukkitRunnable {
 		GameAPI.setJoinable(time > MAX_TIME / 2);
 		if(time == MAX_TIME - 2){
 			damage = true;
-			
+
 			for(Player player : Bukkit.getOnlinePlayers()){
 				BadblockPlayer bp = (BadblockPlayer) player;
 				bp.pseudoJail(bp.getTeam().teamData(SpaceTeamData.class).getRespawnLocation(), 300.0d);
@@ -114,18 +114,18 @@ public class GameRunnable extends BukkitRunnable {
 		int size = GameAPI.getAPI().getTeams().size();
 
 		List<BadblockTeam> to = new ArrayList<>();
-		
+
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			if(team.getOnlinePlayers().size() == 0){
 				GameAPI.getAPI().getGameServer().cancelReconnectionInvitations(team);
 				to.add(team);
-				
+
 				new TranslatableString("spaceballs.team-loose", team.getChatName()).broadcast();;
 			}
 		}
-		
+
 		to.forEach(GameAPI.getAPI()::unregisterTeam);
-		
+
 		if(size == 1 || forceEnd){
 			cancel();
 			Iterator<BadblockTeam> teams = GameAPI.getAPI().getTeams().iterator();
@@ -137,13 +137,13 @@ public class GameRunnable extends BukkitRunnable {
 						winner = team;
 				}
 			}
-			
+
 
 			GameAPI.getAPI().getGameServer().setGameState(GameState.FINISHED);
 
 			Location winnerLocation = PluginSB.getInstance().getMapConfiguration().getSpawnLocation();
 			Location looserLocation = winnerLocation.clone().add(0d, 7d, 0d);
-			
+
 			for(BadblockPlayer bp : GameAPI.getAPI().getOnlinePlayers()){
 				bp.heal();
 				bp.clearInventory();
@@ -151,38 +151,38 @@ public class GameRunnable extends BukkitRunnable {
 
 				double badcoins = bp.inGameData(SpaceData.class).getScore() / 4;
 				double xp	    = bp.inGameData(SpaceData.class).getScore() / 2;
-				
+
 				if(winner.equals(bp.getTeam())){
 					bp.teleport(winnerLocation);
 					bp.setAllowFlight(true);
 					bp.setFlying(true);
-					
+
 					new BukkitRunnable() {
 						int count = 5;
-						
+
 						@Override
 						public void run() {
 							count--;
-							
+
 							bp.teleport(winnerLocation);
 							bp.setAllowFlight(true);
 							bp.setFlying(true);
-							
+
 							if(count == 0)
 								cancel();
 						}
 					}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
-					
+
 					bp.sendTranslatedTitle("spaceballs.title-win", winner.getChatName());
 					bp.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.WINS);
-					
+
 					incrementAchievements(bp, SBAchievementList.SB_WIN_1, SBAchievementList.SB_WIN_2, SBAchievementList.SB_WIN_3, SBAchievementList.SB_WIN_4);
 				} else {
 					badcoins = ((double) badcoins) / 1.5d;
-					
+
 					bp.jailPlayerAt(looserLocation);
 					bp.sendTranslatedTitle("spaceballs.title-loose", winner.getChatName());
-					
+
 					if(bp.getBadblockMode() == BadblockMode.PLAYER)
 						bp.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.LOOSES);
 				}
@@ -193,35 +193,37 @@ public class GameRunnable extends BukkitRunnable {
 
 				int rbadcoins = badcoins < 2 ? 2 : (int) badcoins;
 				int rxp		  = xp < 5 ? 5 : (int) xp;
-				
+
 				bp.getPlayerData().addBadcoins(rbadcoins, true);
 				bp.getPlayerData().addXp(rxp, true);
-				
+
 				new BukkitRunnable(){
-					
+
 					@Override
 					public void run(){
 						if(bp.isOnline()){
 							bp.sendTranslatedActionBar("spaceballs.win", rbadcoins, rxp);
 						}
 					}
-					
+
 				}.runTaskTimer(GameAPI.getAPI(), 0, 30L);
-				
-				bp.getCustomObjective().generate();
+
+				if (bp.getCustomObjective() != null)
+					bp.getCustomObjective().generate();
 			}
 
 			new SBResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
 			new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
 			new KickRunnable().runTaskTimer(GameAPI.getAPI(), 0, 20L);
-			
+
 		} else if(size == 0){
 			cancel();
 			Bukkit.shutdown();
 			return;
 		} else {
 			for(BadblockPlayer player : GameAPI.getAPI().getOnlinePlayers())
-				player.getCustomObjective().generate();
+				if (player.getCustomObjective() != null)
+					player.getCustomObjective().generate();
 		}
 
 		time--;
