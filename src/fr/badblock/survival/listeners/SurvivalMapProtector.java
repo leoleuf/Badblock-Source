@@ -173,7 +173,7 @@ public class SurvivalMapProtector implements MapProtector {
 
 	@Override
 	public boolean allowExplosion(Location location) {
-		return inGame();
+		return false;
 	}
 
 	@Override
