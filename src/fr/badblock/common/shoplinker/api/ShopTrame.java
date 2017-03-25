@@ -1,4 +1,4 @@
-package fr.xmalware.badblock.shoplinker.api;
+package fr.badblock.common.shoplinker.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

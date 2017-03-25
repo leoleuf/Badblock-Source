@@ -1,4 +1,4 @@
-package fr.xmalware.badblock.shoplinker.api;
+package fr.badblock.common.shoplinker.api;
 
 import fr.badblock.rabbitconnector.RabbitListenerType;
 import fr.badblock.rabbitconnector.RabbitPacketType;

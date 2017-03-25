@@ -1,9 +1,9 @@
-package fr.xmalware.badblock.shoplinker.plugin.events;
+package fr.badblock.common.shoplinker.plugin.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import fr.xmalware.badblock.shoplinker.api.ShopData;
+import fr.badblock.common.shoplinker.api.ShopData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

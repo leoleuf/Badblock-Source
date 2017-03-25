@@ -1,4 +1,4 @@
-package fr.xmalware.badblock.shoplinker.plugin.permissions;
+package fr.badblock.common.shoplinker.plugin.permissions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

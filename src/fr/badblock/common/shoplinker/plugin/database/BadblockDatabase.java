@@ -1,4 +1,4 @@
-package fr.xmalware.badblock.shoplinker.plugin.database;
+package fr.badblock.common.shoplinker.plugin.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 
-import fr.xmalware.badblock.shoplinker.plugin.ShopLinker;
-import fr.xmalware.badblock.shoplinker.plugin.database.Request.RequestType;
+import fr.badblock.common.shoplinker.plugin.ShopLinker;
+import fr.badblock.common.shoplinker.plugin.database.Request.RequestType;
 
 public class BadblockDatabase {
 

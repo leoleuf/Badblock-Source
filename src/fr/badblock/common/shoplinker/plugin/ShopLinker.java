@@ -1,4 +1,4 @@
-package fr.xmalware.badblock.shoplinker.plugin;
+package fr.badblock.common.shoplinker.plugin;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
+import fr.badblock.common.shoplinker.plugin.database.BadblockDatabase;
+import fr.badblock.common.shoplinker.plugin.listeners.ReceiveShopDataListener;
 import fr.badblock.rabbitconnector.RabbitConnector;
-import fr.xmalware.badblock.shoplinker.api.ShopLinkerAPI;
-import fr.xmalware.badblock.shoplinker.plugin.database.BadblockDatabase;
-import fr.xmalware.badblock.shoplinker.plugin.listeners.ReceiveShopDataListener;
 import lombok.Getter;
 
 public class ShopLinker extends JavaPlugin {

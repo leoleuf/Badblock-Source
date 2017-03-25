@@ -1,7 +1,7 @@
-package fr.xmalware.badblock.shoplinker.api;
+package fr.badblock.common.shoplinker.api;
 
+import fr.badblock.common.shoplinker.plugin.listeners.ReceiveShopDataListener;
 import fr.badblock.rabbitconnector.RabbitService;
-import fr.xmalware.badblock.shoplinker.plugin.listeners.ReceiveShopDataListener;
 import lombok.Data;
 
 @Data

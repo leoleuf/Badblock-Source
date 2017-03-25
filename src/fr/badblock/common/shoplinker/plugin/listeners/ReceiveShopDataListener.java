@@ -1,16 +1,16 @@
-package fr.xmalware.badblock.shoplinker.plugin.listeners;
+package fr.badblock.common.shoplinker.plugin.listeners;
 
 import org.bukkit.Bukkit;
 
 import com.google.gson.Gson;
 
+import fr.badblock.common.shoplinker.api.ShopData;
+import fr.badblock.common.shoplinker.api.ShopLinkerSettings;
+import fr.badblock.common.shoplinker.plugin.ShopLinkWorker;
+import fr.badblock.common.shoplinker.plugin.ShopLinker;
+import fr.badblock.common.shoplinker.plugin.events.PlayerBuyEvent;
 import fr.badblock.rabbitconnector.RabbitConnector;
 import fr.badblock.rabbitconnector.RabbitListener;
-import fr.xmalware.badblock.shoplinker.api.ShopData;
-import fr.xmalware.badblock.shoplinker.api.ShopLinkerSettings;
-import fr.xmalware.badblock.shoplinker.plugin.ShopLinkWorker;
-import fr.xmalware.badblock.shoplinker.plugin.ShopLinker;
-import fr.xmalware.badblock.shoplinker.plugin.events.PlayerBuyEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

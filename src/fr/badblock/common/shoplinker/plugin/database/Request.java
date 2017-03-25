@@ -1,4 +1,4 @@
-package fr.xmalware.badblock.shoplinker.plugin.database;
+package fr.badblock.common.shoplinker.plugin.database;
 
 import java.sql.ResultSet;
 

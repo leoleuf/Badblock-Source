@@ -1,10 +1,10 @@
-package fr.xmalware.badblock.shoplinker.plugin;
+package fr.badblock.common.shoplinker.plugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import fr.xmalware.badblock.shoplinker.api.ShopData;
-import fr.xmalware.badblock.shoplinker.plugin.permissions.AbstractPermissions;
+import fr.badblock.common.shoplinker.api.ShopData;
+import fr.badblock.common.shoplinker.plugin.permissions.AbstractPermissions;
 
 public class ShopLinkWorker {
 
