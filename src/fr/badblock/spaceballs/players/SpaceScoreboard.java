@@ -28,6 +28,7 @@ public class SpaceScoreboard extends BadblockScoreboardGenerator {
 		objective.setGenerator(this);
 
 		objective.generate();
+		doBadblockFooter(objective);
 	}
 
 	@Override
