@@ -68,7 +68,7 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 
 	@Override
 	public void generate(){
-		objective.changeLine(15, "&8&m----------------------");
+		objective.changeLine(16, "&8&m----------------------");
 
 		int i = doTime();
 
@@ -88,7 +88,8 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 		for(int a=3;a<=i;a++)
 			objective.removeLine(a);
 
-		objective.changeLine(2,  "&8&m----------------------");
+		objective.changeLine(i--,  "&8&m----------------------");
+		objective.changeLine(i,  i18n("scoreboard.server", alivePlayers())); i--;
 	}
 
 	private int alivePlayers(){
