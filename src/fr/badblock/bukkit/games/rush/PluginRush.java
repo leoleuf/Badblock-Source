@@ -18,6 +18,7 @@ import fr.badblock.bukkit.games.rush.listeners.FakeEntityInteractListener;
 import fr.badblock.bukkit.games.rush.listeners.JoinListener;
 import fr.badblock.bukkit.games.rush.listeners.MoveListener;
 import fr.badblock.bukkit.games.rush.listeners.PartyJoinListener;
+import fr.badblock.bukkit.games.rush.listeners.QuitListener;
 import fr.badblock.bukkit.games.rush.listeners.RushMapProtector;
 import fr.badblock.bukkit.games.rush.listeners.SheepListener;
 import fr.badblock.bukkit.games.rush.runnables.PreStartRunnable;
@@ -137,6 +138,7 @@ public class PluginRush extends BadblockPlugin {
 			new MoveListener();
 			new DeathListener();
 			new JoinListener();
+			new QuitListener();
 			new PartyJoinListener();
 			new BedExplodeListener();	// 
 			new SheepListener();		// Gère les moutons en début de partie :3
