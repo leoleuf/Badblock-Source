@@ -8,7 +8,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import fr.badblock.bukkit.games.speeduhc.PluginUHC;
 import fr.badblock.bukkit.games.survivalgames.PluginSurvival;
 import fr.badblock.bukkit.games.survivalgames.configuration.SurvivalMapConfiguration;
 import fr.badblock.bukkit.games.survivalgames.players.SurvivalScoreboard;
