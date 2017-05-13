@@ -24,9 +24,9 @@ import lombok.AllArgsConstructor;
 public class StartRunnable extends BukkitRunnable {
 	public    static final int 		     TIME_BEFORE_START = 300;
 	protected static 	   StartRunnable task 		       = null;
-	protected static 	   GameRunnable  gameTask		   = null;
+	public 	  static 	   GameRunnable  gameTask		   = null;
 
-	private int time;
+	public static int time;
 
 	@Override
 	public void run() {
@@ -130,9 +130,9 @@ public class StartRunnable extends BukkitRunnable {
 
 	public static void joinNotify(int currentPlayers, int maxPlayers){
 		if (task != null) {
-			int a = task.time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
-			if ((a < task.time && task.time <= 10) || ((a < 10 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers()) && task.time >= 10)) task.time = 10;
-			else task.time = a;
+			int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
+			if ((a < time && time <= 60) || ((a < 60 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers()) && time >= 60)) time = 60;
+			else time = a;
 		}
 		int minPlayers = PluginRush.getInstance().getConfiguration().minPlayers;
 		if(currentPlayers < minPlayers) return;
@@ -142,7 +142,8 @@ public class StartRunnable extends BukkitRunnable {
 
 	public static void startGame(boolean force){
 		if(task == null){
-			task = new StartRunnable(force ? 10 :TIME_BEFORE_START);
+			task = new StartRunnable();
+			time = force ? 10 : TIME_BEFORE_START;
 			task.start();
 		}
 	}
@@ -150,8 +151,10 @@ public class StartRunnable extends BukkitRunnable {
 	public static void stopGame(){
 		if(gameTask != null){
 			gameTask.forceEnd = true;
+			time = TIME_BEFORE_START;
 		} else if(task != null){
 			task.cancel();
+			time = TIME_BEFORE_START;
 		}
 
 		task = null;
