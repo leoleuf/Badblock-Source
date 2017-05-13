@@ -117,8 +117,8 @@ public class StartRunnable extends BukkitRunnable {
 	
 	public static void startGame(boolean force){
 		if(task == null){
-			task = new StartRunnable();
 			time = force ? 10 : TIME_BEFORE_START;
+			task = new StartRunnable();
 			task.start();
 		}
 	}
@@ -128,8 +128,8 @@ public class StartRunnable extends BukkitRunnable {
 			gameTask.forceEnd = true;
 			time = TIME_BEFORE_START;
 		} else if(task != null){
-			time = TIME_BEFORE_START;
 			task.cancel();
+			time = TIME_BEFORE_START;
 		}
 		
 		task = null;
