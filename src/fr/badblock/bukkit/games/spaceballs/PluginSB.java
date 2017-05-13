@@ -18,6 +18,7 @@ import fr.badblock.bukkit.games.spaceballs.listeners.JoinListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.MoveListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.PartyJoinListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.PickupItemListener;
+import fr.badblock.bukkit.games.spaceballs.listeners.QuitListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.SBMapProtector;
 import fr.badblock.bukkit.games.spaceballs.runnables.PreStartRunnable;
 import fr.badblock.gameapi.BadblockPlugin;
@@ -147,6 +148,7 @@ public class PluginSB extends BadblockPlugin {
 			new DeathListener();
 			new PartyJoinListener();
 			new JoinListener();
+			new QuitListener();
 			new PickupItemListener();
 			
 			File votesFile = new File(getDataFolder(), VOTES_CONFIG);
