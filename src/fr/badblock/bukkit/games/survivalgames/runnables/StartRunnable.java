@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import fr.badblock.bukkit.games.speeduhc.PluginUHC;
 import fr.badblock.bukkit.games.survivalgames.PluginSurvival;
 import fr.badblock.bukkit.games.survivalgames.configuration.SurvivalMapConfiguration;
 import fr.badblock.bukkit.games.survivalgames.players.SurvivalScoreboard;
@@ -112,12 +113,14 @@ public class StartRunnable extends BukkitRunnable {
 		if (task != null) {
 			int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
 			if (time >= 60 && (a <= 60 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 60;
-			else if (time <= 60) time = a;
+			else if (time >= 60) time = a;
 		}
-		int minPlayers = PluginSurvival.getInstance().getConfiguration().minPlayers;
-
-		if(currentPlayers >= minPlayers)
-			startGame();
+		if(currentPlayers < PluginSurvival.getInstance().getConfiguration().minPlayers) return;
+		
+		startGame();
+		int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
+		if (time >= 60 && (a <= 60 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 60;
+		else if (time <= 60) time = a;
 	}
 
 	public static void startGame(){
