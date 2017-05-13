@@ -25,7 +25,7 @@ public class StartRunnable extends BukkitRunnable {
 	protected static 	   StartRunnable task 		       = null;
 	public    static 	   GameRunnable  gameTask		   = null;
 
-	private int time;
+	public static int time;
 
 	@Override
 	public void run() {
@@ -110,9 +110,9 @@ public class StartRunnable extends BukkitRunnable {
 
 	public static void joinNotify(int currentPlayers, int maxPlayers){
 		if (task != null) {
-			int a = task.time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
-			if ((a < task.time && task.time <= 10) || ((a < 10 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers()) && task.time >= 10)) task.time = 10;
-			else task.time = a;
+			int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
+			if (time >= 60 && (a <= 60 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 60;
+			else if (time <= 60) time = a;
 		}
 		int minPlayers = PluginSurvival.getInstance().getConfiguration().minPlayers;
 
@@ -122,18 +122,19 @@ public class StartRunnable extends BukkitRunnable {
 
 	public static void startGame(){
 		if(task == null){
-			task = new StartRunnable(TIME_BEFORE_START);
+			task = new StartRunnable();
+			time = TIME_BEFORE_START;
 			task.start();
 		}
 	}
 
 	public static void stopGame(){
 		if(gameTask != null){
+			time = TIME_BEFORE_START;
 			gameTask.forceEnd = true;
-			task.time = TIME_BEFORE_START;
 		} else if(task != null){
+			time = TIME_BEFORE_START;
 			task.cancel();
-			task.time = TIME_BEFORE_START;
 		} else {
 			new KickRunnable();
 		}

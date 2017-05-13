@@ -19,6 +19,7 @@ import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 
@@ -67,6 +68,10 @@ public class JoinListener extends BadListener {
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e){
+		if (StartRunnable.gameTask == null && BukkitUtils.getPlayers().size() - 1 < PluginSurvival.getInstance().getConfiguration().minPlayers) {
+			StartRunnable.stopGame();
+			StartRunnable.time = 60;
+		}
 		e.setQuitMessage(null);
 	}
 }
