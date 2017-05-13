@@ -122,19 +122,19 @@ public class StartRunnable extends BukkitRunnable {
 
 	public static void startGame(){
 		if(task == null){
-			task = new StartRunnable();
 			time = TIME_BEFORE_START;
+			task = new StartRunnable();
 			task.start();
 		}
 	}
 
 	public static void stopGame(){
 		if(gameTask != null){
-			time = TIME_BEFORE_START;
 			gameTask.forceEnd = true;
-		} else if(task != null){
 			time = TIME_BEFORE_START;
+		} else if(task != null){
 			task.cancel();
+			time = TIME_BEFORE_START;
 		} else {
 			new KickRunnable();
 		}
