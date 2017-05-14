@@ -70,7 +70,7 @@ public class JoinListener extends BadListener {
 	public void onQuit(PlayerQuitEvent e){
 		if (StartRunnable.gameTask == null && BukkitUtils.getPlayers().size() - 1 < PluginSurvival.getInstance().getConfiguration().minPlayers) {
 			StartRunnable.stopGame();
-			StartRunnable.time = 60;
+			StartRunnable.time = StartRunnable.time > 60 ? StartRunnable.time : 60;
 		}
 		e.setQuitMessage(null);
 	}
