@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StartRunnable extends BukkitRunnable {
-	public    static final int 		     TIME_BEFORE_START = 30;
+	public    static final int 		     TIME_BEFORE_START = 300;
 	protected static 	   StartRunnable task 		       = null;
 	public    static 	   GameRunnable  gameTask		   = null;
 
