@@ -25,7 +25,7 @@ public class StartRunnable extends BukkitRunnable {
 	protected static 	   StartRunnable task 		       = null;
 	public    static 	   GameRunnable  gameTask		   = null;
 
-	public static int time;
+	public static int time = TIME_BEFORE_START;
 
 	@Override
 	public void run() {
@@ -109,22 +109,16 @@ public class StartRunnable extends BukkitRunnable {
 	}
 
 	public static void joinNotify(int currentPlayers, int maxPlayers){
-		if (task != null) {
-			int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
-			if (time >= 60 && (a <= 60 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 60;
-			else if (time >= 60) time = a;
-		}
 		if(currentPlayers < PluginSurvival.getInstance().getConfiguration().minPlayers) return;
 		
 		startGame();
 		int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
 		if (time >= 60 && (a <= 60 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 60;
-		else if (time <= 60) time = a;
+		else if (time >= 60) time = a;
 	}
 
 	public static void startGame(){
 		if(task == null){
-			time = TIME_BEFORE_START;
 			task = new StartRunnable();
 			task.start();
 		}
