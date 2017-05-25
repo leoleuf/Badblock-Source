@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -47,13 +48,8 @@ public class JoinListener extends BadListener {
 	}
 
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e){
+	public void onJoin(PlayerJoinEvent e) {
 		e.setJoinMessage(null);
-
-		if(inGame()){
-			return;
-		}
-
 		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
 
 		new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
@@ -66,6 +62,30 @@ public class JoinListener extends BadListener {
 			player.sendTranslatedTabHeader(new TranslatableString("rush.tab.header"), new TranslatableString("rush.tab.footer"));
 
 			GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginRush.getInstance().getMaxPlayers()).broadcast();
+		}
+	}
+	
+	@EventHandler
+	public void onLogin(PlayerLoginEvent e){
+
+		if(inGame()){
+			return;
+		}
+
+		PluginRush rush = PluginRush.getInstance();
+		if (Bukkit.getOnlinePlayers().size() + 1 >= rush.getMaxPlayers()) {
+			if (rush.getConfiguration().enabledAutoTeamManager) {
+				int max = rush.getConfiguration().maxPlayersAutoTeam * rush.getAPI().getTeams().size();
+				if (rush.getMaxPlayers() < max) {
+					rush.getAPI().getTeams().forEach(team -> team.setMaxPlayers(team.getMaxPlayers() + 1));
+					rush.setMaxPlayers(rush.getMaxPlayers() + rush.getAPI().getTeams().size());
+					try {
+						BukkitUtils.setMaxPlayers(rush.getMaxPlayers());
+					} catch (Exception err) {
+						err.printStackTrace();
+					}
+				}
+			}
 		}
 		PreStartRunnable.doJob();
 		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), PluginRush.getInstance().getMaxPlayers());

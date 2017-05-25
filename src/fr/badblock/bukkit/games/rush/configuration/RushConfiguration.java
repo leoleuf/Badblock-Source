@@ -14,6 +14,9 @@ public class RushConfiguration {
 	public String 	   		   fallbackServer   = "lobby";
 	public String 	   		   defaultKit		= "defaultKit";
 	public int    	   		   maxPlayersInTeam = 4;
+	public boolean			   enabledAutoTeamManager = false;
+	public int				   minPlayersAutoTeam = 1;
+	public int				   maxPlayersAutoTeam = 4;
 	public int    	   		   minPlayers	    = 4;
 	public MapLocation 		   spawn;
 	

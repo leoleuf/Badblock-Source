@@ -185,4 +185,9 @@ public class PluginRush extends BadblockPlugin {
 		kit.giveKit(player);
 	}
 	
+	public int getMinPlayers() {
+		if (!configuration.enabledAutoTeamManager) return configuration.minPlayers;
+		return configuration.minPlayersAutoTeam * getAPI().getTeams().size();
+	}
+	
 }
