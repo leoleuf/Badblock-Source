@@ -17,7 +17,7 @@ public class QuitListener extends BadListener {
 	public void onQuit(PlayerQuitEvent e){
 		if (StartRunnable.gameTask == null && BukkitUtils.getPlayers().size() - 1 < PluginRush.getInstance().getConfiguration().minPlayers) {
 			StartRunnable.stopGame();
-			StartRunnable.time = StartRunnable.time > 60 ? StartRunnable.time : 60;
+			StartRunnable.time = StartRunnable.time > 30 ? StartRunnable.time : 30;
 		}
 		if(!inGame()) return;
 		
