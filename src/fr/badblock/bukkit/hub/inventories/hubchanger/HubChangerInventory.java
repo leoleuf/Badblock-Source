@@ -95,6 +95,7 @@ public class HubChangerInventory extends CustomUniqueInventory {
 		FullSEntry sentry = SEntryInfosListener.sentries.get("login");
 		if (sentry != null) {
 			id++;
+			System.out.println("Login > " + sentry.getIngamePLayers());
 			if (time < System.currentTimeMillis()) {
 				if (nb > sentry.getIngamePLayers() / BungeeWorkerListener.bungeeWorkers) {
 					nb--;
