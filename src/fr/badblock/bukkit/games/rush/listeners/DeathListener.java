@@ -97,7 +97,7 @@ public class DeathListener extends BadListener {
 			}
 			
 			player.setBadblockMode(BadblockMode.SPECTATOR);
-			e.setTimeBeforeRespawn(0);
+			e.setTimeBeforeRespawn(3);
 			
 			if(killer == null){
 				respawnPlace = PluginRush.getInstance().getMapConfiguration().getSpawnLocation();
@@ -105,7 +105,7 @@ public class DeathListener extends BadListener {
 				respawnPlace = killer.getLocation();
 			}
 		} else {
-			e.setTimeBeforeRespawn(0);
+			e.setTimeBeforeRespawn(3);
 			respawnPlace = player.getTeam().teamData(RushTeamData.class).getRespawnLocation();
 
 			player.setMaxHealth(20 + player.getTeam().teamData(RushTeamData.class).health);
