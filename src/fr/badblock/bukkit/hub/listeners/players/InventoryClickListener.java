@@ -107,6 +107,7 @@ public class InventoryClickListener extends _HubListener {
 			ItemMeta itemMeta = itemStack.getItemMeta();
 			if (itemMeta == null)
 				return;
+			if (itemMeta.getDisplayName().contains("connexion")) return;
 			if (itemStack.getType().equals(Material.STAINED_CLAY)) {
 				for (Hub hub : Hub.getHubs()) {
 					if (hub.getItemStack().getItemMeta() != null && hub.getItemStack().getItemMeta().getDisplayName()
