@@ -96,5 +96,6 @@ public class BedListenerUtils {
 			state.progress(1.0d);
 			state.trySucceed(player, achievement);
 		}
+		player.saveGameData();
 	}
 }
