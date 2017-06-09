@@ -235,5 +235,6 @@ public class GameRunnable extends BukkitRunnable {
 			state.progress(1.0d);
 			state.trySucceed(player, achievement);
 		}
+		player.saveGameData();
 	}
 }
