@@ -97,8 +97,8 @@ public class DeathListener extends BadListener {
 			}
 			
 			player.setBadblockMode(BadblockMode.SPECTATOR);
-			e.setTimeBeforeRespawn(3);
-			
+			e.setTimeBeforeRespawn(0);
+			player.postResult(null);
 			if(killer == null){
 				respawnPlace = PluginRush.getInstance().getMapConfiguration().getSpawnLocation();
 			} else {
