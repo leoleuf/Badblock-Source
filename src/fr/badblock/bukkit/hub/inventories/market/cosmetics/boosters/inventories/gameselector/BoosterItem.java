@@ -1,16 +1,23 @@
 package fr.badblock.bukkit.hub.inventories.market.cosmetics.boosters.inventories.gameselector;
 
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
+import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
+import fr.badblock.bukkit.hub.inventories.market.cosmetics.boosters.inventories.RealTimeBoosterManager;
 import fr.badblock.bukkit.hub.objects.HubPlayer;
+import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.data.boosters.PlayerBooster;
+import fr.badblock.gameapi.utils.general.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +42,7 @@ public class BoosterItem extends CustomItem {
 			player.sendTranslatedMessage("hub.items.booster.unknownbooster");
 			return;
 		}
-		/*if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
+		if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
 			PlayerBooster playerBooster = RealTimeBoosterManager.stockage.get(this.getGamePrefix());
 			if (playerBooster != null) {
 				if (playerBooster.isValid() && playerBooster.isEnabled()) {
@@ -79,7 +86,7 @@ public class BoosterItem extends CustomItem {
 					}
 				}
 			}
-		}.start();*/
+		}.start();
 	}
 
 	@Override

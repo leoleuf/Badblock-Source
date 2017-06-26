@@ -16,11 +16,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
+import fr.badblock.bukkit.hub.inventories.market.cosmetics.boosters.inventories.RealTimeBoosterManager;
 import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.bukkit.hub.rabbitmq.listeners.SEntryInfosListener;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.data.boosters.PlayerBooster;
 import fr.badblock.gameapi.run.BadblockGame;
+import fr.badblock.gameapi.utils.general.TimeUnit;
 import fr.badblock.gameapi.utils.i18n.Locale;
 import fr.badblock.gameapi.utils.itemstack.ItemStackUtils;
 import fr.badblock.gameapi.utils.threading.TaskManager;
@@ -52,9 +55,9 @@ public abstract class GameSelectorItem extends CustomItem {
 					tempInGamePlayers += fullSEntry.getIngamePLayers();
 				}
 				if (waitingLinePlayers == tempWaitingLinePlayers && inGamePlayers == tempInGamePlayers) {
-				/*	if (!RealTimeBoosterManager.stockage.containsKey(getGamePrefix()) || (RealTimeBoosterManager.stockage.get(getGamePrefix()) != null && (!RealTimeBoosterManager.stockage.get(getGamePrefix()).isValid() || !RealTimeBoosterManager.stockage.get(getGamePrefix()).isEnabled()))) {
+					if (!RealTimeBoosterManager.stockage.containsKey(getGamePrefix()) || (RealTimeBoosterManager.stockage.get(getGamePrefix()) != null && (!RealTimeBoosterManager.stockage.get(getGamePrefix()).isValid() || !RealTimeBoosterManager.stockage.get(getGamePrefix()).isEnabled()))) {
 						return;
-					}*/
+					}
 				}
 				if (waitingLinePlayers > tempWaitingLinePlayers) waitingLinePlayers--;
 				else if (waitingLinePlayers < tempWaitingLinePlayers) waitingLinePlayers++;
@@ -118,13 +121,13 @@ public abstract class GameSelectorItem extends CustomItem {
 			itemStack = ItemStackUtils.fakeEnchant(itemStack);
 		}
 		if (this.getLore() != null && !this.getLore().isEmpty()) {
-			String boosterLore = /*GameAPI.i18n().get(locale, "hub.items.booster.nobooster")[0]*/"§cAucun booster activé, on en a pas parlé avant.";
-			/*if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
+			String boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.nobooster")[0]/*"§cAucun booster activé, on en a pas parlé avant."*/;
+			if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
 				PlayerBooster playerBooster = RealTimeBoosterManager.stockage.get(this.getGamePrefix());
 				if (playerBooster.isEnabled() && playerBooster.isValid()) {
 					boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.boost", playerBooster.getUsername(), (int) ((playerBooster.getBooster().getCoinsMultiplier() - 1) * 100), (int) ((playerBooster.getBooster().getXpMultiplier() - 1) * 100), TimeUnit.SECOND.toShort((playerBooster.getExpire() / 1000L) - (System.currentTimeMillis() / 1000L)))[0]; 
 				}
-			}*/
+			}
 			itemMeta.setLore(Arrays.asList(GameAPI.i18n().get(locale, this.getLore(), inGamePlayers, waitingLinePlayers,
 					(this.getGame() != null ? this.getGame().getDeveloper() : ""), boosterLore)));
 		}
@@ -141,13 +144,13 @@ public abstract class GameSelectorItem extends CustomItem {
 		ItemMeta itemMeta = itemStack.getItemMeta();
 		itemMeta.setDisplayName(GameAPI.i18n().get(locale, this.getName())[0]);
 		if (this.getLore() != null && !this.getLore().isEmpty()) {
-			String boosterLore = /*GameAPI.i18n().get(locale, "hub.items.booster.nobooster")[0]*/"§cAucun booster activé, on en a pas parlé avant.";
-			/*if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
+			String boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.nobooster")[0]/*"§cAucun booster activé, on en a pas parlé avant."*/;
+			if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
 				PlayerBooster playerBooster = RealTimeBoosterManager.stockage.get(this.getGamePrefix());
 				if (playerBooster.isEnabled() && playerBooster.isValid()) {
 					boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.boost", playerBooster.getUsername(), (int) ((playerBooster.getBooster().getCoinsMultiplier() - 1) * 100), (int) ((playerBooster.getBooster().getXpMultiplier() - 1) * 100), TimeUnit.SECOND.toShort((playerBooster.getExpire() / 1000L) - (System.currentTimeMillis() / 1000L)))[0]; 
 				}
-			}*/
+			}
 			itemMeta.setLore(Arrays.asList(GameAPI.i18n().get(locale, this.getLore(), inGamePlayers, waitingLinePlayers,
 					(this.getGame() != null ? this.getGame().getDeveloper() : ""), boosterLore)));
 		}
