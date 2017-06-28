@@ -98,6 +98,7 @@ public class NPCData {
 			if (protocol < 107) {
 				player.sendMessage("§cVous devez être en 1.9 ou + pour jouer à ce jeu.");
 				player.sendMessage("§cChangez de version pour pouvoir y jouer.");
+				return;
 			}
 		}
 		// Envoi vers le matchmaking
