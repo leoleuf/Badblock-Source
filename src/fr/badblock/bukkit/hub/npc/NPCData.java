@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
@@ -19,10 +20,10 @@ import fr.badblock.gameapi.fakeentities.FakeEntity;
 import fr.badblock.gameapi.packets.watchers.WatcherLivingEntity;
 import fr.badblock.gameapi.packets.watchers.WatcherZombie;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.sentry.SEntry;
 import fr.badblock.gameapi.utils.ConfigUtils;
 import fr.badblock.rabbitconnector.RabbitPacketType;
 import fr.badblock.rabbitconnector.RabbitService;
-import fr.badblock.sentry.SEntry;
 import fr.badblock.utils.Encodage;
 import lombok.Getter;
 import lombok.Setter;
@@ -90,6 +91,14 @@ public class NPCData {
 		if (!matchmaking) {
 			player.sendPlayer(this.getServer());
 			return;
+		}
+		// 1.9
+		if (displayName.toLowerCase().contains("skillz") || displayName.toLowerCase().contains("brain")) {
+			int protocol = ProtocolLibrary.getProtocolManager().getProtocolVersion(player);
+			if (protocol < 107) {
+				player.sendMessage("§cVous devez être en 1.9 ou + pour jouer à ce jeu.");
+				player.sendMessage("§cChangez de version pour pouvoir y jouer.");
+			}
 		}
 		// Envoi vers le matchmaking
 		BadBlockHub instance = BadBlockHub.getInstance();
