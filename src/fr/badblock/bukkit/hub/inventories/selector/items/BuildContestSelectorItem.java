@@ -25,7 +25,7 @@ public class BuildContestSelectorItem extends GameSelectorItem {
 	
 	public BuildContestSelectorItem() {
 		super("hub.items.buildcontestselectoritem", itemStack.getType(), "hub.items.buildcontestselectoritem.lore");
-		this.setFakeEnchantment(true);
+		//this.setFakeEnchantment(true);
 	}
 
 	@Override

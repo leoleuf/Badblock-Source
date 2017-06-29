@@ -9,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
@@ -28,7 +27,9 @@ import fr.badblock.utils.Encodage;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import us.myles.ViaVersion.api.ViaVersion;
 
+@SuppressWarnings("deprecation")
 @Getter
 @Setter
 public class NPCData {
@@ -94,10 +95,10 @@ public class NPCData {
 		}
 		// 1.9
 		if (displayName.toLowerCase().contains("skillz") || displayName.toLowerCase().contains("brain")) {
-			int protocol = ProtocolLibrary.getProtocolManager().getProtocolVersion(player);
+			int protocol = ViaVersion.getInstance().getPlayerVersion(player);
 			if (protocol < 107) {
 				player.sendMessage("§cVous devez être en 1.9 ou + pour jouer à ce jeu.");
-				player.sendMessage("§cChangez de version pour pouvoir y jouer.");
+				player.sendMessage("§cChangez de version pour pouvoir y jouer (" + protocol + ").");
 				return;
 			}
 		}
