@@ -16,7 +16,9 @@ import fr.badblock.rabbitconnector.RabbitPacketType;
 import fr.badblock.rabbitconnector.RabbitService;
 import fr.badblock.sentry.SEntry;
 import fr.badblock.utils.Encodage;
+import us.myles.ViaVersion.api.ViaVersion;
 
+@SuppressWarnings("deprecation")
 public class SkillZSelectorItem extends GameSelectorItem {
 
 	public SkillZSelectorItem() {
@@ -36,6 +38,12 @@ public class SkillZSelectorItem extends GameSelectorItem {
 
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
+		int protocol = ViaVersion.getInstance().getPlayerVersion(player);
+		if (protocol < 107) {
+			player.sendMessage("§cVous devez être en 1.9 ou + pour jouer à ce jeu.");
+			player.sendMessage("§cChangez de version pour pouvoir y jouer (" + protocol + ").");
+			return;
+		}
 		BadBlockHub instance = BadBlockHub.getInstance();
 		RabbitService service = instance.getRabbitService();
 		Gson gson = instance.getGson();
