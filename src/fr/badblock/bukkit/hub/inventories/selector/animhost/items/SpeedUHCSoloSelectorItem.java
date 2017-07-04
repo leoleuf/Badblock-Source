@@ -5,7 +5,7 @@ import fr.badblock.gameapi.run.BadblockGame;
 public class SpeedUHCSoloSelectorItem extends AnimHostItem {
 
 	public SpeedUHCSoloSelectorItem() {
-		super("hub.items.speeduhcselectoritem.solo", BadblockGame.UHCSPEED, "speeduhcs_world");
+		super("hub.items.speeduhcselectoritem.solo", BadblockGame.UHCSPEED, "speeduhct_world");
 	}
 
 }
