@@ -34,7 +34,7 @@ public class Rush2v2NBSelectorItem extends SubGameSelectorItem {
 
 	@Override
 	public List<String> getGames() {
-		return Arrays.asList("rush2v2");
+		return Arrays.asList("rush");
 	}
 
 	@Override

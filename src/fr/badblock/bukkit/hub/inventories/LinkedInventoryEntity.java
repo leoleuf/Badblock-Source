@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.abstracts.inventories.CustomInventory;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.inventories.BuildContestChooserInventory;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.inventories.CTSChooserInventory;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.inventories.PearlsWarChooserInventory;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.inventories.RushChooserInventory;
@@ -65,6 +66,7 @@ public class LinkedInventoryEntity {
 		createAndAssign("gamepnj.speeduhc", EntityType.BLAZE, WatcherBlaze.class, "hub.gamepnj.speeduhc", SpeedUHCChooserInventory.class);
 		createAndAssign("gamepnj.survivalgames", EntityType.SKELETON, WatcherSkeleton.class, "hub.gamepnj.survivalgames", SurvivalGamesChooserInventory.class);
 		createAndAssign("gamepnj.cts", EntityType.SHEEP, WatcherSheep.class, "hub.gamepnj.cts", CTSChooserInventory.class);
+		createAndAssign("gamepnj.buildcontest", EntityType.SHEEP, WatcherVillager.class, "hub.gamepnj.buildcontest", BuildContestChooserInventory.class);
 	}
 
 }
