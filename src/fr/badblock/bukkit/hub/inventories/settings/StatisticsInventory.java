@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import fr.badblock.bukkit.hub.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.inventories.settings.items.BlueStainedGlassPaneItem;
 import fr.badblock.bukkit.hub.inventories.settings.items.CyanStainedGlassPaneItem;
+import fr.badblock.bukkit.hub.inventories.settings.statistics.BuildContestStatisticsItem;
 import fr.badblock.bukkit.hub.inventories.settings.statistics.CTSStatisticsItem;
 import fr.badblock.bukkit.hub.inventories.settings.statistics.PearlsWarStatisticsItem;
 import fr.badblock.bukkit.hub.inventories.settings.statistics.RushStatisticsItem;
@@ -111,6 +112,7 @@ public class StatisticsInventory extends CustomInventory {
 		super("hub.items.statisticsinventory", 5);
 		BlueStainedGlassPaneItem blueStainedGlassPaneItem = new BlueStainedGlassPaneItem();
 		this.setItem(blueStainedGlassPaneItem, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43);
+		this.setItem(13, new BuildContestStatisticsItem());
 		this.setItem(19, new TowerStatisticsItem());
 		this.setItem(20, new RushStatisticsItem());
 		this.setItem(21, new SpeedUHCStatisticsItem());
