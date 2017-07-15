@@ -7,9 +7,9 @@ import fr.badblock.bukkit.hub.inventories.settings.items.CyanStainedGlassPaneIte
 public class BoosterGameSelectorInventory extends CustomInventory {
 
 	public BoosterGameSelectorInventory() {
-		super("hub.items.booster.gameselectorinventory", 3);
+		super("hub.items.booster.gameselectorinventory", 4);
 		BlueStainedGlassPaneItem blueStainedGlassPaneItem = new BlueStainedGlassPaneItem();
-		this.setItem(blueStainedGlassPaneItem, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25);
+		this.setItem(blueStainedGlassPaneItem, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35);
 		this.setItem(13, new BuildContestBoosterItem());
 		this.setItem(19, new TowerBoosterItem());
 		this.setItem(20, new RushBoosterItem());
