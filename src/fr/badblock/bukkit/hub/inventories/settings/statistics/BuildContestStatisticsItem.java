@@ -34,10 +34,13 @@ public class BuildContestStatisticsItem extends CustomItem {
 	@Override
 	public ItemStack toItemStack(BadblockPlayer player) {
 		TranslatableString prefix = new TranslatableString("hub.items.buildcontestselectoritem");
+		double ratio = player.getPlayerData().getStatistics("buildcontest", "wins") / player.getPlayerData().getStatistics("buildcontest", "looses");
 		ItemStack itemStack = build(this.getMaterial(), 1, (byte) 0, prefix.getAsLine(player),
 				player.getTranslatedMessage("hub.items.buildconteststatistics",
+						CalcUtil.getInstance().convertInt(player.getPlayerData().getStatistics("buildcontest", "wins") + player.getPlayerData().getStatistics("buildcontest", "looses")),
 						CalcUtil.getInstance().convertInt(player.getPlayerData().getStatistics("buildcontest", "wins")),
-						CalcUtil.getInstance().convertInt(player.getPlayerData().getStatistics("buildcontest", "looses"))));
+						CalcUtil.getInstance().convertInt(player.getPlayerData().getStatistics("buildcontest", "looses")),
+						String.format("%.2f", ratio)));
 		return itemStack;
 	}
 

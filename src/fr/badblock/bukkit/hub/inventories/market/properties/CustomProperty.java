@@ -18,6 +18,7 @@ public enum CustomProperty {
 	XP(new XpCustomPropertyRunnable()),
 	CHEST(new ChestCustomPropertyRunnable()),
 	CRYSTALS(new CrystalsCustomPropertyRunnable()),
+	PARTICLES(new CrystalsCustomPropertyRunnable()),
 	BOOSTER(new BoosterCustomPropertyRunnable());
 	
 	@Getter @Setter private CustomPropertyRunnable customPropertyRunnable;

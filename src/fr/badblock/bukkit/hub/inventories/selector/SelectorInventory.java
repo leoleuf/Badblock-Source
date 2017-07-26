@@ -12,7 +12,6 @@ import fr.badblock.bukkit.hub.inventories.selector.items.PvPBoxSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.PvPFactionSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.QuitSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.RushSelectorItem;
-import fr.badblock.bukkit.hub.inventories.selector.items.SkillZSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SkyBlockSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SpaceBallsSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SpawnSelectorItem;
@@ -46,7 +45,6 @@ public class SelectorInventory extends CustomInventory {
 		this.setItem(41, new FreeBuildSelectorItem());
 		this.setItem(42, new DayZSelectorItem());
 		this.setItem(45, new HubChangerSelectorItem());
-		this.setItem(49, new SkillZSelectorItem());
 		this.setItem(53, new QuitSelectorItem());
 		this.setNoFilledItem(new BlueStainedGlassPaneItem());
 	}
