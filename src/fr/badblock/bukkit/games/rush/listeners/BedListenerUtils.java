@@ -74,7 +74,8 @@ public class BedListenerUtils {
 
 				for(Player bukkitPlayer : Bukkit.getOnlinePlayers()){
 					BadblockPlayer bPlayer = (BadblockPlayer) bukkitPlayer;
-					bPlayer.getCustomObjective().generate();
+					if (bPlayer.getCustomObjective() != null)
+						bPlayer.getCustomObjective().generate();
 
 					String type = explosion ? "rush.explodeBed" : "rush.breakBed";
 

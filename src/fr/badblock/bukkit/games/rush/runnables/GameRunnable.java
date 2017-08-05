@@ -238,7 +238,8 @@ public class GameRunnable extends BukkitRunnable {
 
 				}.runTaskTimer(GameAPI.getAPI(), 0, 30L);
 
-				bp.getCustomObjective().generate();
+				if (bp.getCustomObjective() != null)
+					bp.getCustomObjective().generate();
 			}
 
 			if (winner != null)

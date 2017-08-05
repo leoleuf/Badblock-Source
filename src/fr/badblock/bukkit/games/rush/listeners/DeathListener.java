@@ -35,12 +35,12 @@ public class DeathListener extends BadListener {
 		death(e, e.getPlayer(), null, e.getLastDamageCause());
 		e.setDeathMessage(GameMessages.deathEventMessage(e));
 	}
-	
+
 	@EventHandler
 	public void onDeath(FightingDeathEvent e){
 		death(e, e.getPlayer(), e.getKiller(), e.getLastDamageCause());
 		e.setDeathMessage(GameMessages.deathEventMessage(e));
-		
+
 		if(e.getKiller().getType() == EntityType.PLAYER){
 			BadblockPlayer killer = (BadblockPlayer) e.getKiller();
 			incrementAchievements(killer, RushAchievementList.RUSH_KILL_1, RushAchievementList.RUSH_KILL_2, RushAchievementList.RUSH_KILL_3, RushAchievementList.RUSH_KILL_4, RushAchievementList.RUSH_KILLER, RushAchievementList.RUSH_UKILLER);
@@ -66,36 +66,36 @@ public class DeathListener extends BadListener {
 		lastDeath.put(player.getName(), System.currentTimeMillis() + 1000L);
 		if (player.getOpenInventory() != null && player.getOpenInventory().getCursor() != null)
 			player.getOpenInventory().setCursor(null);
-		
+
 		Location respawnPlace = null;
-		
+
 		player.getPlayerData().incrementStatistic("rush", RushScoreboard.DEATHS);
 		player.inGameData(RushData.class).deaths++;
 		player.getCustomObjective().generate();
-		
+
 		if(player.getTeam().teamData(RushTeamData.class).getFirstBedPart() == null){
 			player.getPlayerData().incrementStatistic("rush", RushScoreboard.LOOSES);
 			BadblockTeam team = player.getTeam();
-			
+
 			e.setDeathMessageEnd(new TranslatableString("rush.player-loose", player.getName(), team.getChatName()));
-			
+
 			player.sendTranslatedTitle("rush.player-loose-title");
 			player.sendTimings(20, 80, 20);
 			e.setLightning(true);
-			
+
 			team.leaveTeam(player);
-			
+
 			if(team.getOnlinePlayers().size() == 0){
 				GameAPI.getAPI().getGameServer().cancelReconnectionInvitations(team);
 				GameAPI.getAPI().unregisterTeam(team);
 
 				GameAPI.getAPI().getOnlinePlayers().forEach(p -> {
-					
+
 				});
-				
+
 				new TranslatableString("rush.team-loose", team.getChatName()).broadcast();;
 			}
-			
+
 			player.setBadblockMode(BadblockMode.SPECTATOR);
 			e.setTimeBeforeRespawn(0);
 			player.postResult(null);
@@ -116,26 +116,26 @@ public class DeathListener extends BadListener {
 				e.setWhileRespawnPlace(respawnPlace);
 			}
 		}
-		
+
 		if(killer != null && killer.getType() == EntityType.PLAYER){
 			BadblockPlayer bKiller = (BadblockPlayer) killer;
 			bKiller.getPlayerData().incrementStatistic("rush", RushScoreboard.KILLS);
 			bKiller.inGameData(RushData.class).kills++;
-			
-			bKiller.getCustomObjective().generate();
+			if (bKiller.getCustomObjective() != null)
+				bKiller.getCustomObjective().generate();
 		}
-		
+
 		player.getCustomObjective().generate();
 		e.setRespawnPlace(respawnPlace);
 	}
-	
+
 	@EventHandler
 	public void onRespawn(PlayerFakeRespawnEvent e){
 		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
 			e.getPlayer().getOpenInventory().setCursor(null);
 		PluginRush.getInstance().giveDefaultKit(e.getPlayer());
 	}
-	
+
 	private void incrementAchievements(BadblockPlayer player, PlayerAchievement... achievements){
 		for(PlayerAchievement achievement : achievements){
 			PlayerAchievementState state = player.getPlayerData().getAchievementState(achievement);
