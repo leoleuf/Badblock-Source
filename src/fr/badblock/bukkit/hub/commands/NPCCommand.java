@@ -9,8 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 
 import fr.badblock.bukkit.hub.BadBlockHub;
-import fr.badblock.bukkit.hub.npc.NPCData;
 import fr.badblock.bukkit.hub.tasks.RequestNPCTask;
+import fr.badblock.bukkit.hub.utils.pnj.NPCData;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.command.AbstractCommand;
 import fr.badblock.gameapi.databases.SQLRequestType;

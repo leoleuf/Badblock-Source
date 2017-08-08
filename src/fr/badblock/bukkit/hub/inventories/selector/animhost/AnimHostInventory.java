@@ -9,6 +9,7 @@ import fr.badblock.bukkit.hub.inventories.selector.animhost.items.SpaceBalls4v4S
 import fr.badblock.bukkit.hub.inventories.selector.animhost.items.SpeedUHCSoloSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.animhost.items.SurvivalGames24SelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.animhost.items.Tower2v2SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.animhost.items.Tower4v4SelectorItem;
 import fr.badblock.bukkit.hub.inventories.settings.items.BlueStainedGlassPaneItem;
 import fr.badblock.bukkit.hub.inventories.settings.settings.LightBlueStainedGlassPaneItem;
 
@@ -34,6 +35,7 @@ public class AnimHostInventory extends CustomInventory {
 		this.addItem(new SurvivalGames24SelectorItem());
 		//this.addItem(new Tower2v2NBSelectorItem());
 		this.addItem(new Tower2v2SelectorItem());
+		this.addItem(new Tower4v4SelectorItem());
 		//this.addItem(new Tower4v4NBSelectorItem());
 		//this.addItem(new Tower4v4SelectorItem());
 		//this.addItem(new Tower8v8NBSelectorItem());

@@ -51,10 +51,6 @@ public abstract class SubGameSelectorItem extends CustomItem {
 				}
 				if (waitingLinePlayers == tempWaitingLinePlayers && inGamePlayers == tempInGamePlayers)
 					return;
-				if (waitingLinePlayers > tempWaitingLinePlayers) waitingLinePlayers--;
-				else if (waitingLinePlayers < tempWaitingLinePlayers) waitingLinePlayers++;
-				if (inGamePlayers > tempInGamePlayers) inGamePlayers--;
-				else if (inGamePlayers < tempInGamePlayers) inGamePlayers++;
 				waitingLinePlayers = tempWaitingLinePlayers;
 				inGamePlayers = tempInGamePlayers;
 				Map<Locale, ItemStack> staticItems = new HashMap<>();

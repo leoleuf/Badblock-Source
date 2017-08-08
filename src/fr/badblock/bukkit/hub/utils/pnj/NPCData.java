@@ -1,17 +1,13 @@
-package fr.badblock.bukkit.hub.npc;
-
+package fr.badblock.bukkit.hub.utils.pnj;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
-
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.bukkit.hub.utils.MountManager;
@@ -27,13 +23,10 @@ import fr.badblock.utils.Encodage;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
-
 @Getter
 @Setter
 public class NPCData {
-
 	public static Map<Integer, NPCData> stockage = new HashMap<>();
-
 	@Expose
 	private String displayName;
 	@Expose
@@ -54,7 +47,6 @@ public class NPCData {
 	@Expose
 	private boolean matchmaking;
 	private FakeEntity<? extends WatcherLivingEntity> fakeEntity;
-
 	public NPCData(String location, EntityType entityType, boolean vip, boolean staff, boolean matchmaking,
 			String displayName, String server) {
 		this.setLocation(location);
@@ -66,12 +58,10 @@ public class NPCData {
 		this.setServer(server);
 		this.yop();
 	}
-
 	public void yop() {
 		this.setFakeEntity(MountManager.spawn(ConfigUtils.convertStringToLocation(location), entityType, WatcherZombie.class, false, false, false, false, ChatColor.translateAlternateColorCodes('°', displayName)));
 		Bukkit.getConsoleSender().sendMessage("[BadBlockHub] Spawned FakeEntity: " + ChatColor.translateAlternateColorCodes('°', displayName));
 	}
-
 	public void onClick(BadblockPlayer player) {
 		HubPlayer hubPlayer = HubPlayer.get(player);
 		// Antispam
@@ -98,12 +88,10 @@ public class NPCData {
 		service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), this.getServer(), false)),
 				Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, true);
 	}
-
 	public void remove() {
 		if (fakeEntity != null) {
 			fakeEntity.remove();
 			fakeEntity.destroy();
 		}
 	}
-
 }

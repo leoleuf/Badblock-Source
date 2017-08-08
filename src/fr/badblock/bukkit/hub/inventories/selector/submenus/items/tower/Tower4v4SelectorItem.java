@@ -22,14 +22,12 @@ public class Tower4v4SelectorItem extends SubGameSelectorItem {
 
 	@SuppressWarnings("deprecation")
 	public Tower4v4SelectorItem() {
-		super("hub.items.towerselectoritem.4v4", Material.BANNER, DyeColor.LIME.getDyeData(),
-				"hub.items.towerselectoritem.4v4.lore");
+		super("hub.items.towerselectoritem.4v4", Material.BANNER, DyeColor.LIME.getDyeData(), "hub.items.towerselectoritem.4v4.lore");
 	}
 
 	@Override
 	public List<ItemAction> getActions() {
-		return Arrays.asList(ItemAction.INVENTORY_DROP, ItemAction.INVENTORY_LEFT_CLICK,
-				ItemAction.INVENTORY_RIGHT_CLICK, ItemAction.INVENTORY_WHEEL_CLICK);
+		return Arrays.asList(ItemAction.INVENTORY_DROP, ItemAction.INVENTORY_LEFT_CLICK, ItemAction.INVENTORY_RIGHT_CLICK, ItemAction.INVENTORY_WHEEL_CLICK);
 	}
 
 	@Override
@@ -45,20 +43,10 @@ public class Tower4v4SelectorItem extends SubGameSelectorItem {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), "tower4v4", false)),
-						Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
-				/*if (!player.hasPermission("others.mod.connect")) {
-					SEntryInfosListener.tempPlayers.put(player.getName(), System.currentTimeMillis() + SEntryInfosListener.tempTime);
-					SEntryInfosListener.tempPlayersRank.put(player.getName(), player.getMainGroup());
-					SEntryInfosListener.tempPlayersUUID.put(player.getName(), player.getUniqueId());
-					SEntryInfosListener.tempPlayersPropertyMap.put(player.getName(), ((CraftPlayer)player).getHandle().getProfile().getProperties());
-				}*/
+				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), getGames().get(0), false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 			}
 		};
-		if (player.hasPermission("matchmaking.priority")) runnable.run();
-		else {
-			runnable.run();//TaskManager.runAsyncTaskLater(runnable, new Random().nextInt(20 * 9) + (20 * 3));
-		}
+		runnable.run();
 		player.closeInventory();
 	}
 

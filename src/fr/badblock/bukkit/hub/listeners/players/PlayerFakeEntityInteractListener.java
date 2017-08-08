@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import fr.badblock.bukkit.hub.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.hub.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.listeners._HubListener;
-import fr.badblock.bukkit.hub.npc.NPCData;
+import fr.badblock.bukkit.hub.utils.pnj.NPCData;
 import fr.badblock.gameapi.events.PlayerFakeEntityInteractEvent;
 import fr.badblock.gameapi.fakeentities.FakeEntity;
 import fr.badblock.gameapi.players.BadblockPlayer;

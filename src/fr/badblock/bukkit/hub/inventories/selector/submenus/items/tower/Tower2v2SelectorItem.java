@@ -22,19 +22,17 @@ public class Tower2v2SelectorItem extends SubGameSelectorItem {
 
 	@SuppressWarnings("deprecation")
 	public Tower2v2SelectorItem() {
-		super("hub.items.towerselectoritem.2v2", Material.BANNER, DyeColor.LIME.getDyeData(),
-				"hub.items.towerselectoritem.2v2.lore");
+		super("hub.items.towerselectoritem.2v2", Material.BANNER, DyeColor.LIME.getDyeData(), "hub.items.towerselectoritem.2v2.lore");
 	}
 
 	@Override
 	public List<ItemAction> getActions() {
-		return Arrays.asList(ItemAction.INVENTORY_DROP, ItemAction.INVENTORY_LEFT_CLICK,
-				ItemAction.INVENTORY_RIGHT_CLICK, ItemAction.INVENTORY_WHEEL_CLICK);
+		return Arrays.asList(ItemAction.INVENTORY_DROP, ItemAction.INVENTORY_LEFT_CLICK, ItemAction.INVENTORY_RIGHT_CLICK, ItemAction.INVENTORY_WHEEL_CLICK);
 	}
 
 	@Override
 	public List<String> getGames() {
-		return Arrays.asList("tower");
+		return Arrays.asList("tower2v2");
 	}
 
 	@Override
@@ -45,20 +43,10 @@ public class Tower2v2SelectorItem extends SubGameSelectorItem {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), "tower", false)),
-						Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
-				/*if (!player.hasPermission("others.mod.connect")) {
-					SEntryInfosListener.tempPlayers.put(player.getName(), System.currentTimeMillis() + SEntryInfosListener.tempTime);
-					SEntryInfosListener.tempPlayersRank.put(player.getName(), player.getMainGroup());
-					SEntryInfosListener.tempPlayersUUID.put(player.getName(), player.getUniqueId());
-					SEntryInfosListener.tempPlayersPropertyMap.put(player.getName(), ((CraftPlayer)player).getHandle().getProfile().getProperties());
-				}*/
+				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), getGames().get(0), false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 			}
 		};
-		if (player.hasPermission("matchmaking.priority")) runnable.run();
-		else {
-			runnable.run();//TaskManager.runAsyncTaskLater(runnable, new Random().nextInt(20 * 9) + (20 * 3));
-		}
+		runnable.run();
 		player.closeInventory();
 	}
 
