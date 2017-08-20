@@ -1,5 +1,8 @@
 package fr.badblock.common.shoplinker.bukkit;
 
+import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,22 +10,30 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
+import fr.badblock.common.shoplinker.api.utils.JsonUtils;
 import fr.badblock.common.shoplinker.bukkit.commands.OPICommand;
 import fr.badblock.common.shoplinker.bukkit.commands.RInvCommand;
+import fr.badblock.common.shoplinker.bukkit.commands.RmSignCommand;
+import fr.badblock.common.shoplinker.bukkit.commands.SetSignCommand;
 import fr.badblock.common.shoplinker.bukkit.commands.ShopExecuteCommand;
 import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
 import fr.badblock.common.shoplinker.bukkit.inventories.InventoriesLoader;
 import fr.badblock.common.shoplinker.bukkit.inventories.utils.ChatColorUtils;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.InventoryCloseListener;
+import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInteractListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInventoryClickListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerJoinListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
+import fr.badblock.common.shoplinker.bukkit.signs.SignManager;
+import fr.badblock.common.shoplinker.bukkit.signs.SignObject;
 import fr.badblock.rabbitconnector.RabbitConnector;
 
 public class ShopLinkerLoader {
+
+	private static final Type signType = new TypeToken<List<SignObject>>() {}.getType();
 
 	public ShopLinkerLoader(ShopLinker shopLinker) {
 		loadEverything(shopLinker);
@@ -31,6 +42,7 @@ public class ShopLinkerLoader {
 	private void loadEverything(ShopLinker shopLinker) {
 		loadConfiguration(shopLinker);
 		loadFields(shopLinker);
+		loadSigns(shopLinker);
 		loadInventories(shopLinker);
 		loadRabbitMQ(shopLinker);
 		loadDatabase(shopLinker);
@@ -40,13 +52,31 @@ public class ShopLinkerLoader {
 	}
 
 	private void loadConfiguration(ShopLinker shopLinker) {
-		shopLinker.reloadConfig();
+		shopLinker.reloadConfig();	
+	}
+	
+	public void loadSigns(ShopLinker shopLinker) {
+		try {
+			File file = new File(shopLinker.getDataFolder(), "signs.json");
+			if (!file.exists()) {
+				file.createNewFile();
+				SignObject signObject = new SignObject("world", 0, 100, 0, "default");
+				SignManager signManager = SignManager.load(new ArrayList<>());
+				signManager.addSign(signObject);
+				JsonUtils.save(file, signManager.getSigns(), true);
+			}else{
+				List<SignObject> data = JsonUtils.load(file, signType, new ArrayList<>());
+				SignManager.load(data);
+			}
+		}catch(Exception error) {
+			error.printStackTrace();
+		}
 	}
 
 	private void loadFields(ShopLinker shopLinker) {
 		ShopLinker.setInstance(shopLinker);
 		FileConfiguration configuration = shopLinker.getConfig();
-		shopLinker.setNotRestrictiveGson(new GsonBuilder().setPrettyPrinting().create());
+		shopLinker.setNotRestrictiveGson(JsonUtils.getPrettyGson());
 		ShopLinker.setConsole(Bukkit.getConsoleSender());
 		ShopLinkerAPI.CURRENT_SERVER_NAME = getString(configuration, "queueName");
 		ReceiveCommandListener.enabledCommands = getBoolean(configuration, "enabledCommands");
@@ -113,6 +143,7 @@ public class ShopLinkerLoader {
 	private void loadBukkitListeners(ShopLinker shopLinker) {
 		PluginManager pluginManager = shopLinker.getServer().getPluginManager();
 		pluginManager.registerEvents(new PlayerJoinListener(), shopLinker);
+		pluginManager.registerEvents(new PlayerInteractListener(), shopLinker);
 		pluginManager.registerEvents(new PlayerInventoryClickListener(), shopLinker);
 		pluginManager.registerEvents(new InventoryCloseListener(), shopLinker);
 	}
@@ -120,13 +151,15 @@ public class ShopLinkerLoader {
 	private void loadCommands(ShopLinker shopLinker) {
 		shopLinker.getCommand("opi").setExecutor(new OPICommand());
 		shopLinker.getCommand("rinv").setExecutor(new RInvCommand());
+		shopLinker.getCommand("setsign").setExecutor(new SetSignCommand());
+		shopLinker.getCommand("rmsign").setExecutor(new RmSignCommand());
 		shopLinker.getCommand("shopexecute").setExecutor(new ShopExecuteCommand());
 	}
 
 	private void saveConfiguration(ShopLinker shopLinker) {
 		shopLinker.saveConfig();
 	}
-	
+
 	private boolean getBoolean(FileConfiguration fileConfiguration, String key, boolean value) {
 		if (!fileConfiguration.contains(key)) {
 			fileConfiguration.set(key, value);
@@ -134,11 +167,11 @@ public class ShopLinkerLoader {
 		}
 		return fileConfiguration.getBoolean(key);
 	}
-	
+
 	private boolean getBoolean(FileConfiguration fileConfiguration, String key) {
 		return getBoolean(fileConfiguration, key, false);
 	}
-	
+
 	private String getString(FileConfiguration fileConfiguration, String key, String value) {
 		if (!fileConfiguration.contains(key)) {
 			fileConfiguration.set(key, value);
@@ -146,11 +179,11 @@ public class ShopLinkerLoader {
 		}
 		return fileConfiguration.getString(key);
 	}
-	
+
 	private String getString(FileConfiguration fileConfiguration, String key) {
 		return getString(fileConfiguration, key, "");
 	}
-	
+
 	private int getInt(FileConfiguration fileConfiguration, String key, int value) {
 		if (!fileConfiguration.contains(key)) {
 			fileConfiguration.set(key, value);
@@ -158,7 +191,7 @@ public class ShopLinkerLoader {
 		}
 		return fileConfiguration.getInt(key);
 	}
-	
+
 	private int getInt(FileConfiguration fileConfiguration, String key) {
 		return getInt(fileConfiguration, key, 0);
 	}

@@ -9,5 +9,12 @@ commands:
      aliases: [openinventory]
    rinv:
      description: Reload inventories
+     permission: shoplinker.admin
+   setsign:
+     description: Set a sign
+     permission: shoplinker.admin
+   rmsign:
+     description: Remove a sign
+     permission: shoplinker.admin
    shopexecute:
      description: Claim data
