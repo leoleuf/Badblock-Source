@@ -1,6 +1,7 @@
 package fr.badblock.common.shoplinker.api;
 
-import fr.badblock.common.shoplinker.plugin.listeners.ReceiveShopDataListener;
+import fr.badblock.common.shoplinker.api.objects.*;
+import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
 import fr.badblock.rabbitconnector.RabbitService;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ public class ShopLinkerAPI {
 	public transient static String CURRENT_SERVER_NAME = null;
 	
 	private RabbitService		   	rabbitService;
-	private ReceiveShopDataListener receiveShopDataListener;
+	private ReceiveCommandListener  receiveCommandListener;
 	
 	// CONSTRUCTOR
 	public ShopLinkerAPI(RabbitService rabbitService) {
@@ -18,21 +19,21 @@ public class ShopLinkerAPI {
 	}
 	
 	// PUBLIC
-	public void sendShopdata(String serverName, String playerName, String objectName) {
-		sendShopData(serverName, buildShopData(playerName, objectName));
+	public void sendShopData(ShopType shopType, String serverName, String playerName, String objectName, String displayName, int[] depends, boolean multibuy) {
+		sendShopData(serverName, buildShopData(shopType, playerName, objectName, displayName, depends, multibuy));
 	}
 
 	// PRIVATE
 	private void sendShopData(ShopTrame shopTrame) {
 		if (shopTrame.getShopDataDestination().getQueueName().equalsIgnoreCase(CURRENT_SERVER_NAME)) {
-			if (receiveShopDataListener == null) receiveShopDataListener = new ReceiveShopDataListener(CURRENT_SERVER_NAME);
-			receiveShopDataListener.onPacketReceiving(buildPacketData(shopTrame));
+			if (receiveCommandListener == null) receiveCommandListener = new ReceiveCommandListener(CURRENT_SERVER_NAME);
+			receiveCommandListener.onPacketReceiving(buildPacketData(shopTrame));
 			return;
 		}
 		rabbitService.sendAsyncPacket(buildQueueName(shopTrame), buildPacketData(shopTrame), ShopLinkerSettings.PACKET_ENCODAGE, ShopLinkerSettings.PACKET_TYPE, ShopLinkerSettings.TTL, ShopLinkerSettings.DEBUG);
 	}
 
-	private  void sendShopData(String serverName, ShopData shopData) {
+	private void sendShopData(String serverName, ShopData shopData) {
 		sendShopData(buildDataDestination(serverName), shopData);
 	}
 	
@@ -41,14 +42,14 @@ public class ShopLinkerAPI {
 	}
 	
 	private String buildPacketData(ShopTrame shopTrame) {
-		return ReceiveShopDataListener.getGson().toJson(shopTrame.getShopData());
+		return ReceiveCommandListener.getGson().toJson(shopTrame.getShopData());
 	}
 	private ShopDataDestination buildDataDestination(String serverName) {
 		return new ShopDataDestination(serverName);
 	}
 	
-	private ShopData buildShopData(String playerName, String rankName) {
-		return new ShopData(playerName, rankName);
+	private ShopData buildShopData(ShopType shopType, String playerName, String rankName, String displayName, int[] depends, boolean multibuy) {
+		return new ShopData(shopType, playerName, rankName, displayName, depends, multibuy);
 	}
 	
 	private ShopTrame buildShopTrame(ShopDataDestination shopDataDestination, ShopData shopData) {

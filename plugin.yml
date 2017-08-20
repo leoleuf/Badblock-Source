@@ -1,0 +1,13 @@
+name: BadBlockShopLinker
+author: xMalware
+version: 1.0
+description: The best shop ever
+main: fr.badblock.common.shoplinker.bukkit.ShopLinker
+commands:
+   opi:
+     description: Open custom inventory
+     aliases: [openinventory]
+   rinv:
+     description: Reload inventories
+   shopexecute:
+     description: Claim data

@@ -11,6 +11,6 @@ public class ShopLinkerSettings {
 	public final static RabbitPacketType  	PACKET_TYPE 		= RabbitPacketType.PUBLISHER;
 	public final static RabbitListenerType  LISTENER_TYPE 		= RabbitListenerType.SUBSCRIBER;
 	public final static long				TTL					= -1;
-	public final static boolean				DEBUG				= false;
+	public final static boolean				DEBUG				= true;
 	
 }
