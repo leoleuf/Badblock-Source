@@ -42,6 +42,7 @@ public class PlayerInteractAtEntityListener implements Listener {
 		armorStandManager.setArmorStand(signObject);
 		armorStandManager.save();
 		player.sendMessage(ChatColor.GREEN + "[ShopLinker] You set the armor stand as an inventory opener.");
+		ShopLinkerCommand.armorSet.remove(uniquePlayerId);
 	}
 	
 }
