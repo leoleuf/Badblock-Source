@@ -1,4 +1,4 @@
-package fr.badblock.common.shoplinker.bukkit.signs;
+package fr.badblock.common.shoplinker.bukkit.clickers.managers;
 
 import java.io.File;
 import java.util.Collection;
@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.bukkit.Location;
 
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
+import fr.badblock.common.shoplinker.bukkit.clickers.ClickableObject;
 import fr.badblock.minecraftserver.JsonUtils;
 import lombok.Data;
 import lombok.Getter;
@@ -18,31 +19,31 @@ import lombok.Setter;
 
 	@Getter@Setter private static SignManager instance;
 
-	private Collection<SignObject> signs = new HashSet<>();
+	private Collection<ClickableObject> signs = new HashSet<>();
 	private final File			   file  = new File(ShopLinker.getInstance().getDataFolder(), "signs.json");
 
-	public SignManager(List<SignObject> signs) {
+	public SignManager(List<ClickableObject> signs) {
 		setSigns(signs);
 		getSigns().forEach(signObject -> signObject.genLocation());
 	}
 
-	public SignObject getSign(Location location) {
-		Optional<SignObject> signObject = getSigns().parallelStream().filter(sign -> sign.getLocation().equals(location)).findFirst();
+	public ClickableObject getSign(Location location) {
+		Optional<ClickableObject> signObject = getSigns().parallelStream().filter(sign -> sign.getLocation().equals(location)).findFirst();
 		if (!signObject.isPresent()) return null;
 		return signObject.get();
 	}
 
-	public void addSign(SignObject signObject) {
+	public void addSign(ClickableObject signObject) {
 		getSigns().add(signObject);
 	}
 
-	public void setSign(SignObject signObject) {
+	public void setSign(ClickableObject signObject) {
 		removeSign(signObject.getLocation());
 		addSign(signObject);
 	}
 
 	public void removeSign(Location location) {
-		SignObject signO = getSign(location);
+		ClickableObject signO = getSign(location);
 		if (signO != null) signs.remove(signO);
 	}
 
@@ -50,7 +51,7 @@ import lombok.Setter;
 		JsonUtils.save(file, this.getSigns(), true);
 	}
 
-	public static SignManager load(List<SignObject> data) {
+	public static SignManager load(List<ClickableObject> data) {
 		setInstance(new SignManager(data));
 		return getInstance();
 	}

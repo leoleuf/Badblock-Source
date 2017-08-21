@@ -4,17 +4,6 @@ version: 1.0
 description: The best shop ever
 main: fr.badblock.common.shoplinker.bukkit.ShopLinker
 commands:
-   opi:
-     description: Open custom inventory
-     aliases: [openinventory]
-   rinv:
-     description: Reload inventories
-     permission: shoplinker.admin
-   setsign:
-     description: Set a sign
-     permission: shoplinker.admin
-   rmsign:
-     description: Remove a sign
-     permission: shoplinker.admin
-   shopexecute:
-     description: Claim data
+   shoplinker:
+     description: ShopLinker main command
+     aliases: [sl]

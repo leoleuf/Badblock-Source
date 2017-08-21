@@ -15,9 +15,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import fr.badblock.common.shoplinker.bukkit.clickers.ClickableObject;
+import fr.badblock.common.shoplinker.bukkit.clickers.managers.SignManager;
 import fr.badblock.common.shoplinker.bukkit.inventories.BukkitInventories;
-import fr.badblock.common.shoplinker.bukkit.signs.SignManager;
-import fr.badblock.common.shoplinker.bukkit.signs.SignObject;
 
 public class PlayerInteractListener implements Listener {
 
@@ -49,7 +49,7 @@ public class PlayerInteractListener implements Listener {
 		Sign sign = (Sign) clickedBlock.getState();
 		Location signLocation = sign.getLocation();
 		SignManager signManager = SignManager.getInstance();
-		SignObject signObject = signManager.getSign(signLocation);
+		ClickableObject signObject = signManager.getSign(signLocation);
 		// Not registered sign
 		if (signObject == null) return;
 		// Open inventory

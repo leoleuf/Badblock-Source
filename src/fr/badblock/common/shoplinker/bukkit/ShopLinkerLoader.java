@@ -14,26 +14,25 @@ import com.google.gson.reflect.TypeToken;
 
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.api.utils.JsonUtils;
-import fr.badblock.common.shoplinker.bukkit.commands.OPICommand;
-import fr.badblock.common.shoplinker.bukkit.commands.RInvCommand;
-import fr.badblock.common.shoplinker.bukkit.commands.RmSignCommand;
-import fr.badblock.common.shoplinker.bukkit.commands.SetSignCommand;
-import fr.badblock.common.shoplinker.bukkit.commands.ShopExecuteCommand;
+import fr.badblock.common.shoplinker.bukkit.clickers.ClickableObject;
+import fr.badblock.common.shoplinker.bukkit.clickers.managers.ArmorStandManager;
+import fr.badblock.common.shoplinker.bukkit.clickers.managers.SignManager;
+import fr.badblock.common.shoplinker.bukkit.commands.ShopLinkerCommand;
 import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
 import fr.badblock.common.shoplinker.bukkit.inventories.InventoriesLoader;
 import fr.badblock.common.shoplinker.bukkit.inventories.utils.ChatColorUtils;
+import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.EntityDamageByEntityListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.InventoryCloseListener;
+import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInteractAtEntityListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInteractListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInventoryClickListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerJoinListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
-import fr.badblock.common.shoplinker.bukkit.signs.SignManager;
-import fr.badblock.common.shoplinker.bukkit.signs.SignObject;
 import fr.badblock.rabbitconnector.RabbitConnector;
 
 public class ShopLinkerLoader {
 
-	private static final Type signType = new TypeToken<List<SignObject>>() {}.getType();
+	private static final Type signType = new TypeToken<List<ClickableObject>>() {}.getType();
 
 	public ShopLinkerLoader(ShopLinker shopLinker) {
 		loadEverything(shopLinker);
@@ -43,6 +42,7 @@ public class ShopLinkerLoader {
 		loadConfiguration(shopLinker);
 		loadFields(shopLinker);
 		loadSigns(shopLinker);
+		loadArmorStands(shopLinker);
 		loadInventories(shopLinker);
 		loadRabbitMQ(shopLinker);
 		loadDatabase(shopLinker);
@@ -54,19 +54,37 @@ public class ShopLinkerLoader {
 	private void loadConfiguration(ShopLinker shopLinker) {
 		shopLinker.reloadConfig();	
 	}
-	
+
 	public void loadSigns(ShopLinker shopLinker) {
 		try {
 			File file = new File(shopLinker.getDataFolder(), "signs.json");
 			if (!file.exists()) {
 				file.createNewFile();
-				SignObject signObject = new SignObject("world", 0, 100, 0, "default");
+				ClickableObject signObject = new ClickableObject("world", 0, 100, 0, "default");
 				SignManager signManager = SignManager.load(new ArrayList<>());
 				signManager.addSign(signObject);
 				JsonUtils.save(file, signManager.getSigns(), true);
 			}else{
-				List<SignObject> data = JsonUtils.load(file, signType, new ArrayList<>());
+				List<ClickableObject> data = JsonUtils.load(file, signType, new ArrayList<>());
 				SignManager.load(data);
+			}
+		}catch(Exception error) {
+			error.printStackTrace();
+		}
+	}
+
+	public void loadArmorStands(ShopLinker shopLinker) {
+		try {
+			File file = new File(shopLinker.getDataFolder(), "armorstands.json");
+			if (!file.exists()) {
+				file.createNewFile();
+				ClickableObject clickableObject = new ClickableObject("world", 0, 100, 0, "default");
+				ArmorStandManager armorStandManager = ArmorStandManager.load(new ArrayList<>());
+				armorStandManager.addArmorStand(clickableObject);
+				JsonUtils.save(file, armorStandManager.getArmorStands(), true);
+			}else{
+				List<ClickableObject> data = JsonUtils.load(file, signType, new ArrayList<>());
+				ArmorStandManager.load(data);
 			}
 		}catch(Exception error) {
 			error.printStackTrace();
@@ -142,18 +160,16 @@ public class ShopLinkerLoader {
 
 	private void loadBukkitListeners(ShopLinker shopLinker) {
 		PluginManager pluginManager = shopLinker.getServer().getPluginManager();
-		pluginManager.registerEvents(new PlayerJoinListener(), shopLinker);
+		pluginManager.registerEvents(new EntityDamageByEntityListener(), shopLinker);
+		pluginManager.registerEvents(new InventoryCloseListener(), shopLinker);
+		pluginManager.registerEvents(new PlayerInteractAtEntityListener(), shopLinker);
 		pluginManager.registerEvents(new PlayerInteractListener(), shopLinker);
 		pluginManager.registerEvents(new PlayerInventoryClickListener(), shopLinker);
-		pluginManager.registerEvents(new InventoryCloseListener(), shopLinker);
+		pluginManager.registerEvents(new PlayerJoinListener(), shopLinker);
 	}
 
 	private void loadCommands(ShopLinker shopLinker) {
-		shopLinker.getCommand("opi").setExecutor(new OPICommand());
-		shopLinker.getCommand("rinv").setExecutor(new RInvCommand());
-		shopLinker.getCommand("setsign").setExecutor(new SetSignCommand());
-		shopLinker.getCommand("rmsign").setExecutor(new RmSignCommand());
-		shopLinker.getCommand("shopexecute").setExecutor(new ShopExecuteCommand());
+		shopLinker.getCommand("shoplinker").setExecutor(new ShopLinkerCommand());
 	}
 
 	private void saveConfiguration(ShopLinker shopLinker) {

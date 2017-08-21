@@ -1,4 +1,4 @@
-package fr.badblock.common.shoplinker.bukkit.signs;
+package fr.badblock.common.shoplinker.bukkit.clickers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -7,7 +7,7 @@ import org.bukkit.World;
 import lombok.Getter;
 
 @Getter
-public class SignObject {
+public class ClickableObject {
 
 	public String 			 		   world;
 	public int    			 		   x;
@@ -17,7 +17,7 @@ public class SignObject {
 
 	@Getter private transient Location location;
 	
-	public SignObject(String world, int x, int y, int z, String inventoryName) {
+	public ClickableObject(String world, int x, int y, int z, String inventoryName) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
@@ -26,7 +26,7 @@ public class SignObject {
 		this.genLocation();
 	}
 	
-	public SignObject(Location location, String inventoryName) {
+	public ClickableObject(Location location, String inventoryName) {
 		this(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), inventoryName);
 	}
 	
