@@ -35,10 +35,12 @@ public class EntityDamageByEntityListener implements Listener {
 			ClickableObject clickableObject = armorStandManager.getArmorStand(entityLocation);
 			// Not registered sign
 			if (clickableObject == null) return;
+			event.setCancelled(true);
 			// Open inventory
 			BukkitInventories.openInventory(player, clickableObject.getInventoryName());
 			return;
 		}
+		event.setCancelled(true);
 		ArmorStandManager armorStandManager = ArmorStandManager.getInstance();
 		ClickableObject signObject = new ClickableObject(entityLocation, inventoryName);	
 		armorStandManager.setArmorStand(signObject);
