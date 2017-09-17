@@ -10,8 +10,6 @@ public class InventoryShopObject {
 	private String				queueName;
 	private String				action;
 	private String				message;
-	private int					neededCoins;
-	private int[]				depends;
-	private boolean				multibuy;
+	private int					offerId;
 	
 }
