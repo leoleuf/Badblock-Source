@@ -48,7 +48,7 @@ public class CrystalsBuyManager {
 		int playerId = resultSet.getInt("id");
 		int shopPoints = resultSet.getInt("ptsboutique");
 		String displayName = StringEscapeUtils.escapeHtml4(ChatColor.stripColor(inventoryItemObject.getName()));
-		BadblockDatabase.getInstance().addSyncRequest(new Request("SELECT id, price, needed_offer FROM boutique_offers WHERE id = '" + shopObject.getOfferId() + "'", RequestType.GETTER) {
+		BadblockDatabase.getInstance().addSyncRequest(new Request("SELECT id, price, needed_offer, multiBuy FROM boutique_offers WHERE id = '" + shopObject.getOfferId() + "'", RequestType.GETTER) {
 			@Override
 			public void done(ResultSet resultSet) {
 				try {
