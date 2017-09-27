@@ -101,6 +101,10 @@ public class RushMapProtector implements MapProtector {
 				case CHEST: case TRAPPED_CHEST: case ENDER_CHEST: case FURNACE: case ENCHANTMENT_TABLE: case WORKBENCH:
 					cancel = true;
 					break;
+				case BARRIER:
+					cancel = true;
+					player.sendTranslatedMessage("rush.youcantplaceablockthere");
+					return false;
 				default: break;
 			}
 
