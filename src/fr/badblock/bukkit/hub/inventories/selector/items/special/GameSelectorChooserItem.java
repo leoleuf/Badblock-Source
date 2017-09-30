@@ -34,8 +34,8 @@ public class GameSelectorChooserItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList(server);
+	public String getGame() {
+		return server;
 	}
 
 	@Override

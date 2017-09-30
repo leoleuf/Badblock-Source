@@ -31,8 +31,8 @@ public class BuildContest16SelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("buildcontest16");
+	public String getGame() {
+		return "buildcontest16";
 	}
 
 	@Override

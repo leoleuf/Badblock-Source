@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,8 +32,10 @@ import fr.badblock.sentry.FullSEntry;
 
 public abstract class GameSelectorItem extends CustomItem {
 
-	int inGamePlayers = 0;
-	int waitingLinePlayers = 0;
+	public static HashMap<String, Integer> inGamePlayers = new HashMap<>();
+	public static HashMap<String, Integer> waitingLinePlayers = new HashMap<>();
+
+	private long lastRefresh;
 
 	public GameSelectorItem(String name, Material material) {
 		this(name, material, (byte) 0, 1, "");
@@ -44,6 +47,7 @@ public abstract class GameSelectorItem extends CustomItem {
 		TaskManager.scheduleSyncRepeatingTask("gameselector_" + name, new Runnable() {
 			@Override
 			public void run() {
+				long timestamp = System.currentTimeMillis();
 				int tempWaitingLinePlayers = 0;
 				int tempInGamePlayers = 0;
 				for (String game : getGames()) {
@@ -54,17 +58,31 @@ public abstract class GameSelectorItem extends CustomItem {
 					tempWaitingLinePlayers += fullSEntry.getWaitinglinePlayers();
 					tempInGamePlayers += fullSEntry.getIngamePLayers();
 				}
-				if (waitingLinePlayers == tempWaitingLinePlayers && inGamePlayers == tempInGamePlayers) {
+				if (!(waitingLinePlayers.containsKey(getGamePrefix())))
+				{
+					waitingLinePlayers.put(getGamePrefix(), tempWaitingLinePlayers);
+				}
+				if (!(inGamePlayers.containsKey(getGamePrefix())))
+				{
+					inGamePlayers.put(getGamePrefix(), tempInGamePlayers);
+				}
+				int waitingLinePlayersInt = waitingLinePlayers.get(getGamePrefix());
+				int inGamePlayersInt = inGamePlayers.get(getGamePrefix());
+				if (waitingLinePlayersInt == tempWaitingLinePlayers && inGamePlayersInt == tempInGamePlayers) {
 					if (!RealTimeBoosterManager.stockage.containsKey(getGamePrefix()) || (RealTimeBoosterManager.stockage.get(getGamePrefix()) != null && (!RealTimeBoosterManager.stockage.get(getGamePrefix()).isValid() || !RealTimeBoosterManager.stockage.get(getGamePrefix()).isEnabled()))) {
 						return;
 					}
 				}
-				if (waitingLinePlayers > tempWaitingLinePlayers) waitingLinePlayers--;
-				else if (waitingLinePlayers < tempWaitingLinePlayers) waitingLinePlayers++;
-				if (inGamePlayers > tempInGamePlayers) inGamePlayers--;
-				else if (inGamePlayers < tempInGamePlayers) inGamePlayers++;
-				waitingLinePlayers = tempWaitingLinePlayers;
-				inGamePlayers = tempInGamePlayers;
+				if (lastRefresh < timestamp)
+				{
+					if (waitingLinePlayersInt > tempWaitingLinePlayers) waitingLinePlayersInt--;
+					else if (waitingLinePlayersInt < tempWaitingLinePlayers) waitingLinePlayersInt++;
+					if (inGamePlayersInt > tempInGamePlayers) inGamePlayersInt--;
+					else if (inGamePlayersInt < tempInGamePlayers) inGamePlayersInt++;
+					waitingLinePlayers.put(getGamePrefix(), waitingLinePlayersInt);
+					inGamePlayers.put(getGamePrefix(), inGamePlayersInt);
+					lastRefresh = timestamp + new Random().nextInt(1600) + 300;
+				}
 				Map<Locale, ItemStack> staticItems = new HashMap<>();
 				for (Entry<Locale, ItemStack> entry : staticItem.entrySet())
 					staticItems.put(entry.getKey(), rebuildLore(entry.getValue(), entry.getKey()));
@@ -87,7 +105,7 @@ public abstract class GameSelectorItem extends CustomItem {
 					}
 				}
 			}
-		}, 1, 20);
+		}, 1, 1);
 	}
 
 	private static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
@@ -128,7 +146,7 @@ public abstract class GameSelectorItem extends CustomItem {
 					boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.boost", playerBooster.getUsername(), (int) ((playerBooster.getBooster().getCoinsMultiplier() - 1) * 100), (int) ((playerBooster.getBooster().getXpMultiplier() - 1) * 100), TimeUnit.SECOND.toShort((playerBooster.getExpire() / 1000L) - (System.currentTimeMillis() / 1000L)))[0]; 
 				}
 			}
-			itemMeta.setLore(Arrays.asList(GameAPI.i18n().get(locale, this.getLore(), inGamePlayers, waitingLinePlayers,
+			itemMeta.setLore(Arrays.asList(GameAPI.i18n().get(locale, this.getLore(), inGamePlayers.get(getGamePrefix()), waitingLinePlayers.get(getGamePrefix()),
 					(this.getGame() != null ? this.getGame().getDeveloper() : ""), boosterLore)));
 		}
 		itemStack.setItemMeta(itemMeta);
@@ -151,7 +169,7 @@ public abstract class GameSelectorItem extends CustomItem {
 					boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.boost", playerBooster.getUsername(), (int) ((playerBooster.getBooster().getCoinsMultiplier() - 1) * 100), (int) ((playerBooster.getBooster().getXpMultiplier() - 1) * 100), TimeUnit.SECOND.toShort((playerBooster.getExpire() / 1000L) - (System.currentTimeMillis() / 1000L)))[0]; 
 				}
 			}
-			itemMeta.setLore(Arrays.asList(GameAPI.i18n().get(locale, this.getLore(), inGamePlayers, waitingLinePlayers,
+			itemMeta.setLore(Arrays.asList(GameAPI.i18n().get(locale, this.getLore(), inGamePlayers.get(getGamePrefix()), waitingLinePlayers.get(getGamePrefix()),
 					(this.getGame() != null ? this.getGame().getDeveloper() : ""), boosterLore)));
 		}
 		itemStack.setItemMeta(itemMeta);

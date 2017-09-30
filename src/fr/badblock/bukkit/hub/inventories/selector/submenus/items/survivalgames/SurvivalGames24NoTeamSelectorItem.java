@@ -33,8 +33,8 @@ public class SurvivalGames24NoTeamSelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("sg24noteam");
+	public String getGame() {
+		return "sg24noteam";
 	}
 
 	@Override

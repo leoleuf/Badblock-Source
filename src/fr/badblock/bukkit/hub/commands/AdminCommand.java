@@ -14,7 +14,7 @@ import fr.badblock.gameapi.utils.selections.CuboidSelection;
 public class AdminCommand extends AbstractCommand {
 
 	public AdminCommand() {
-		super("admin", new TranslatableString("hub.admin.help"), GamePermission.ADMIN, GamePermission.ADMIN, GamePermission.ADMIN);
+		super("ad", new TranslatableString("hub.admin.help"), GamePermission.ADMIN, GamePermission.ADMIN, GamePermission.ADMIN);
 		allowConsole(false);
 	}
 

@@ -13,11 +13,12 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.gameapi.utils.ConfigUtils;
 
-public class PearlsWarSelectorItem extends GameSelectorItem {
+public class TowerRunSelectorItem extends GameSelectorItem {
 
-	public PearlsWarSelectorItem() {
-		// super("§bPearlsWar", Material.ENDER_PEARL);
-		super("hub.items.pearlswarselectoritem", Material.ENDER_PEARL, "hub.items.pearlswarsselectoritem.lore");
+	public TowerRunSelectorItem() {
+		// super("§bTower", Material.NETHER_FENCE);
+		super("hub.items.towerrunselectoritem", Material.NETHER_FENCE, "hub.items.towerrunselectoritem.lore");
+		this.setFakeEnchantment(true);
 	}
 
 	@Override
@@ -28,32 +29,32 @@ public class PearlsWarSelectorItem extends GameSelectorItem {
 
 	@Override
 	public List<String> getGames() {
-		return Arrays.asList("pw16");
+		return Arrays.asList("towerE");
 	}
 
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
-		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "pearlswar");
-		if (location == null) // player.sendMessage("§cCe jeu est
-								// indisponible.");
+		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "tower");
+		if (location == null)
 			player.sendTranslatedMessage("hub.gameunavailable");
-		else
+		else{
 			player.teleport(location);
+		}
 	}
 
 	@Override
 	public BadblockGame getGame() {
-		return BadblockGame.PEARLSWAR;
+		return BadblockGame.TOWER;
 	}
 
 	@Override
 	public boolean isMiniGame() {
-		return false;
+		return true;
 	}
-	
+
 	@Override
 	public String getGamePrefix() {
-		return "pw";
+		return "towerE";
 	}
 
 }

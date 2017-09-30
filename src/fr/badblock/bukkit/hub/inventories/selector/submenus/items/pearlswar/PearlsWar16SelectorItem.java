@@ -33,8 +33,8 @@ public class PearlsWar16SelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("pw16");
+	public String getGame() {
+		return "pw16";
 	}
 
 	@Override

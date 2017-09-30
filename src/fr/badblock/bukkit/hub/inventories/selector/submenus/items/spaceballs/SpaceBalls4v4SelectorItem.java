@@ -33,8 +33,8 @@ public class SpaceBalls4v4SelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("sb4v4");
+	public String getGame() {
+		return "sb4v4";
 	}
 
 	@Override

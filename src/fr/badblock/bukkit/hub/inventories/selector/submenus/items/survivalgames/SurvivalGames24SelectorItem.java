@@ -33,8 +33,8 @@ public class SurvivalGames24SelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("sg24");
+	public String getGame() {
+		return "sg24";
 	}
 
 	@Override

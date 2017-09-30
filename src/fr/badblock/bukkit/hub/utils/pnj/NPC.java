@@ -1,12 +1,15 @@
 package fr.badblock.bukkit.hub.utils.pnj;
 import java.util.HashMap;
 import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+
 import com.mojang.authlib.GameProfile;
+
 import fr.badblock.gameapi.players.BadblockPlayer;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
@@ -37,6 +40,7 @@ public class NPC {
 		npcs.put(entityPlayer.getId(), this);
 		return entityPlayer;
 	}
+	@SuppressWarnings("unlikely-arg-type")
 	public void despawn(EntityPlayer entityPlayer) {
 		npcs.remove(this);
 		entityPlayer.die();

@@ -17,6 +17,7 @@ import fr.badblock.bukkit.hub.inventories.selector.items.SpaceBallsSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SpawnSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SpeedUHCSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SurvivalGamesSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.TowerRunSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.TowerSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.VIPZoneSelectorItem;
 import fr.badblock.bukkit.hub.inventories.settings.items.BlueStainedGlassPaneItem;
@@ -27,7 +28,7 @@ public class SelectorInventory extends CustomInventory {
 	public SelectorInventory() {
 		super("hub.items.selectorinventory", 6);
 		LightBlueStainedGlassPaneItem lightBlueStainedGlassPaneItem = new LightBlueStainedGlassPaneItem();
-		this.setItem(lightBlueStainedGlassPaneItem, 19, 20, 21, 13, 23, 24, 25, 27, 35, 37, 43, 47, 48, 49, 50, 51);
+		this.setItem(lightBlueStainedGlassPaneItem, 19, 20, 21, 13, 23, 24, 25, 27, 35, 37, 43, 47, 48, 50, 51);
 		this.setItem(0, new SpawnSelectorItem());
 		this.setItem(4, new GoogleAuthSelectorItem());
 		this.setItem(8, new VIPZoneSelectorItem());
@@ -45,6 +46,7 @@ public class SelectorInventory extends CustomInventory {
 		this.setItem(41, new FreeBuildSelectorItem());
 		this.setItem(42, new DayZSelectorItem());
 		this.setItem(45, new HubChangerSelectorItem());
+		this.setItem(49, new TowerRunSelectorItem());
 		this.setItem(53, new QuitSelectorItem());
 		this.setNoFilledItem(new BlueStainedGlassPaneItem());
 	}

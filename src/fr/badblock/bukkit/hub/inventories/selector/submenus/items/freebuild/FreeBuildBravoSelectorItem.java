@@ -29,8 +29,8 @@ public class FreeBuildBravoSelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("fb2");
+	public String getGame() {
+		return "fb2";
 	}
 
 	@Override

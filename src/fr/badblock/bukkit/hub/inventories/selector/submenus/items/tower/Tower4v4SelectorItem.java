@@ -31,8 +31,8 @@ public class Tower4v4SelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("tower4v4");
+	public String getGame() {
+		return "tower4v4";
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class Tower4v4SelectorItem extends SubGameSelectorItem {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), getGames().get(0), false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
+				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), getGame(), false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 			}
 		};
 		runnable.run();

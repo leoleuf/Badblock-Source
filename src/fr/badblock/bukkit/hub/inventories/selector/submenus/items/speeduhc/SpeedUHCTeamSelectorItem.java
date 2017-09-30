@@ -33,8 +33,8 @@ public class SpeedUHCTeamSelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("speeduhct");
+	public String getGame() {
+		return "speeduhct";
 	}
 
 	@Override

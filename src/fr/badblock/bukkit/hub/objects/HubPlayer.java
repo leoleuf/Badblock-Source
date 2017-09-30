@@ -167,7 +167,7 @@ public class HubPlayer implements InGameData {
 		BadBlockHub hub = BadBlockHub.getInstance();
 		final TempScheduler tempScheduler0 = new TempScheduler();
 		tempScheduler0.task = TaskManager.scheduleSyncRepeatingTask("hub_" + player.getName() + "_" + player.getEntityId(), new Runnable() {
-			@SuppressWarnings("deprecation")
+			@SuppressWarnings({ "deprecation", "unlikely-arg-type" })
 			@Override
 			public void run() {
 				if (player == null || !player.isOnline()) {
@@ -245,6 +245,7 @@ public class HubPlayer implements InGameData {
 			long time = 0;
 			int id = 0;
 			boolean iv;*/
+			@SuppressWarnings("unlikely-arg-type")
 			@Override
 			public void run() {
 				if (player == null || !player.isOnline()) {
@@ -323,7 +324,7 @@ public class HubPlayer implements InGameData {
 		}, 2, 2);
 		TempScheduler tempScheduler3 = new TempScheduler();
 		tempScheduler3.task = TaskManager.scheduleSyncRepeatingTask(player.getName() + "_funmode", new Runnable() {
-			@SuppressWarnings("deprecation")
+			@SuppressWarnings({ "deprecation", "unlikely-arg-type" })
 			@Override
 			public void run() {
 				if (player == null || !player.isOnline()) {

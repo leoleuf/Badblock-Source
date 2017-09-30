@@ -42,7 +42,7 @@ public class FreeBuildSelectorItem extends GameSelectorItem {
 		else {
 			if (itemAction.equals(ItemAction.INVENTORY_LEFT_CLICK)) {
 				//CustomInventory.get(FreeBuildChooserInventory.class).open(player);
-				player.sendMessage("§b▶ §7Entrée §bsolitaire §7dans la file §b(FreeBuild Alpha)§7...");
+				player.sendMessage("§b▶ §7Entrée §bsolitaire §7dans la file §b(FreeBuild)§7...");
 				Runnable runnable = new Runnable() {
 					@Override
 					public void run() {
@@ -56,11 +56,11 @@ public class FreeBuildSelectorItem extends GameSelectorItem {
 					}
 				};
 				if (player.hasPermission("matchmaking.priority")) {
-					player.sendMessage("§b➤ §7Téléportation §bsolitaire §7en jeu §b(FreeBuild Alpha)§7...");
+					player.sendMessage("§b➤ §7Téléportation §bsolitaire §7en jeu §b(FreeBuild)§7...");
 					runnable.run();
 				}
 				else {
-					player.sendMessage("§b▶ §7Entrée §bsolitaire §7dans la file §b(FreeBuild Alpha)§7...");
+					player.sendMessage("§b▶ §7Entrée §bsolitaire §7dans la file §b(FreeBuild)§7...");
 					int time = new Random().nextInt(20 * 9) + (20 * 3);
 					player.sendMessage("§bAccès: §3Standard §b| Estimé: §b" + TimeUtils.getStringTime(time / 20));
 					TaskManager.runAsyncTaskLater(runnable, time);

@@ -53,7 +53,7 @@ public class PlayerJoinListener extends _HubListener {
 		player.setMaxHealth(2D);
 		player.setHealth(2D);
 		player.setWalkSpeed(0.4F);
-		player.setGameMode(GameMode.ADVENTURE);
+		player.setGameMode(GameMode.SURVIVAL);
 		PlayerCustomInventory.give(player);
 		System.out.println("[HUB] Loaded " + player.getName() + ".");
 	}

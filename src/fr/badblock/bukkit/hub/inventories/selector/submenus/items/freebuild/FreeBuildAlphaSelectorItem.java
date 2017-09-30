@@ -30,8 +30,8 @@ public class FreeBuildAlphaSelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("fb");
+	public String getGame() {
+		return "fb";
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import fr.badblock.bukkit.hub.commands.AuthCheckCommand;
 import fr.badblock.bukkit.hub.commands.AuthRemoveCommand;
 import fr.badblock.bukkit.hub.commands.NPCCommand;
 import fr.badblock.bukkit.hub.commands.RaceCommand;
+import fr.badblock.bukkit.hub.commands.SignCommand;
 import fr.badblock.bukkit.hub.commands.SpawnCommand;
 import fr.badblock.bukkit.hub.effectlib.EffectManager;
 import fr.badblock.bukkit.hub.inventories.LinkedInventoryEntity;
@@ -48,6 +49,7 @@ import fr.badblock.bukkit.hub.tasks.BossBarTask;
 import fr.badblock.bukkit.hub.tasks.RebootTask;
 import fr.badblock.bukkit.hub.tasks.RequestBoosterTask;
 import fr.badblock.bukkit.hub.tasks.RequestNPCTask;
+import fr.badblock.bukkit.hub.tasks.RequestSignsTask;
 import fr.badblock.bukkit.hub.utils.MountManager;
 import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
@@ -140,6 +142,7 @@ public class BadBlockHub extends BadblockPlugin {
 		// Effects
 		effectManager = new EffectManager(this);
 		// Tasks
+		new RequestSignsTask();
 		new RequestNPCTask();
 		new RequestBoosterTask();
 		new RebootTask();
@@ -203,6 +206,7 @@ public class BadBlockHub extends BadblockPlugin {
 		}
 		this.setVipPushCuboid(new CuboidSelection(loc1, loc2));
 		// Commands
+		new SignCommand();
 		new NPCCommand();
 		new AdminCommand();
 		new SpawnCommand();

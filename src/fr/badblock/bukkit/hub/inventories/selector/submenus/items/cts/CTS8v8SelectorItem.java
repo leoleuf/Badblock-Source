@@ -32,8 +32,8 @@ public class CTS8v8SelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("cts8v8");
+	public String getGame() {
+		return "cts8v8";
 	}
 
 	@Override

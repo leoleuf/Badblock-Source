@@ -33,8 +33,8 @@ public class Rush4x4SelectorItem extends SubGameSelectorItem {
 	}
 
 	@Override
-	public List<String> getGames() {
-		return Arrays.asList("rush4x4wb");
+	public String getGame() {
+		return "rush4x4wb";
 	}
 
 	@Override
