@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.SubGameSelectorItem;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.rabbitconnector.RabbitPacketType;
 import fr.badblock.rabbitconnector.RabbitService;
@@ -40,7 +41,7 @@ public class BuildContest16SelectorItem extends SubGameSelectorItem {
 		BadBlockHub instance = BadBlockHub.getInstance();
 		RabbitService service = instance.getRabbitService();
 		Gson gson = instance.getGson();
-		service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), "buildcontest16", false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
+		service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), "buildcontest16", false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 		player.closeInventory();
 	}
 

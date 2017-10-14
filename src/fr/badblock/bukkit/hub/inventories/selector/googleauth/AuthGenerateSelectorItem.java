@@ -13,6 +13,7 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.general.Callback;
@@ -32,7 +33,7 @@ public class AuthGenerateSelectorItem extends CustomItem {
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
 		player.closeInventory();
-		AuthUtils.getAuthKey(player.getName(), new Callback<String>() {
+		AuthUtils.getAuthKey(HubPlayer.getRealName(player), new Callback<String>() {
 			@Override
 			public void done(String key, Throwable throwable) {
 				// on lui prévient quand même qu'une clé a quand-même été générée avant
@@ -42,7 +43,7 @@ public class AuthGenerateSelectorItem extends CustomItem {
 				// génération d'une nouvelle clé
 				GoogleAuthenticatorKey authKey = AuthUtils.gAuth.createCredentials();
 				String secretKey = authKey.getKey();
-				AuthUtils.tempPlayersKeys.put(player.getName().toLowerCase(), secretKey);
+				AuthUtils.tempPlayersKeys.put(HubPlayer.getRealName(player).toLowerCase(), secretKey);
 				// demander une vérification du mot de passe avant sauvegarde
 				// /authcheck <code>
 				player.sendTranslatedMessage("hub.auth.generatedkey", secretKey);

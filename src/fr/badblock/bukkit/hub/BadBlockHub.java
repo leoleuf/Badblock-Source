@@ -24,6 +24,38 @@ import fr.badblock.bukkit.hub.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.inventories.hubchanger.HubChangerInventory;
 import fr.badblock.bukkit.hub.inventories.join.PlayerCustomInventory;
 import fr.badblock.bukkit.hub.inventories.market.cosmetics.chests.objects.ChestLoader;
+import fr.badblock.bukkit.hub.inventories.selector.items.BuildContestSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.CTSSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.DayZSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.FreeBuildSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.PearlsWarSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.PointOutSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.PvPBoxSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.PvPFactionSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.RushSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.SkyBlockSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.SpeedUHCSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.SurvivalGamesSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.TowerRunSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.TowerSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.buildcontest.BuildContest16SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.cts.CTS8v8SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.pearlswar.PearlsWar16SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.pointout.PointOut8v8SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.rush.Rush2v2NBSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.rush.Rush2v2SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.rush.Rush4v4NBSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.rush.Rush4v4SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.rush.Rush4x1SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.rush.Rush4x4NBSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.rush.Rush4x4SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.spaceballs.SpaceBalls4v4SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.speeduhc.SpeedUHCSoloSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.speeduhc.SpeedUHCTeamSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.survivalgames.SurvivalGames24NoTeamSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.survivalgames.SurvivalGames24SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.Tower2v2SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.Tower4v4SelectorItem;
 import fr.badblock.bukkit.hub.listeners.entities.CreatureSpawnListener;
 import fr.badblock.bukkit.hub.listeners.entities.EntityCombustListener;
 import fr.badblock.bukkit.hub.listeners.entities.EntityExplodeListener;
@@ -46,6 +78,7 @@ import fr.badblock.bukkit.hub.rabbitmq.listeners.HubPacketListener;
 import fr.badblock.bukkit.hub.rabbitmq.listeners.SEntryInfosListener;
 import fr.badblock.bukkit.hub.rabbitmq.listeners.WorkerListener;
 import fr.badblock.bukkit.hub.tasks.BossBarTask;
+import fr.badblock.bukkit.hub.tasks.DropsTask;
 import fr.badblock.bukkit.hub.tasks.RebootTask;
 import fr.badblock.bukkit.hub.tasks.RequestBoosterTask;
 import fr.badblock.bukkit.hub.tasks.RequestNPCTask;
@@ -103,7 +136,7 @@ public class BadBlockHub extends BadblockPlugin {
 		if (System.getSecurityManager() == null) System.setSecurityManager(new BadblockSecurityManager());
 		System.out.println("Loaded BadblockHub! (onLoad())");
 	}
-	
+
 	@Override
 	public void onDisable() {
 		this.getRabbitService().remove();
@@ -147,6 +180,7 @@ public class BadBlockHub extends BadblockPlugin {
 		new RequestBoosterTask();
 		new RebootTask();
 		new BossBarTask();
+		new DropsTask();
 		// Player items
 		PlayerCustomInventory.load();
 		// Rabbit
@@ -161,6 +195,47 @@ public class BadBlockHub extends BadblockPlugin {
 		new BoosterUpdateListener();
 		new BungeeWorkerListener();
 		new WorkerListener();
+		// kamoulox
+		Bukkit.getScheduler().runTaskLater(BadBlockHub.getInstance(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				new TowerSelectorItem();
+				new CTSSelectorItem();
+				new CTS8v8SelectorItem();
+				new FreeBuildSelectorItem();
+				new PearlsWarSelectorItem();
+				new PvPBoxSelectorItem();
+				new PvPFactionSelectorItem();
+				new RushSelectorItem();
+				new BuildContestSelectorItem();
+				new BuildContest16SelectorItem();
+				new SkyBlockSelectorItem();
+				new DayZSelectorItem();
+				new SpeedUHCSelectorItem();
+				new SurvivalGamesSelectorItem();
+				new TowerRunSelectorItem();
+				new TowerSelectorItem();
+				new Tower2v2SelectorItem();
+				new Tower4v4SelectorItem();
+				new SurvivalGames24SelectorItem();
+				new SurvivalGames24NoTeamSelectorItem();
+				new SpeedUHCTeamSelectorItem();
+				new SpeedUHCSoloSelectorItem();
+				new SpaceBalls4v4SelectorItem();
+				new Rush4x4SelectorItem();
+				new Rush4x4NBSelectorItem();
+				new Rush4x1SelectorItem();
+				new Rush4v4SelectorItem();
+				new Rush4v4NBSelectorItem();
+				new Rush2v2SelectorItem();
+				new Rush2v2NBSelectorItem();
+				new PearlsWar16SelectorItem();
+				new PointOut8v8SelectorItem();
+				new PointOutSelectorItem();
+			}
+		}, 5 * 20);
 		// SEntry
 		new SEntryInfosListener();
 		// Inventories interactions by fake-entities
@@ -256,7 +331,7 @@ public class BadBlockHub extends BadblockPlugin {
 		GameAPI.getAPI().setEmptyChunks(cuboid2, true);
 		GameAPI.getAPI().loadChunks(cuboid2, 1);
 		System.out.println("[ChunkLoader] Loaded chunks");
-		
+
 		/*TaskManager.scheduleAsyncRepeatingTask("christmas_starparticles", new Runnable() {
 		 * // remove after christmas
 			@SuppressWarnings("deprecation")

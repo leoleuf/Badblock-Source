@@ -79,7 +79,7 @@ public class PlayerInteractListener extends _HubListener {
 									BadBlockHub instance = BadBlockHub.getInstance();
 									RabbitService service = instance.getRabbitService();
 									Gson gson = instance.getGson();
-									service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), internalName, false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
+									service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), internalName, false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 								}
 							}, time);
 							break;

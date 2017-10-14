@@ -42,7 +42,6 @@ public class SkyBlockSelectorItem extends GameSelectorItem {
 		else {
 			if (itemAction.equals(ItemAction.INVENTORY_LEFT_CLICK)) {
 				//CustomInventory.get(FreeBuildChooserInventory.class).open(player);
-				player.sendMessage("§b▶ §7Entrée §bsolitaire §7dans la file §b(SkyBlock)§7...");
 				Runnable runnable = new Runnable() {
 					@Override
 					public void run() {
@@ -61,7 +60,7 @@ public class SkyBlockSelectorItem extends GameSelectorItem {
 				}
 				else {
 					player.sendMessage("§b▶ §7Entrée §bsolitaire §7dans la file §b(SkyBlock)§7...");
-					int time = new Random().nextInt(20 * 9) + (20 * 3);
+					int time = new Random().nextInt(20 * 16) + (20 * 8);
 					player.sendMessage("§bAccès: §3Standard §b| Estimé: §b" + TimeUtils.getStringTime(time / 20));
 					TaskManager.runAsyncTaskLater(runnable, time);
 				}

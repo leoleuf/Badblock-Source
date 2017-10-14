@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.rabbitconnector.RabbitPacketType;
@@ -50,7 +51,7 @@ public class SkillZSelectorItem extends GameSelectorItem {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), "skillz", false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
+				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), "skillz", false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 			}
 		};
 		if (player.hasPermission("matchmaking.priority")) runnable.run();

@@ -163,6 +163,13 @@ public class HubPlayer implements InGameData {
 		this.getScoreboard().generate();
 	}
 
+	public static String getRealName(BadblockPlayer player)
+	{
+		GameBadblockPlayer gbp = (GameBadblockPlayer) player;
+		if (gbp.getRealName() != null) return gbp.getRealName();
+		return gbp.getName();
+	}
+	
 	public void lodad(BadblockPlayer player) {
 		BadBlockHub hub = BadBlockHub.getInstance();
 		final TempScheduler tempScheduler0 = new TempScheduler();
@@ -204,7 +211,7 @@ public class HubPlayer implements InGameData {
 						player.saveGameData();
 					}
 				}
-				GameAPI.getAPI().getSqlDatabase().call("SELECT id, xp, badcoins FROM debts WHERE playerName = '" + player.getName().toLowerCase() + "'", SQLRequestType.QUERY, new Callback<ResultSet>() {
+				GameAPI.getAPI().getSqlDatabase().call("SELECT id, xp, badcoins FROM debts WHERE playerName = '" + HubPlayer.getRealName(player) + "'", SQLRequestType.QUERY, new Callback<ResultSet>() {
 
 					@Override
 					public void done(ResultSet result, Throwable error) {

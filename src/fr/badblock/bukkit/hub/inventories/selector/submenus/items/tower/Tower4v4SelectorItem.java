@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.SubGameSelectorItem;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.rabbitconnector.RabbitPacketType;
 import fr.badblock.rabbitconnector.RabbitService;
@@ -43,7 +44,7 @@ public class Tower4v4SelectorItem extends SubGameSelectorItem {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(player.getName(), getGame(), false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
+				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), getGame(), false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 			}
 		};
 		runnable.run();

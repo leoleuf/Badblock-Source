@@ -56,7 +56,7 @@ public class BoosterItem extends CustomItem {
 		hubPlayer.lastBooster.setGameName(this.getGamePrefix());
 		hubPlayer.lastBooster.setExpire(System.currentTimeMillis() + hubPlayer.lastBooster.getBooster().getLength());
 		hubPlayer.lastBooster.setEnabled(true);
-		hubPlayer.lastBooster.setUsername(player.getName());
+		hubPlayer.lastBooster.setUsername(HubPlayer.getRealName(player));
 		player.sendTranslatedMessage("hub.boosters.disabled.enabledsuccessfully", this.getGamePrefix());
 		player.playSound(Sound.NOTE_PLING);
 		player.saveGameData();
@@ -73,7 +73,7 @@ public class BoosterItem extends CustomItem {
 					error.printStackTrace();
 				}
 				GameAPI.getAPI().getRabbitSpeaker().sendSyncUTF8Publisher("boosterRefresh", getGamePrefix(), 10000L, false);
-				String[] data = player.getTranslatedMessage("hub.boosters.launched", player.getName(), getGamePrefix(),
+				String[] data = player.getTranslatedMessage("hub.boosters.launched", HubPlayer.getRealName(player), getGamePrefix(),
 						((int)((hubPlayer.lastBooster.getBooster().getCoinsMultiplier() - 1) * 100)), ((int)((hubPlayer.lastBooster.getBooster().getXpMultiplier() - 1) * 100)),
 						TimeUnit.SECOND.toFrench(hubPlayer.lastBooster.getBooster().getLength() / 1000L));
 				for (String string : data) {

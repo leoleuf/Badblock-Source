@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.market.properties.CustomPropertyRunnable;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.data.PlayerData;
 import fr.badblock.gameapi.players.data.boosters.Booster;
@@ -49,7 +50,7 @@ public class BoosterCustomPropertyRunnable extends CustomPropertyRunnable {
 				ConfigUtils.getInt(BadBlockHub.getInstance(), "booster.data." + id + ".thanks.maxbadcoins"), 
 				ConfigUtils.getInt(BadBlockHub.getInstance(), "booster.data." + id + ".thanks.maxxp"), 
 				(ConfigUtils.getInt(BadBlockHub.getInstance(), "booster.data." + id + ".effectiveTime") * 1000L));
-		PlayerBooster playerBooster = new PlayerBooster(player.getName(), -1, false, 0, 0, null, booster);
+		PlayerBooster playerBooster = new PlayerBooster(HubPlayer.getRealName(player), -1, false, 0, 0, null, booster);
 		gamePlayerData.getBoosters().add(playerBooster);
 		player.saveGameData();
 	}

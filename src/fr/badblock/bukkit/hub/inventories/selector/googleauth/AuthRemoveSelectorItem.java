@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.general.Callback;
 
@@ -27,7 +28,7 @@ public class AuthRemoveSelectorItem extends CustomItem {
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
 		player.closeInventory();
-		String playerName = player.getName().toLowerCase();
+		String playerName = HubPlayer.getRealName(player).toLowerCase();
 		AuthUtils.getAuthKey(playerName, new Callback<String>() {
 			@Override
 			public void done(String key, Throwable throwable) {

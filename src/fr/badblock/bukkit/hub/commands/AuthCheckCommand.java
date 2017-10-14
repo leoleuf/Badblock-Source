@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import com.google.gson.JsonObject;
 
 import fr.badblock.bukkit.hub.inventories.selector.googleauth.AuthUtils;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.command.AbstractCommand;
 import fr.badblock.gameapi.players.BadblockPlayer;
@@ -30,7 +31,7 @@ public class AuthCheckCommand extends AbstractCommand {
 			player.sendTranslatedMessage("hub.auth.notanint");
 			return true;
 		}
-		String playerName = player.getName().toLowerCase();
+		String playerName = HubPlayer.getRealName(player).toLowerCase();
 		String secretKey = AuthUtils.tempPlayersKeys.get(playerName);
 		if (secretKey == null || secretKey.isEmpty()) {
 			player.sendTranslatedMessage("hub.auth.pleasegeneratebeforecheck");

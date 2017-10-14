@@ -133,7 +133,14 @@ public class GameSign implements Runnable {
 		}
 		else
 		{
+			block.setType(Material.CHEST);
+			org.bukkit.material.Chest chestData = (org.bukkit.material.Chest) block.getState().getData();
+			chestData.setFacingDirection(getBlockFace(getDirection()));
+			block.getState().setData(chestData);
 			block.setType(Material.WALL_SIGN);
+			org.bukkit.material.Sign signData = (org.bukkit.material.Sign) block.getState().getData();
+			signData.setFacingDirection(getBlockFace(getDirection()));
+			block.getState().setData(signData);
 		}
 	}
 	

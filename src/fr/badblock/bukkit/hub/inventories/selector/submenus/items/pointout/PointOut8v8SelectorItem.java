@@ -1,4 +1,4 @@
-package fr.badblock.bukkit.hub.inventories.selector.submenus.items.survivalgames;
+package fr.badblock.bukkit.hub.inventories.selector.submenus.items.pointout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,12 +19,11 @@ import fr.badblock.rabbitconnector.RabbitService;
 import fr.badblock.sentry.SEntry;
 import fr.badblock.utils.Encodage;
 
-public class SurvivalGames24NoTeamSelectorItem extends SubGameSelectorItem {
+public class PointOut8v8SelectorItem extends SubGameSelectorItem {
 
 	@SuppressWarnings("deprecation")
-	public SurvivalGames24NoTeamSelectorItem() {
-		super("hub.items.survivalgamesselectoritem.24noteam", Material.BANNER, DyeColor.RED.getDyeData(),
-				"hub.items.survivalgamesselectoritem.24noteam.lore");
+	public PointOut8v8SelectorItem() {
+		super("hub.items.pointoutselectoritem.8v8", Material.BANNER, DyeColor.CYAN.getDyeData(), "hub.items.pointoutselectoritem.8v8.lore");
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class SurvivalGames24NoTeamSelectorItem extends SubGameSelectorItem {
 
 	@Override
 	public String getGame() {
-		return "sg24noteam";
+		return "pointout8v8";
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class SurvivalGames24NoTeamSelectorItem extends SubGameSelectorItem {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), "sg24noteam", false)),
+				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), "pointout8v8", false)),
 						Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 				/*if (!player.hasPermission("others.mod.connect")) {
 					SEntryInfosListener.tempPlayers.put(player.getName(), System.currentTimeMillis() + SEntryInfosListener.tempTime);

@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import com.google.gson.JsonObject;
 
 import fr.badblock.bukkit.hub.inventories.selector.googleauth.AuthUtils;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.command.AbstractCommand;
 import fr.badblock.gameapi.players.BadblockPlayer;
@@ -32,7 +33,7 @@ public class AuthRemoveCommand extends AbstractCommand {
 			return true;
 		}
 		final int enteredTemporaryCode = secretId;
-		String playerName = player.getName().toLowerCase();
+		String playerName = HubPlayer.getRealName(player).toLowerCase();
 		AuthUtils.getAuthKey(playerName, new Callback<String>() {
 			@Override
 			public void done(String string, Throwable throwable) {
