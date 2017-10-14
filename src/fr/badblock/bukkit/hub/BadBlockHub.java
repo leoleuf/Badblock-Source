@@ -83,6 +83,7 @@ import fr.badblock.bukkit.hub.tasks.RebootTask;
 import fr.badblock.bukkit.hub.tasks.RequestBoosterTask;
 import fr.badblock.bukkit.hub.tasks.RequestNPCTask;
 import fr.badblock.bukkit.hub.tasks.RequestSignsTask;
+import fr.badblock.bukkit.hub.tasks.TaskListTask;
 import fr.badblock.bukkit.hub.utils.MountManager;
 import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
@@ -175,6 +176,7 @@ public class BadBlockHub extends BadblockPlugin {
 		// Effects
 		effectManager = new EffectManager(this);
 		// Tasks
+		new TaskListTask();
 		new RequestSignsTask();
 		new RequestNPCTask();
 		new RequestBoosterTask();

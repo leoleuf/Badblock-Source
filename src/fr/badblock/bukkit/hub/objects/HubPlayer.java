@@ -325,10 +325,14 @@ public class HubPlayer implements InGameData {
 		TaskManager.scheduleAsyncRepeatingTask(player.getName() + "_objective", new Runnable() {
 			@Override
 			public void run() {
+				if (!player.isOnline())
+				{
+					TaskManager.cancelTaskByName(player.getName() + "_objective");
+				}
 				if (player.getCustomObjective() != null)
 					player.getCustomObjective().generate();
 			}
-		}, 2, 2);
+		}, 20, 20);
 		TempScheduler tempScheduler3 = new TempScheduler();
 		tempScheduler3.task = TaskManager.scheduleSyncRepeatingTask(player.getName() + "_funmode", new Runnable() {
 			@SuppressWarnings({ "deprecation", "unlikely-arg-type" })
