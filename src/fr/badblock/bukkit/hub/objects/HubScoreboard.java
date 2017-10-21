@@ -44,8 +44,8 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 			int i = 14;
 			objective.changeLine(i, "");
 			i--;
-			objective.changeLine(i, i18n("hub.scoreboard.shoppoints", (player.getPlayerData().getShopPoints() != -1
-					? player.getPlayerData().getShopPoints() : i18n("hub.scoreboard.shoppoints_nowebsiteaccount"))));
+			objective.changeLine(i, i18n("hub.scoreboard.shoppoints", (player.getShopPoints() != -1
+					? player.getShopPoints() : i18n("hub.scoreboard.shoppoints_nowebsiteaccount"))));
 			i--;
 			objective.changeLine(i, i18n("hub.scoreboard.badcoins", player.getPlayerData().getBadcoins()));
 			i--;
