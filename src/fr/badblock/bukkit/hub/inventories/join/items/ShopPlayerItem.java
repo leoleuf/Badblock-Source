@@ -8,7 +8,6 @@ import org.bukkit.block.Block;
 
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
-import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer;
 
 public class ShopPlayerItem extends CustomItem {
@@ -30,12 +29,7 @@ public class ShopPlayerItem extends CustomItem {
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
 		player.closeInventory();
-		if (!player.hasPermission("hub.soonbypass")) {
-			player.sendTranslatedMessage("hub.items.functionsoon");
-			return;
-		}
-		HubPlayer hubPlayer = HubPlayer.get(player);
-		hubPlayer.getShopInventory().open(player);
+		player.sendTranslatedMessage("hub.items.functionsoon");
 	}
 
 }

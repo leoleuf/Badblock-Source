@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="C:/t/p/service/PermissionsEx.jar"/>
+	<classpathentry kind="lib" path="C:/t/p/service/BadBlockShopLinker.jar"/>
+	<classpathentry kind="lib" path="C:/Users/root/Downloads/lombok.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GoogleAuth"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BadblockSpigot"/>
+	<classpathentry kind="lib" path="C:/Users/root/Downloads/ProtocolLib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/root/Downloads/ViaVersion-1.1.2-SNAPSHOT.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/API"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GameAPI"/>
+	<classpathentry kind="lib" path="C:/Users/root/Desktop/spigot.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

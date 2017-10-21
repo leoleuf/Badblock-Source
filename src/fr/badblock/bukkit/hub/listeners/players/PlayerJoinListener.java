@@ -17,6 +17,7 @@ import fr.badblock.bukkit.hub.listeners._HubListener;
 import fr.badblock.bukkit.hub.objects.HubPlayer;
 import fr.badblock.bukkit.hub.objects.HubScoreboard;
 import fr.badblock.bukkit.hub.objects.HubStoredPlayer;
+import fr.badblock.game.core18R3.players.GameBadblockPlayer;
 import fr.badblock.game.core18R3.players.ingamedata.CommandInGameData;
 import fr.badblock.gameapi.events.api.PlayerLoadedEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
@@ -99,8 +100,13 @@ public class PlayerJoinListener extends _HubListener {
 				if (hubPlayer.getScoreboard() != null)
 					hubPlayer.getScoreboard().generate();
 				// Broadcast a join message
-				if (player.hasPermission("hub.broadcastjoin")) {
-					new TranslatableString("hub.joined", player.getGroupPrefix(), player.getName()).broadcast();
+				if (player.hasPermission("hub.broadcastjoin"))
+				{
+					GameBadblockPlayer gbp = (GameBadblockPlayer) player;
+					if (!gbp.getFakeMainGroup().equalsIgnoreCase("default"))
+					{
+						new TranslatableString("hub.joined", player.getGroupPrefix(), player.getName()).broadcast();
+					}
 				}
 				// For sur tous les joueurs pour voir s'ils peuvent voir celui qui vient de se co
 				for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -121,7 +127,7 @@ public class PlayerJoinListener extends _HubListener {
 					else if (hubStoredPlayer.isHidePlayers()) player.hidePlayer(plo);
 					else player.showPlayer(pl);
 				}
-				
+
 				//for (BadblockPlayer po : BukkitUtils.getPlayers())
 				//	if (HubStoredPlayer.get(po).hidePlayers) po.hidePlayer(player);
 				/*if (hubStoredPlayer.isHidePlayers())

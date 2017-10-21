@@ -1,11 +1,8 @@
 package fr.badblock.bukkit.hub.listeners.players;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,9 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.gson.Gson;
-
-import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
 import fr.badblock.bukkit.hub.inventories.market.cosmetics.chests.objects.ChestLoader;
@@ -28,10 +22,6 @@ import fr.badblock.bukkit.hub.signs.GameSign;
 import fr.badblock.bukkit.hub.signs.GameSignManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.ConfigUtils;
-import fr.badblock.rabbitconnector.RabbitPacketType;
-import fr.badblock.rabbitconnector.RabbitService;
-import fr.badblock.sentry.SEntry;
-import fr.badblock.utils.Encodage;
 
 public class PlayerInteractListener extends _HubListener {
 
@@ -63,27 +53,10 @@ public class PlayerInteractListener extends _HubListener {
 				for (GameSign gameSign : GameSignManager.stockage.values())
 				{
 					Location loc = ConfigUtils.convertStringToLocation(gameSign.getLocation());
-					System.out.println(block.getLocation().toString() + " / " + loc);
-					if (loc.getX() == location.getX() && loc.getY() == location.getY() && loc.getZ() == location.getZ()) {
-						{
-							player.sendTranslatedMessage("hub.gameteleport");
-							int time = 15 + new Random().nextInt(15);
-							int addedTime = (time + 10) * 50;
-							if (gameSign.getTempMap() == null) gameSign.setTempMap(new HashMap<>());
-							gameSign.getTempMap().put(player.getName(), System.currentTimeMillis() + addedTime);
-							String internalName = gameSign.getInternalName();
-							Bukkit.getScheduler().runTaskLater(BadBlockHub.getInstance(), new Runnable()
-							{
-								@Override
-								public void run() {
-									BadBlockHub instance = BadBlockHub.getInstance();
-									RabbitService service = instance.getRabbitService();
-									Gson gson = instance.getGson();
-									service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), internalName, false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
-								}
-							}, time);
-							break;
-						}
+					if (loc.getX() == location.getX() && loc.getY() == location.getY() && loc.getZ() == location.getZ())
+					{
+						gameSign.click(player);
+						break;
 					}
 				}
 			}
@@ -113,7 +86,6 @@ public class PlayerInteractListener extends _HubListener {
 				player.sendMessage(customItem.getErrorNeededPermission());
 				return;
 			}
-
 			customItem.onClick(player, itemAction, event.getClickedBlock());
 		}
 	}

@@ -1,0 +1,5 @@
+
+				/*if (waitingLinePlayers > tempWaitingLinePlayers) waitingLinePlayers--;
+				else if (waitingLinePlayers < tempWaitingLinePlayers) waitingLinePlayers++;
+				if (inGamePlayers > tempInGamePlayers) inGamePlayers--;
+				else if (inGamePlayers < tempInGamePlayers) inGamePlayers++;*/

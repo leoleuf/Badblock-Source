@@ -5,7 +5,6 @@ import org.apache.commons.lang.Validate;
 import fr.badblock.bukkit.hub.inventories.market.properties.runnables.BadCoinsCustomPropertyRunnable;
 import fr.badblock.bukkit.hub.inventories.market.properties.runnables.BoosterCustomPropertyRunnable;
 import fr.badblock.bukkit.hub.inventories.market.properties.runnables.ChestCustomPropertyRunnable;
-import fr.badblock.bukkit.hub.inventories.market.properties.runnables.CrystalsCustomPropertyRunnable;
 import fr.badblock.bukkit.hub.inventories.market.properties.runnables.XpCustomPropertyRunnable;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.utils.BadValidator;
@@ -17,8 +16,6 @@ public enum CustomProperty {
 	BADCOINS(new BadCoinsCustomPropertyRunnable()),
 	XP(new XpCustomPropertyRunnable()),
 	CHEST(new ChestCustomPropertyRunnable()),
-	CRYSTALS(new CrystalsCustomPropertyRunnable()),
-	PARTICLES(new CrystalsCustomPropertyRunnable()),
 	BOOSTER(new BoosterCustomPropertyRunnable());
 	
 	@Getter @Setter private CustomPropertyRunnable customPropertyRunnable;

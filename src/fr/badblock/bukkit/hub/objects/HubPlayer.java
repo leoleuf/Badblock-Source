@@ -35,7 +35,6 @@ import fr.badblock.bukkit.hub.inventories.market.cosmetics.mounts.defaults.Mount
 import fr.badblock.bukkit.hub.inventories.market.cosmetics.particles.defaults.ParticleItem;
 import fr.badblock.bukkit.hub.inventories.market.cosmetics.particles.utils.Wings;
 import fr.badblock.bukkit.hub.inventories.market.ownitems.OwnableItem;
-import fr.badblock.bukkit.hub.inventories.shop.inventories.MiniGameShopInventory;
 import fr.badblock.game.core18R3.players.GameBadblockPlayer;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.databases.SQLRequestType;
@@ -130,8 +129,6 @@ public class HubPlayer implements InGameData {
 
 	public FakeEntity<?> fakeEntity;
 
-	public CustomInventory shopInventory = CustomInventory.get(MiniGameShopInventory.class);
-
 	public OwnableItem buyItem;
 
 	public long lastChat;
@@ -174,11 +171,11 @@ public class HubPlayer implements InGameData {
 		BadBlockHub hub = BadBlockHub.getInstance();
 		final TempScheduler tempScheduler0 = new TempScheduler();
 		tempScheduler0.task = TaskManager.scheduleSyncRepeatingTask("hub_" + player.getName() + "_" + player.getEntityId(), new Runnable() {
-			@SuppressWarnings({ "deprecation", "unlikely-arg-type" })
+			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
 				if (player == null || !player.isOnline()) {
-					TaskManager.taskList.remove(tempScheduler0.task.getTaskId());
+					TaskManager.taskList.remove("hub_" + player.getName() + "_" + player.getEntityId());
 					tempScheduler0.task.cancel();
 					return;
 				}
@@ -252,11 +249,10 @@ public class HubPlayer implements InGameData {
 			long time = 0;
 			int id = 0;
 			boolean iv;*/
-			@SuppressWarnings("unlikely-arg-type")
 			@Override
 			public void run() {
 				if (player == null || !player.isOnline()) {
-					TaskManager.taskList.remove(tempScheduler2.task.getTaskId());
+					TaskManager.taskList.remove("hub_show_" + player.getName() + "_" + player.getEntityId());
 					tempScheduler2.task.cancel();
 					return;
 				}
@@ -328,6 +324,7 @@ public class HubPlayer implements InGameData {
 				if (!player.isOnline())
 				{
 					TaskManager.cancelTaskByName(player.getName() + "_objective");
+					return;
 				}
 				if (player.getCustomObjective() != null)
 					player.getCustomObjective().generate();
@@ -335,11 +332,11 @@ public class HubPlayer implements InGameData {
 		}, 20, 20);
 		TempScheduler tempScheduler3 = new TempScheduler();
 		tempScheduler3.task = TaskManager.scheduleSyncRepeatingTask(player.getName() + "_funmode", new Runnable() {
-			@SuppressWarnings({ "deprecation", "unlikely-arg-type" })
+			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
 				if (player == null || !player.isOnline()) {
-					TaskManager.taskList.remove(tempScheduler3.task.getTaskId());
+					TaskManager.taskList.remove(player.getName() + "_funmode");
 					tempScheduler3.task.cancel();
 					return;
 				}
