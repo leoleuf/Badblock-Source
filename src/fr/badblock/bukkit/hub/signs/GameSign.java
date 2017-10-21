@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,18 +14,27 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.selector.items.GameSelectorItem;
+import fr.badblock.bukkit.hub.objects.HubPlayer;
+import fr.badblock.bukkit.hub.utils.HubFlag;
+import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.ConfigUtils;
+import fr.badblock.gameapi.utils.general.Flags;
+import fr.badblock.rabbitconnector.RabbitPacketType;
+import fr.badblock.rabbitconnector.RabbitService;
+import fr.badblock.sentry.SEntry;
+import fr.badblock.utils.Encodage;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class GameSign implements Runnable {
-
+	
 	@Expose
 	private String				internalName;
 	@Expose
@@ -57,8 +67,38 @@ public class GameSign implements Runnable {
 		tempMap = new HashMap<>();
 		firstRefresh = System.currentTimeMillis() + 30_000;
 		realLocation = ConfigUtils.convertStringToLocation(getLocation());
-		System.out.println("Set real location : " + realLocation);
 		taskId = BadBlockHub.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(BadBlockHub.getInstance(), this, 0, 5);
+	}
+
+	public void click(BadblockPlayer player) {
+		// AntiSpam
+		if (Flags.isValid(player, HubFlag.SIGN_SPAM))
+		{
+			player.sendTranslatedMessage("hub.spam.waitbetweeneachinteraction");
+			return;
+		}
+		// Set flag
+		Flags.setTemporaryFlag(player, HubFlag.SIGN_SPAM, 2500);
+		// Temporary variables
+		int time = 15 + new Random().nextInt(15);
+		int addedTime = (time + 10) * 50;
+		// Set map
+		if (getTempMap() == null) setTempMap(new HashMap<>());
+		getTempMap().put(player.getName(), System.currentTimeMillis() + addedTime);
+		String internalName = getInternalName();
+		// Run task
+		Bukkit.getScheduler().runTaskLater(BadBlockHub.getInstance(), new Runnable()
+		{
+			@Override
+			public void run() {
+				// Teleport
+				BadBlockHub instance = BadBlockHub.getInstance();
+				RabbitService service = instance.getRabbitService();
+				Gson gson = instance.getGson();
+				service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), internalName, false)), Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
+			}
+		}, time);
+		player.sendTranslatedMessage("hub.gameteleport");
 	}
 
 	public void run() {
@@ -83,20 +123,16 @@ public class GameSign implements Runnable {
 		}
 		else
 		{
-			System.out.println("AAAAAAAAAAAAAAAA");
 			if (tempPlayers < getInGamePlayers())
 			{
-				System.out.println("BBBBBBBBBBBBB");
 				if (getLastRefresh() < timestamp)
 				{
-					System.out.println("CCCCCCCCCCCCCC");
 					tempPlayers++;
 					setLastRefresh(timestamp + (new Random().nextInt(1300) + 900));
 				}
 			}
 			else if (tempPlayers > getInGamePlayers())
 			{
-				System.out.println("0000000000");
 				tempPlayers = getInGamePlayers();
 			}
 		}
@@ -116,7 +152,6 @@ public class GameSign implements Runnable {
 				i++;
 				if (!line.equalsIgnoreCase(lines[i]))
 				{
-					System.out.println(line + " : " + lines[i]);
 					equals = false;
 					break;
 				}
@@ -128,7 +163,6 @@ public class GameSign implements Runnable {
 					sign.setLine(x, lines[x]);
 				}
 				sign.update(true);
-				System.out.println("Updated GameSign " + internalName);
 			}
 		}
 		else
@@ -171,7 +205,6 @@ public class GameSign implements Runnable {
 
 	public long getTemporaryPlayers()
 	{
-		System.out.println("Temp map : " + getTempMap().size());
 		return getWaitingLinePlayers() + (getInGamePlayers() > getTempPlayers() ? (getInGamePlayers() - getTempPlayers()) : 0) + getTempMap().size();
 	}
 
