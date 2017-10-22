@@ -64,7 +64,10 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 						).count();
 			}).sum();
 
-			objective.changeLine(i, i18n("hub.scoreboard.achievements", have, total));
+			double doublePercent = have / total;
+			doublePercent *= 100;
+			int intPercent = (int) doublePercent;
+			objective.changeLine(i, i18n("hub.scoreboard.achievements", have, total, intPercent));
 			i--;
 			objective.changeLine(i, "");
 			i--;
