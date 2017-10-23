@@ -20,6 +20,7 @@ import fr.badblock.gameapi.events.fakedeaths.FakeDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent.FightingDeaths;
 import fr.badblock.gameapi.events.fakedeaths.NormalDeathEvent;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
@@ -62,6 +63,7 @@ public class DeathListener extends BadListener {
 
 		player.getPlayerData().addRankedPoints(-2);
 		player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.DEATHS);
+		player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SurvivalScoreboard.DEATHS, 1);
 		player.inGameData(SurvivalData.class).death		= true;
 		player.inGameData(SurvivalData.class).deathTime = GameRunnable.generalTime;
 		GameAPI.getAPI().getOnlinePlayers().stream().filter(badblockPlayer -> badblockPlayer.getCustomObjective() != null).forEach(badblockPlayer -> badblockPlayer.getCustomObjective().generate());
@@ -80,12 +82,14 @@ public class DeathListener extends BadListener {
 		if(killer != null && killer.getType() == EntityType.PLAYER){
 			BadblockPlayer bKiller = (BadblockPlayer) killer;
 			bKiller.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.KILLS);
+			bKiller.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SurvivalScoreboard.KILLS, 1);
 			bKiller.inGameData(SurvivalData.class).kills++;
 			
 			bKiller.getCustomObjective().generate();
 		}
 		
 		player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.LOOSES);
+		player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SurvivalScoreboard.LOOSES, 1);
 		player.getCustomObjective().generate();
 		e.setRespawnPlace(respawnPlace);
 		player.postResult(null);

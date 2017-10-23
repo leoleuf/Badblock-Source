@@ -15,8 +15,11 @@ import fr.badblock.bukkit.games.survivalgames.runnables.GameRunnable;
 import fr.badblock.bukkit.games.survivalgames.runnables.KickRunnable;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.game.GameState;
+import fr.badblock.gameapi.game.rankeds.RankedCalc;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.data.PlayerAchievementState;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.general.TimeUnit;
 
 public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
@@ -87,6 +90,7 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 
 						player.sendTranslatedTitle("survival.title-win", winner.getName());
 						player.getPlayerData().incrementStatistic("survival", SurvivalScoreboard.WINS);
+						player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SurvivalScoreboard.WINS, 1);
 
 						player.getPlayerData().incrementAchievements(player, SGAchievementList.SG_WIN_1, SGAchievementList.SG_WIN_2, SGAchievementList.SG_WIN_3, SGAchievementList.SG_WIN_4);
 
@@ -145,6 +149,30 @@ public class DeathmatchRunnable extends BukkitRunnable implements TimeProvider {
 				}
 			}
 
+			// Work with rankeds
+			String rankedGameName = RankedManager.instance.getCurrentRankedGameName();
+			for (BadblockPlayer player : BukkitUtils.getPlayers())
+			{
+				RankedManager.instance.calcPoints(rankedGameName, player, new RankedCalc()
+				{
+
+					@Override
+					public long done() {
+						double kills = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.KILLS);
+						double deaths = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.DEATHS);
+						double wins = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.WINS);
+						double looses = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.LOOSES);
+						double total = 
+								( (kills * 2) + (wins * 4) + 
+										((kills / (deaths > 0 ? deaths : 1) ) ) )
+								/ (1 + looses);
+						return (long) total;
+					}
+
+				});
+			}
+			RankedManager.instance.fill(rankedGameName);
+			
 			new SurvivalResults(TimeUnit.SECOND.toShort(GameRunnable.generalTime, TimeUnit.SECOND, TimeUnit.HOUR));
 			new EndEffectRunnable(winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
 			new KickRunnable().runTaskTimer(GameAPI.getAPI(), 0, 20L);

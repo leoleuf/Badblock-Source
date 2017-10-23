@@ -16,11 +16,13 @@ import fr.badblock.bukkit.games.survivalgames.listeners.JoinListener;
 import fr.badblock.bukkit.games.survivalgames.listeners.MoveListener;
 import fr.badblock.bukkit.games.survivalgames.listeners.SurvivalMapProtector;
 import fr.badblock.bukkit.games.survivalgames.listeners.ZombieListener;
+import fr.badblock.bukkit.games.survivalgames.players.SurvivalScoreboard;
 import fr.badblock.bukkit.games.survivalgames.runnables.PreStartRunnable;
 import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.AchievementList;
 import fr.badblock.gameapi.game.GameServer.WhileRunningConnectionTypes;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.gameapi.run.BadblockGameData;
@@ -145,6 +147,11 @@ public class PluginSurvival extends BadblockPlugin {
 				world.setTime(2000L);
 				world.getEntities().forEach(entity -> entity.remove());
 			});
+			
+			// Ranked
+			RankedManager.instance.initialize(RankedManager.instance.getCurrentRankedGameName(), 
+					SurvivalScoreboard.KILLS, SurvivalScoreboard.DEATHS, SurvivalScoreboard.WINS, SurvivalScoreboard.LOOSES);
+			
 		} catch(Throwable e){
 			e.printStackTrace();
 		}
