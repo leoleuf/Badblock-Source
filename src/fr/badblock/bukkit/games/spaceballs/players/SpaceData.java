@@ -1,6 +1,7 @@
 package fr.badblock.bukkit.games.spaceballs.players;
 
 import fr.badblock.bukkit.games.spaceballs.SBAchievementList;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.data.InGameData;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class SpaceData implements InGameData {
 		diamonds += count;
 
 		player.getPlayerData().increaseStatistic("spaceballs", SpaceScoreboard.DIAMONDS, count);
+		player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SpaceScoreboard.DIAMONDS, 1);
 		for (int i = 0; i <= count; i++) {
 			player.getPlayerData().incrementAchievements(player, SBAchievementList.SB_JEWELER_1, SBAchievementList.SB_JEWELER_2, SBAchievementList.SB_JEWELER_3, SBAchievementList.SB_JEWELER_4, SBAchievementList.SB_VBJEWELER);
 		}

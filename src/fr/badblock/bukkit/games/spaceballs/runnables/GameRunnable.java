@@ -20,6 +20,8 @@ import fr.badblock.bukkit.games.spaceballs.result.SBResults;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.PlayerAchievement;
 import fr.badblock.gameapi.game.GameState;
+import fr.badblock.gameapi.game.rankeds.RankedCalc;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
@@ -175,6 +177,7 @@ public class GameRunnable extends BukkitRunnable {
 
 					bp.sendTranslatedTitle("spaceballs.title-win", winner.getChatName());
 					bp.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.WINS);
+					bp.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SpaceScoreboard.WINS, 1);
 
 					incrementAchievements(bp, SBAchievementList.SB_WIN_1, SBAchievementList.SB_WIN_2, SBAchievementList.SB_WIN_3, SBAchievementList.SB_WIN_4);
 				} else {
@@ -184,7 +187,10 @@ public class GameRunnable extends BukkitRunnable {
 					bp.sendTranslatedTitle("spaceballs.title-loose", winner.getChatName());
 
 					if(bp.getBadblockMode() == BadblockMode.PLAYER)
+					{
 						bp.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.LOOSES);
+						bp.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SpaceScoreboard.LOOSES, 1);
+					}
 				}
 				if(badcoins > 20 * bp.getPlayerData().getBadcoinsMultiplier())
 					badcoins = 20 * bp.getPlayerData().getBadcoinsMultiplier();
@@ -211,6 +217,31 @@ public class GameRunnable extends BukkitRunnable {
 				if (bp.getCustomObjective() != null)
 					bp.getCustomObjective().generate();
 			}
+
+			// Work with rankeds
+			String rankedGameName = RankedManager.instance.getCurrentRankedGameName();
+			for (BadblockPlayer player : BukkitUtils.getPlayers())
+			{
+				RankedManager.instance.calcPoints(rankedGameName, player, new RankedCalc()
+				{
+
+					@Override
+					public long done() {
+						double kills = RankedManager.instance.getData(rankedGameName, player, SpaceScoreboard.KILLS);
+						double deaths = RankedManager.instance.getData(rankedGameName, player, SpaceScoreboard.DEATHS);
+						double wins = RankedManager.instance.getData(rankedGameName, player, SpaceScoreboard.WINS);
+						double looses = RankedManager.instance.getData(rankedGameName, player, SpaceScoreboard.LOOSES);
+						double diamonds = RankedManager.instance.getData(rankedGameName, player, SpaceScoreboard.DIAMONDS);
+						double total = 
+								( (kills / 0.5D) + (wins * 4) + 
+										( (kills * diamonds) + (diamonds / 0.25) * (kills / (deaths > 0 ? deaths : 1) ) ) )
+								/ (1 + looses);
+						return (long) total;
+					}
+
+				});
+			}
+			RankedManager.instance.fill(rankedGameName);
 
 			new SBResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
 			new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);

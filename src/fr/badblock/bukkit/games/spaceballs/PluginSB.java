@@ -20,11 +20,13 @@ import fr.badblock.bukkit.games.spaceballs.listeners.PartyJoinListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.PickupItemListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.QuitListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.SBMapProtector;
+import fr.badblock.bukkit.games.spaceballs.players.SpaceScoreboard;
 import fr.badblock.bukkit.games.spaceballs.runnables.PreStartRunnable;
 import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.AchievementList;
 import fr.badblock.gameapi.game.GameServer.WhileRunningConnectionTypes;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.run.BadblockGame;
@@ -124,7 +126,7 @@ public class PluginSB extends BadblockPlugin {
 			
 			try { teams.save(teamsFile); } catch (IOException unused){}
 
-			// Chargement des fonctionnalités de l'API non utilisées par défaut
+			// Chargement des fonctionnalitï¿½s de l'API non utilisï¿½es par dï¿½faut
 
 			getAPI().getBadblockScoreboard().doBelowNameHealth();
 			getAPI().getBadblockScoreboard().doTabListHealth();
@@ -169,6 +171,11 @@ public class PluginSB extends BadblockPlugin {
 				world.setTime(2000L);
 				world.getEntities().forEach(entity -> entity.remove());
 			});
+			
+			// Ranked
+			RankedManager.instance.initialize(RankedManager.instance.getCurrentRankedGameName(), 
+					SpaceScoreboard.KILLS, SpaceScoreboard.DEATHS, SpaceScoreboard.DIAMONDS, SpaceScoreboard.WINS, SpaceScoreboard.LOOSES);
+			
 		} catch(Throwable e){
 			e.printStackTrace();
 		}

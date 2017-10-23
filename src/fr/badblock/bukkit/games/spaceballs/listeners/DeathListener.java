@@ -20,6 +20,7 @@ import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.events.fakedeaths.FakeDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent.FightingDeaths;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.events.fakedeaths.NormalDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.PlayerFakeRespawnEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
@@ -72,6 +73,7 @@ public class DeathListener extends BadListener {
 		Location respawnPlace = null;
 
 		player.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.DEATHS);
+		player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SpaceScoreboard.DEATHS, 1);
 		player.inGameData(SpaceData.class).deaths++;
 		player.getCustomObjective().generate();
 
@@ -87,6 +89,7 @@ public class DeathListener extends BadListener {
 		if(killer != null && killer.getType() == EntityType.PLAYER){
 			BadblockPlayer bKiller = (BadblockPlayer) killer;
 			bKiller.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.KILLS);
+			bKiller.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SpaceScoreboard.KILLS, 1);
 			bKiller.inGameData(SpaceData.class).kills++;
 
 			bKiller.getCustomObjective().generate();
