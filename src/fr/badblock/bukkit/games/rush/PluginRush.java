@@ -21,11 +21,13 @@ import fr.badblock.bukkit.games.rush.listeners.PartyJoinListener;
 import fr.badblock.bukkit.games.rush.listeners.QuitListener;
 import fr.badblock.bukkit.games.rush.listeners.RushMapProtector;
 import fr.badblock.bukkit.games.rush.listeners.SheepListener;
+import fr.badblock.bukkit.games.rush.players.RushScoreboard;
 import fr.badblock.bukkit.games.rush.runnables.PreStartRunnable;
 import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.AchievementList;
 import fr.badblock.gameapi.game.GameServer.WhileRunningConnectionTypes;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.run.BadblockGame;
@@ -162,6 +164,11 @@ public class PluginRush extends BadblockPlugin {
 				world.setTime(16000L);
 				world.getEntities().forEach(entity -> entity.remove());
 			});
+			
+			// Ranked
+			RankedManager.instance.initialize(RankedManager.instance.getCurrentRankedGameName(), 
+					RushScoreboard.KILLS, RushScoreboard.DEATHS, RushScoreboard.BROKENBEDS, RushScoreboard.WINS, RushScoreboard.LOOSES);
+			
 		} catch(Throwable e){
 			e.printStackTrace();
 		}

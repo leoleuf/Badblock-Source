@@ -15,8 +15,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.badblock.bukkit.games.rush.PluginRush;
 import fr.badblock.bukkit.games.rush.RushAchievementList;
-import fr.badblock.bukkit.games.rush.configuration.RushMapConfiguration;
 import fr.badblock.bukkit.games.rush.configuration.RushConfiguration.SpawnableItem;
+import fr.badblock.bukkit.games.rush.configuration.RushMapConfiguration;
 import fr.badblock.bukkit.games.rush.entities.RushTeamData;
 import fr.badblock.bukkit.games.rush.players.RushData;
 import fr.badblock.bukkit.games.rush.players.RushScoreboard;
@@ -24,6 +24,8 @@ import fr.badblock.bukkit.games.rush.result.RushResults;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.PlayerAchievement;
 import fr.badblock.gameapi.game.GameState;
+import fr.badblock.gameapi.game.rankeds.RankedCalc;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
@@ -241,6 +243,31 @@ public class GameRunnable extends BukkitRunnable {
 				if (bp.getCustomObjective() != null)
 					bp.getCustomObjective().generate();
 			}
+
+			// Work with rankeds
+			String rankedGameName = RankedManager.instance.getCurrentRankedGameName();
+			for (BadblockPlayer player : BukkitUtils.getPlayers())
+			{
+				RankedManager.instance.calcPoints(rankedGameName, player, new RankedCalc()
+				{
+
+					@Override
+					public long done() {
+						double kills = RankedManager.instance.getData(rankedGameName, player, RushScoreboard.KILLS);
+						double deaths = RankedManager.instance.getData(rankedGameName, player, RushScoreboard.DEATHS);
+						double wins = RankedManager.instance.getData(rankedGameName, player, RushScoreboard.WINS);
+						double looses = RankedManager.instance.getData(rankedGameName, player, RushScoreboard.LOOSES);
+						double brokenBeds = RankedManager.instance.getData(rankedGameName, player, RushScoreboard.BROKENBEDS);
+						double total = 
+								( (kills / 0.5D) + (wins * 4) + 
+										( (kills * brokenBeds) + (brokenBeds * 2) * (kills / (deaths > 0 ? deaths : 1) ) ) )
+								/ (1 + looses);
+						return (long) total;
+					}
+
+				});
+			}
+			RankedManager.instance.fill(rankedGameName);
 
 			if (winner != null)
 				new RushResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
