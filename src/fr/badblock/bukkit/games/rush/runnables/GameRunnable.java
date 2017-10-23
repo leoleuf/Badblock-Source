@@ -201,6 +201,7 @@ public class GameRunnable extends BukkitRunnable {
 						}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
 						bp.sendTranslatedTitle("rush.title-win", winner.getChatName());
 						bp.getPlayerData().incrementStatistic("rush", RushScoreboard.WINS);
+						bp.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), RushScoreboard.WINS, 1);
 
 						incrementAchievements(bp, RushAchievementList.RUSH_WIN_1, RushAchievementList.RUSH_WIN_2, RushAchievementList.RUSH_WIN_3, RushAchievementList.RUSH_WIN_4);
 
@@ -215,7 +216,10 @@ public class GameRunnable extends BukkitRunnable {
 						bp.sendTranslatedTitle("rush.title-loose", winner.getChatName());
 
 						if(bp.getBadblockMode() == BadblockMode.PLAYER)
+						{
 							bp.getPlayerData().incrementStatistic("rush", RushScoreboard.LOOSES);
+							bp.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), RushScoreboard.LOOSES, 1);
+						}
 					}
 				}
 				if(badcoins > 20 * bp.getPlayerData().getBadcoinsMultiplier())

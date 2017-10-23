@@ -12,6 +12,7 @@ import fr.badblock.bukkit.games.rush.players.RushData;
 import fr.badblock.bukkit.games.rush.players.RushScoreboard;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.PlayerAchievement;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.players.data.PlayerAchievementState;
@@ -61,6 +62,7 @@ public class BedListenerUtils {
 				team.teamData(RushTeamData.class).broked(explosion, player.getName());
 
 				player.getPlayerData().incrementStatistic("rush", RushScoreboard.BROKENBEDS);
+				player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), RushScoreboard.BROKENBEDS, 1);
 				player.inGameData(RushData.class).brokedBeds++;
 
 				incrementAchievements(player, RushAchievementList.RUSH_EBED_1, RushAchievementList.RUSH_EBED_2, RushAchievementList.RUSH_EBED_3, RushAchievementList.RUSH_EBED_4, RushAchievementList.RUSH_EXPLODER);

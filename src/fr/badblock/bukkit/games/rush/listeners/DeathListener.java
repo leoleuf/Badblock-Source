@@ -22,6 +22,7 @@ import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.FightingDeathEvent.FightingDeaths;
 import fr.badblock.gameapi.events.fakedeaths.NormalDeathEvent;
 import fr.badblock.gameapi.events.fakedeaths.PlayerFakeRespawnEvent;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
@@ -70,11 +71,13 @@ public class DeathListener extends BadListener {
 		Location respawnPlace = null;
 
 		player.getPlayerData().incrementStatistic("rush", RushScoreboard.DEATHS);
+		player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), RushScoreboard.DEATHS, 1);
 		player.inGameData(RushData.class).deaths++;
 		player.getCustomObjective().generate();
 
 		if(player.getTeam().teamData(RushTeamData.class).getFirstBedPart() == null){
 			player.getPlayerData().incrementStatistic("rush", RushScoreboard.LOOSES);
+			player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), RushScoreboard.LOOSES, 1);
 			BadblockTeam team = player.getTeam();
 
 			e.setDeathMessageEnd(new TranslatableString("rush.player-loose", player.getName(), team.getChatName()));
@@ -120,6 +123,7 @@ public class DeathListener extends BadListener {
 		if(killer != null && killer.getType() == EntityType.PLAYER){
 			BadblockPlayer bKiller = (BadblockPlayer) killer;
 			bKiller.getPlayerData().incrementStatistic("rush", RushScoreboard.KILLS);
+			bKiller.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), RushScoreboard.KILLS, 1);
 			bKiller.inGameData(RushData.class).kills++;
 			if (bKiller.getCustomObjective() != null)
 				bKiller.getCustomObjective().generate();
