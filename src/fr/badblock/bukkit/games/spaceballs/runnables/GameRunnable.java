@@ -178,7 +178,7 @@ public class GameRunnable extends BukkitRunnable {
 					bp.sendTranslatedTitle("spaceballs.title-win", winner.getChatName());
 					bp.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.WINS);
 					bp.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SpaceScoreboard.WINS, 1);
-
+					bp.saveGameData();
 					incrementAchievements(bp, SBAchievementList.SB_WIN_1, SBAchievementList.SB_WIN_2, SBAchievementList.SB_WIN_3, SBAchievementList.SB_WIN_4);
 				} else {
 					badcoins = ((double) badcoins) / 1.5d;
@@ -191,6 +191,7 @@ public class GameRunnable extends BukkitRunnable {
 						bp.getPlayerData().incrementStatistic("spaceballs", SpaceScoreboard.LOOSES);
 						bp.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), SpaceScoreboard.LOOSES, 1);
 					}
+					bp.saveGameData();
 				}
 				if(badcoins > 20 * bp.getPlayerData().getBadcoinsMultiplier())
 					badcoins = 20 * bp.getPlayerData().getBadcoinsMultiplier();
