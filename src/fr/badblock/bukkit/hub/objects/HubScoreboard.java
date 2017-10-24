@@ -7,6 +7,7 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.scoreboard.BadblockScoreboardGenerator;
 import fr.badblock.gameapi.players.scoreboard.CustomObjective;
 import fr.badblock.gameapi.run.BadblockGame;
+import fr.badblock.gameapi.utils.general.NumberFormat;
 
 public class HubScoreboard extends BadblockScoreboardGenerator {
 	private CustomObjective objective;
@@ -45,9 +46,9 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 			objective.changeLine(i, "");
 			i--;
 			objective.changeLine(i, i18n("hub.scoreboard.shoppoints", (player.getShopPoints() != -1
-					? player.getShopPoints() : i18n("hub.scoreboard.shoppoints_nowebsiteaccount"))));
+					? NumberFormat.format(player.getShopPoints()) : i18n("hub.scoreboard.shoppoints_nowebsiteaccount"))));
 			i--;
-			objective.changeLine(i, i18n("hub.scoreboard.badcoins", player.getPlayerData().getBadcoins()));
+			objective.changeLine(i, i18n("hub.scoreboard.badcoins", NumberFormat.format(player.getPlayerData().getBadcoins())));
 			i--;
 			objective.changeLine(i, "");
 			double calc = (((double) (player.getPlayerData().getXp()) * 1.0D) / ((double) (player.getPlayerData().getXpUntilNextLevel()) * 1.0D)) * 1.0D;
@@ -63,7 +64,10 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 						).count();
 			}).sum();
 
-			objective.changeLine(i, i18n("hub.scoreboard.achievements", have, total));
+			double doublePercent = have / total;
+			doublePercent *= 100;
+			int intPercent = (int) doublePercent;
+			objective.changeLine(i, i18n("hub.scoreboard.achievements", have, total, intPercent));
 			i--;
 			objective.changeLine(i, "");
 			i--;
