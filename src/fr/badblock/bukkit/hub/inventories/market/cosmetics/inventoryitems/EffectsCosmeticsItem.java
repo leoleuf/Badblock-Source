@@ -28,10 +28,7 @@ public class EffectsCosmeticsItem extends CustomItem {
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
 		player.closeInventory();
-		if (!player.hasPermission("hub.soonbypass")) {
-			player.sendTranslatedMessage("hub.items.of");
-			return;
-		}
+		player.sendTranslatedMessage("hub.items.of");
 		//CustomInventory.get(ParticlesInventory.class).open(player);
 	}
 
