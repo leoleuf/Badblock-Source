@@ -31,19 +31,23 @@ public class InventoryClickListener extends _HubListener {
 		if (!(event.getWhoClicked() instanceof Player))
 			return;
 		BadblockPlayer player = (BadblockPlayer) event.getWhoClicked();
-		
+
 		HubPlayer lobbyPlayer = HubPlayer.get(player);
 		if (lobbyPlayer.isChestFreeze()) {
 			event.setCancelled(true);
 			return;
 		}
 		lobbyPlayer.lastMove = System.currentTimeMillis() + 300_000L;
-		
+
 		// Bypass en gm
 		if (player.getGameMode().equals(GameMode.CREATIVE))
 			return;
 
 		// Cancel
+		if (event.getCurrentItem() != null && event.getCurrentItem().getType().equals(Material.SKULL_ITEM))
+		{
+			return;
+		}
 		event.setCancelled(!player.hasAdminMode());
 
 		ItemStack itemStack = event.getCurrentItem();
@@ -143,7 +147,7 @@ public class InventoryClickListener extends _HubListener {
 		}
 
 	}
-	
+
 	/**
 	 * Check if an itemstack is similar to another one
 	 * Except lore and amount
