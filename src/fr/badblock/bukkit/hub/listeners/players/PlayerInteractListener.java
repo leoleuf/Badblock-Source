@@ -35,7 +35,12 @@ public class PlayerInteractListener extends _HubListener {
 			return;
 		}
 		if (!player.hasAdminMode())
-			event.setCancelled(true);
+		{
+			if (!event.getItem().getType().equals(Material.SKULL_ITEM))
+			{
+				event.setCancelled(true);
+			}
+		}
 		if (event.getClickedBlock() != null) {
 			// Chest
 			Block block = event.getClickedBlock();

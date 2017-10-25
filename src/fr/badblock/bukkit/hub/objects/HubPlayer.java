@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -418,10 +419,19 @@ public class HubPlayer implements InGameData {
 				}
 			}
 		}, 1, 20);
-	}
-
-	public static void t() {
-
+		// TODO Remove
+		TempScheduler tempScheduler4 = new TempScheduler();
+		tempScheduler4.task = TaskManager.scheduleSyncRepeatingTask(player.getName() + "_halloween", new Runnable() {
+			@Override
+			public void run() {
+				if (player == null || !player.isOnline()) {
+					TaskManager.taskList.remove(player.getName() + "_halloween");
+					tempScheduler4.task.cancel();
+					return;
+				}
+				player.playSound(Sound.AMBIENCE_CAVE);
+			}
+		}, 20 * 5, 20 * 30);
 	}
 
 	public void use() {

@@ -6,10 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.badblock.bukkit.hub.BadBlockHub;
 import fr.badblock.bukkit.hub.inventories.join.PlayerCustomInventory;
@@ -31,18 +34,6 @@ public class PlayerJoinListener extends _HubListener {
 		Bukkit.getScheduler().runTask(BadBlockHub.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				/*if (SEntryInfosListener.tempNPCs.containsKey(player.getName())) {
-					SEntryInfosListener.tempPlayers.put(player.getName(), System.currentTimeMillis());
-				}
-				for (Entry<String, NPC> npc : SEntryInfosListener.tempNPCs.entrySet()) {
-					if (SEntryInfosListener.tempPlayersUUID.containsKey(npc.getKey()) && SEntryInfosListener.tempPlayersRank.containsKey(npc.getKey()) && SEntryInfosListener.tempPlayersPropertyMap.containsKey(npc.getKey())) {
-						Player pl = Bukkit.getPlayer(npc.getKey());
-						if (pl == null || (pl != null && !pl.isOnline())) {
-							//if (!player.hasPermission("vip"))
-							//	npc.getValue().show(npc.getKey(), SEntryInfosListener.tempPlayersUUID.get(npc.getKey()), player, SEntryInfosListener.tempPlayersPropertyMap.get(npc.getKey()));
-						}
-					}
-				}*/
 				player.inGameData(HubPlayer.class);
 				reload(player);
 			}
@@ -50,30 +41,17 @@ public class PlayerJoinListener extends _HubListener {
 	}
 
 	public static void reload(BadblockPlayer player) {
+		player.changePlayerDimension(Environment.NETHER);
 		player.clearInventory();
-		player.setMaxHealth(2D);
-		player.setHealth(2D);
+		player.setMaxHealth(20D);
+		player.setHealth(20D);
 		player.setWalkSpeed(0.4F);
 		player.setGameMode(GameMode.SURVIVAL);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, Integer.MAX_VALUE, 0));
 		PlayerCustomInventory.give(player);
 		System.out.println("[HUB] Loaded " + player.getName() + ".");
 	}
 
-	/*@EventHandler
-	public void onPlayerChatTabComplete(PlayerChatTabCompleteEvent event) {
-		if (!event.getChatMessage().startsWith("/")) {
-			List<String> playerNames = new ArrayList<>();
-			for (Player player : BukkitUtils.getPlayers()) 
-				if (player.getName().toLowerCase().startsWith(event.getChatMessage().toLowerCase()))
-					playerNames.add(player.getName());
-			//for (Entry<String, Long> entry : SEntryInfosListener.tempPlayers.entrySet())
-			//	if (entry.getValue() > System.currentTimeMillis()) 
-			//		if (entry.getKey().toLowerCase().startsWith(event.getChatMessage().toLowerCase()))
-			//			playerNames.add(entry.getKey());
-			event.getTabCompletions().clear();
-			event.getTabCompletions().addAll(playerNames);
-		}
-	}*/
 
 	@EventHandler
 	public void onDataLoad(PlayerLoadedEvent event) {
