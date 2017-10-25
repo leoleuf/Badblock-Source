@@ -8,9 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import fr.badblock.bukkit.hub.inventories.abstracts.actions.ItemAction;
-import fr.badblock.bukkit.hub.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
-import fr.badblock.bukkit.hub.inventories.market.cosmetics.particles.defaults.ParticlesInventory;
 import fr.badblock.gameapi.players.BadblockPlayer;
 
 public class EffectsCosmeticsItem extends CustomItem {
