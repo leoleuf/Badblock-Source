@@ -41,7 +41,6 @@ public class PlayerJoinListener extends _HubListener {
 	}
 
 	public static void reload(BadblockPlayer player) {
-		player.changePlayerDimension(Environment.NETHER);
 		player.clearInventory();
 		player.setMaxHealth(20D);
 		player.setHealth(20D);
