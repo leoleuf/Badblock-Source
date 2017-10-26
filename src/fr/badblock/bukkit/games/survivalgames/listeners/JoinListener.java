@@ -17,6 +17,8 @@ import fr.badblock.bukkit.games.survivalgames.runnables.game.DeathmatchRunnable;
 import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
+import fr.badblock.gameapi.game.rankeds.RankedCalc;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.utils.BukkitUtils;
@@ -73,5 +75,29 @@ public class JoinListener extends BadListener {
 			StartRunnable.time = StartRunnable.time > 60 ? StartRunnable.time : 60;
 		}
 		e.setQuitMessage(null);
+		if (!inGame())
+			return;
+		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
+		// Work with rankeds
+		String rankedGameName = RankedManager.instance.getCurrentRankedGameName();
+		player.getPlayerData().incrementTempRankedData(rankedGameName, SurvivalScoreboard.LOOSES, 1);
+		RankedManager.instance.calcPoints(rankedGameName, player, new RankedCalc()
+		{
+
+			@Override
+			public long done() {
+				double kills = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.KILLS);
+				double deaths = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.DEATHS);
+				double wins = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.WINS);
+				double looses = RankedManager.instance.getData(rankedGameName, player, SurvivalScoreboard.LOOSES);
+				double total = 
+						( (kills * 2) + (wins * 4) + 
+								((kills / (deaths > 0 ? deaths : 1) ) ) )
+						/ (1 + looses);
+				return (long) total;
+			}
+
+		});
+		RankedManager.instance.fill(rankedGameName);
 	}
 }
