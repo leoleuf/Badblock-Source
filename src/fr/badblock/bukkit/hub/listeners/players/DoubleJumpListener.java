@@ -35,7 +35,7 @@ public class DoubleJumpListener extends _HubListener {
 	@EventHandler
 	public void setFlyOnJump(PlayerToggleFlightEvent event) {
 		BadblockPlayer player = (BadblockPlayer) event.getPlayer();
-		Vector jump = player.getLocation().getDirection().multiply(0.4).setY(3);
+		Vector jump = player.getLocation().getDirection().multiply(1.5).setY(1);
 
 		if(event.isFlying() && event.getPlayer().getGameMode() != GameMode.CREATIVE)
 		{
@@ -55,14 +55,54 @@ public class DoubleJumpListener extends _HubListener {
 				int jumpZ = timesJumped.containsKey(player.getName()) ? timesJumped.get(player.getName()) : 0;
 				if (jumpZ != max)
 				{
-					player.playEffect(player.getLocation(), Effect.LARGE_SMOKE, 1);
+					player.playEffect(player.getLocation(), Effect.SMOKE, 1);
 					player.playSound(player.getLocation(), Sound.DIG_WOOL, 100F, 1F);
 					player.setFlying(false);
 					player.setVelocity(player.getVelocity().add(jump));
+					TaskManager.runTaskLater(new Runnable()
+					{
+
+						@Override
+						public void run() {
+							if (!player.isOnline())
+							{
+								return;
+							}
+							player.playEffect(player.getLocation(), Effect.SMOKE, 1);
+							TaskManager.runTaskLater(new Runnable()
+							{
+
+								@Override
+								public void run() {
+									if (!player.isOnline())
+									{
+										return;
+									}
+									player.playEffect(player.getLocation(), Effect.SMOKE, 1);
+									TaskManager.runTaskLater(new Runnable()
+									{
+
+										@Override
+										public void run() {
+											if (!player.isOnline())
+											{
+												return;
+											}
+											player.playEffect(player.getLocation(), Effect.SMOKE, 1);
+										}
+
+									}, 5);
+								}
+
+							}, 5);
+						}
+
+					}, 5);
 					jumpZ++;
 				}
 				else if(jumpZ == max) 
 				{
+					jumpZ = 0;
 					long ti = 5000 / (max > 0 ? max : 1);
 					player.setAllowFlight(false);
 					Flags.setTemporaryFlag(player, "doubleJump", ti);
