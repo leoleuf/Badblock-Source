@@ -36,6 +36,7 @@ public class PlayerInteractListener extends _HubListener {
 		}
 		if (!player.hasAdminMode())
 			event.setCancelled(true);
+		System.out.println("A");
 		if (event.getClickedBlock() != null) {
 			// Chest
 			Block block = event.getClickedBlock();
@@ -48,13 +49,17 @@ public class PlayerInteractListener extends _HubListener {
 				}
 			}
 			// Sign
+			System.out.println("B");
 			if (block.getType().name().contains("SIGN"))
 			{
+				System.out.println("C");
 				for (GameSign gameSign : GameSignManager.stockage.values())
 				{
+					System.out.println("D");
 					Location loc = ConfigUtils.convertStringToLocation(gameSign.getLocation());
 					if (loc.getX() == location.getX() && loc.getY() == location.getY() && loc.getZ() == location.getZ())
 					{
+						System.out.println("E");
 						gameSign.click(player);
 						break;
 					}

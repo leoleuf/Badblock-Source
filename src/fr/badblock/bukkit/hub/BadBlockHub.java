@@ -60,6 +60,7 @@ import fr.badblock.bukkit.hub.listeners.entities.CreatureSpawnListener;
 import fr.badblock.bukkit.hub.listeners.entities.EntityCombustListener;
 import fr.badblock.bukkit.hub.listeners.entities.EntityExplodeListener;
 import fr.badblock.bukkit.hub.listeners.players.AsyncPlayerChatListener;
+import fr.badblock.bukkit.hub.listeners.players.DoubleJumpListener;
 import fr.badblock.bukkit.hub.listeners.players.InventoryClickListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerBuyListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerFakeEntityInteractListener;
@@ -316,6 +317,7 @@ public class BadBlockHub extends BadblockPlugin {
 		new EntityCombustListener();
 		new EntityExplodeListener();
 		new InventoryClickListener();
+		new DoubleJumpListener();
 		new PlayerInteractListener();
 		new PlayerJoinListener();
 		new PlayerBuyListener();
