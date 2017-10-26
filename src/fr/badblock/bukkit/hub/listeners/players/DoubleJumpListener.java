@@ -103,7 +103,7 @@ public class DoubleJumpListener extends _HubListener {
 				else if(jumpZ == max) 
 				{
 					jumpZ = 0;
-					long ti = 5000 / (max > 0 ? max : 1);
+					long ti = 3000;
 					player.setAllowFlight(false);
 					Flags.setTemporaryFlag(player, "doubleJump", ti);
 					TaskManager.runTaskLater(new Runnable()
