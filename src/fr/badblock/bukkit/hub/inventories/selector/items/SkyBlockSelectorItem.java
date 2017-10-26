@@ -36,7 +36,7 @@ public class SkyBlockSelectorItem extends GameSelectorItem {
 
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
-		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "pvpfaction");
+		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "skyblock");
 		if (location == null)
 			player.sendTranslatedMessage("hub.gameunavailable");
 		else {
