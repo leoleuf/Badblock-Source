@@ -28,7 +28,7 @@ public class RushSelectorItem extends GameSelectorItem {
 
 	@Override
 	public List<String> getGames() {
-		return Arrays.asList("rush", "rush2v2", "rush4v4", "rush4x4", "rush2v2wb", "rush4v4wb", "rush4x4wb", "rush4x1");
+		return Arrays.asList("rush2v2", "rush4v4");
 	}
 
 	@Override

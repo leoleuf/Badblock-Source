@@ -35,7 +35,7 @@ public class Rush2v2NBSelectorItem extends SubGameSelectorItem {
 
 	@Override
 	public String getGame() {
-		return "rush";
+		return "rush2v2";
 	}
 
 	@Override
