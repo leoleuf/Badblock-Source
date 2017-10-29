@@ -34,6 +34,12 @@ public class DeathListener extends BadListener {
 	
 	@EventHandler
 	public void onDeath(FightingDeathEvent e){
+		if(!inGame())
+		{
+			e.setCancelled(true);
+			return;
+		}
+		
 		death(e, e.getPlayer(), e.getKiller(), e.getLastDamageCause());
 		e.setDeathMessage(GameMessages.deathEventMessage(e));
 		
