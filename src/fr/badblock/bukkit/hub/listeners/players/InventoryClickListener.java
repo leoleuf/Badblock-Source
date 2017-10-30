@@ -43,11 +43,6 @@ public class InventoryClickListener extends _HubListener {
 		if (player.getGameMode().equals(GameMode.CREATIVE))
 			return;
 
-		// Cancel
-		if (event.getCurrentItem() != null && event.getCurrentItem().getType().equals(Material.SKULL_ITEM))
-		{
-			return;
-		}
 		event.setCancelled(!player.hasAdminMode());
 
 		ItemStack itemStack = event.getCurrentItem();

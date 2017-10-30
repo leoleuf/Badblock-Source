@@ -1,7 +1,5 @@
 package fr.badblock.bukkit.hub.inventories.join;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import fr.badblock.bukkit.hub.inventories.abstracts.items.CustomItem;
@@ -44,7 +42,6 @@ public enum PlayerCustomInventory {
 		player.clearInventory();
 		PlayerInventory inventory = player.getInventory();
 		inventory.setHeldItemSlot(4);
-		inventory.setItem(1, new ItemStack(Material.SKULL_ITEM, 1, (byte) 2));
 		HubStoredPlayer hubStoredPlayer = HubStoredPlayer.get(player);
 		for (PlayerCustomInventory item : values()) {
 			if (item.getPermission() != null && !player.hasPermission(item.getPermission())) continue;
