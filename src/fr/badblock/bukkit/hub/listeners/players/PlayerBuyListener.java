@@ -1,17 +1,10 @@
 package fr.badblock.bukkit.hub.listeners.players;
 
-import org.bukkit.event.EventHandler;
-
-import fr.badblock.bukkit.hub.inventories.market.properties.CustomProperty;
 import fr.badblock.bukkit.hub.listeners._HubListener;
-import fr.badblock.gameapi.players.BadblockPlayer;
-import fr.badblock.gameapi.utils.BukkitUtils;
-import fr.xmalware.badblock.shoplinker.api.ShopData;
-import fr.xmalware.badblock.shoplinker.plugin.events.PlayerBuyEvent;
 
 public class PlayerBuyListener extends _HubListener {
 
-	private final static String SEPARATOR = "_";
+	/*private final static String SEPARATOR = "_";
 	
 	@EventHandler (ignoreCancelled = false)
 	public void onPlayerBuyListener(PlayerBuyEvent event) {
@@ -28,6 +21,6 @@ public class PlayerBuyListener extends _HubListener {
 		BadblockPlayer player = BukkitUtils.getPlayer(shopData.getPlayerName());
 		if (player == null) return;
 		customProperty.run(player, propertyData);
-	}
+	}*/
 
 }

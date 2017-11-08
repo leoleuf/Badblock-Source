@@ -97,7 +97,6 @@ import fr.badblock.gameapi.utils.selections.CuboidSelection;
 import fr.badblock.minecraftserver.BadblockSecurityManager;
 import fr.badblock.rabbitconnector.RabbitConnector;
 import fr.badblock.rabbitconnector.RabbitService;
-import fr.xmalware.badblock.shoplinker.api.ShopLinkerAPI;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -118,7 +117,7 @@ public class BadBlockHub extends BadblockPlugin {
 	public HubPacketThread hubPacketThread;
 	public RabbitConnector rabbitConnector;
 	public RabbitService rabbitService;
-	public ShopLinkerAPI	shopLinkerAPI;
+	//public ShopLinkerAPI	shopLinkerAPI;
 
 	// NPCs
 	private FakeEntity<?> npcxMalware;
@@ -189,7 +188,6 @@ public class BadBlockHub extends BadblockPlugin {
 		// Rabbit
 		this.setRabbitConnector(RabbitConnector.getInstance());
 		this.setRabbitService(this.getRabbitConnector().getService("default"));
-		this.setShopLinkerAPI(new ShopLinkerAPI(this.getRabbitService()));
 		this.setHubPacketThread(new HubPacketThread(this.getRabbitService()));
 		// Hub changer
 		CustomInventory.get(HubChangerInventory.class);
