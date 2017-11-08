@@ -6,6 +6,7 @@ import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.Tower2v2
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.Tower4v4SelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.TowerBookSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.TowerDescSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.TowerRunSelectorItem;
 import fr.badblock.bukkit.hub.inventories.settings.items.BlueStainedGlassPaneItem;
 import fr.badblock.bukkit.hub.inventories.settings.settings.LightBlueStainedGlassPaneItem;
 
@@ -18,6 +19,7 @@ public class TowerChooserInventory extends CustomInventory {
 		this.setItem(13, new TowerDescSelectorItem());
 		this.setItem(21, new Tower2v2SelectorItem());
 		this.setItem(23, new Tower4v4SelectorItem());
+		this.setItem(23, new TowerRunSelectorItem());
 		this.setItem(27, new TowerBookSelectorItem());
 		this.setItem(35, new HubChangerBackItem());
 		this.setNoFilledItem(new LightBlueStainedGlassPaneItem());

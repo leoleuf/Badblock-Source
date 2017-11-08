@@ -221,6 +221,7 @@ public class BadBlockHub extends BadblockPlugin {
 				new TowerRunSelectorItem();
 				new TowerSelectorItem();
 				new Tower2v2SelectorItem();
+				new TowerRunSelectorItem();
 				new Tower4v4SelectorItem();
 				new SurvivalGames24SelectorItem();
 				new SurvivalGames24NoTeamSelectorItem();

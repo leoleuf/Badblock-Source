@@ -28,7 +28,7 @@ public class TowerSelectorItem extends GameSelectorItem {
 
 	@Override
 	public List<String> getGames() {
-		return Arrays.asList("tower", "tower2v2", "tower4v4");
+		return Arrays.asList("tower", "tower2v2", "tower4v4", "towerE");
 	}
 
 	@Override
