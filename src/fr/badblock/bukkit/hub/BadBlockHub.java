@@ -63,7 +63,6 @@ import fr.badblock.bukkit.hub.listeners.entities.EntityExplodeListener;
 import fr.badblock.bukkit.hub.listeners.players.AsyncPlayerChatListener;
 import fr.badblock.bukkit.hub.listeners.players.DoubleJumpListener;
 import fr.badblock.bukkit.hub.listeners.players.InventoryClickListener;
-import fr.badblock.bukkit.hub.listeners.players.PlayerBuyListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerFakeEntityInteractListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerInteractListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerJoinListener;
@@ -324,7 +323,6 @@ public class BadBlockHub extends BadblockPlugin {
 		new DoubleJumpListener();
 		new PlayerInteractListener();
 		new PlayerJoinListener();
-		new PlayerBuyListener();
 		new ServerSchedulerListener();
 		new PlayerMoveListener();
 		new PlayerQuitListener();
