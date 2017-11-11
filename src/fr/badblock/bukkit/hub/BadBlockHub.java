@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import fr.badblock.bukkit.hub.commands.AdminCommand;
 import fr.badblock.bukkit.hub.commands.AuthCheckCommand;
 import fr.badblock.bukkit.hub.commands.AuthRemoveCommand;
+import fr.badblock.bukkit.hub.commands.HubGiveCommand;
 import fr.badblock.bukkit.hub.commands.NPCCommand;
 import fr.badblock.bukkit.hub.commands.RaceCommand;
 import fr.badblock.bukkit.hub.commands.SignCommand;
@@ -288,6 +289,7 @@ public class BadBlockHub extends BadblockPlugin {
 		// Commands
 		new SignCommand();
 		new NPCCommand();
+		new HubGiveCommand();
 		new AdminCommand();
 		new SpawnCommand();
 		new AuthCheckCommand();
