@@ -35,7 +35,7 @@ public class HubGiveCommand extends AbstractCommand {
 			sender.sendMessage("§cData must be int.");
 			return true;
 		}
-		String amountString = args[2];
+		String amountString = args[3];
 		int amount = -1;
 		try
 		{
@@ -46,7 +46,7 @@ public class HubGiveCommand extends AbstractCommand {
 			sender.sendMessage("§cAmount must be int.");
 			return true;
 		}
-		if (amount > 0)
+		if (amount < 1)
 		{
 			sender.sendMessage("§cAmount must higher than 0.");
 			return true;
@@ -63,7 +63,7 @@ public class HubGiveCommand extends AbstractCommand {
 			sender.sendMessage("§cPlayer offline.");
 			return true;
 		}
-		customProperty.run(player, object);
+		customProperty.run(player, dataString);
 		return true;
 	}
 }
