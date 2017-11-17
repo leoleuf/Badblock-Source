@@ -29,7 +29,7 @@ public class ShopPlayerItem extends CustomItem {
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
 		player.closeInventory();
-		player.sendTranslatedMessage("hub.items.functionsoon");
+		player.performCommand("sl opi default");
 	}
 
 }

@@ -10,6 +10,7 @@ import fr.badblock.bukkit.hub.inventories.join.items.HiderDisablePlayerItem;
 import fr.badblock.bukkit.hub.inventories.join.items.HiderPlayerItem;
 import fr.badblock.bukkit.hub.inventories.join.items.HostPlayerItem;
 import fr.badblock.bukkit.hub.inventories.join.items.SettingsPlayerItem;
+import fr.badblock.bukkit.hub.inventories.join.items.ShopPlayerItem;
 import fr.badblock.bukkit.hub.inventories.selector.dev.DevSelectorInventoryOpenItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.BuildSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.StaffRoomSelectorItem;
@@ -23,6 +24,7 @@ import lombok.Setter;
 public enum PlayerCustomInventory {
 
 	GADGETS(0, new GadgetsPlayerItem(), null),
+	SHOP(1, new ShopPlayerItem(), null),
 	CHEST(3, new ChestPlayerItem(), "hub.openchest"),
 	SELECTOR(4, new GameSelectorPlayerItem(), null),
 	HOST(5, new HostPlayerItem(), null),

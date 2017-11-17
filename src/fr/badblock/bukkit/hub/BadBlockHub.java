@@ -68,6 +68,7 @@ import fr.badblock.bukkit.hub.listeners.players.PlayerInteractListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerJoinListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerMoveListener;
 import fr.badblock.bukkit.hub.listeners.players.PlayerQuitListener;
+import fr.badblock.bukkit.hub.listeners.players.ReceiveCommandListener;
 import fr.badblock.bukkit.hub.listeners.protectors.HubMapProtector;
 import fr.badblock.bukkit.hub.listeners.vipzone.RaceListener;
 import fr.badblock.bukkit.hub.listeners.world.ServerSchedulerListener;
@@ -299,13 +300,13 @@ public class BadBlockHub extends BadblockPlugin {
 		// World manage
 		Bukkit.getWorlds().forEach(world -> {
 			world.getEntitiesByClasses(Animals.class, Creature.class).forEach(entity -> entity.remove());
-			world.setFullTime(14000);
+			world.setFullTime(600);
 			world.setPVP(false);
 			world.setStorm(false);
 			world.setThunderDuration(0);
 			world.setThundering(false);
 			world.setWeatherDuration(0);
-			world.setTime(14000);
+			world.setTime(600);
 		});
 
 		// API compatibility
@@ -325,6 +326,7 @@ public class BadBlockHub extends BadblockPlugin {
 		new PlayerJoinListener();
 		new ServerSchedulerListener();
 		new PlayerMoveListener();
+		new ReceiveCommandListener();
 		new PlayerQuitListener();
 		new PlayerFakeEntityInteractListener();
 		new RaceListener(this);
