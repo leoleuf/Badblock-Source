@@ -63,7 +63,11 @@ public class HubGiveCommand extends AbstractCommand {
 			sender.sendMessage("§cPlayer offline.");
 			return true;
 		}
-		customProperty.run(player, dataString);
+		
+		for (int i = 0; i < amount; i++)
+		{
+			customProperty.run(player, dataString);	
+		}
 		return true;
 	}
 }
