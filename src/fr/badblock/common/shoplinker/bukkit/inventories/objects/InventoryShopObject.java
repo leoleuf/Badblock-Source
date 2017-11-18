@@ -7,9 +7,6 @@ import lombok.Data;
 
 public class InventoryShopObject {
 
-	private String				queueName;
-	private String				action;
-	private String				message;
-	private int					offerId;
+	private int	offerId;
 	
 }

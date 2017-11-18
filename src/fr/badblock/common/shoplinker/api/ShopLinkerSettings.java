@@ -10,7 +10,7 @@ public class ShopLinkerSettings {
 	public final static Encodage			PACKET_ENCODAGE 	= Encodage.UTF8;
 	public final static RabbitPacketType  	PACKET_TYPE 		= RabbitPacketType.PUBLISHER;
 	public final static RabbitListenerType  LISTENER_TYPE 		= RabbitListenerType.SUBSCRIBER;
-	public final static long				TTL					= -1;
+	public final static long				TTL					= 86400_000 * 365;
 	public final static boolean				DEBUG				= true;
 	
 }

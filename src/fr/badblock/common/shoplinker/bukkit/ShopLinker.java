@@ -1,5 +1,7 @@
 package fr.badblock.common.shoplinker.bukkit;
 
+import java.util.List;
+
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +18,15 @@ import lombok.Setter;
 	
 	private RabbitService								 rabbitService;
 	// bordel
+	private List<String>							     broadcastMessage;
+	private List<String>							     backLore;
+	private List<String>							     confirmLore;
+	private List<String>							     cancelLore;
+	private String										 cancelledMessage;
+	private String										 backName;
+	private String										 cancelName;
+	private String										 confirmName;
+	private String										 confirmInventoryName;
 	private String			 							 notEnoughCoinsMessage;
 	private String			 							 dependNeededMessage;
 	private String			 							 unknownDependOfferNameMessage;
@@ -29,13 +40,14 @@ import lombok.Setter;
 	private String			 							 nothingToClaimMessage;
 	private String			 							 boughtMessage;
 	private String			 							 rewardMessage;
-	private String			 							 singlePendingMessage;
-	private String			 							 pluralPendingMessage;
+	private List<String>			 					 singlePendingMessage;
+	private List<String>			 					 pluralPendingMessage;
 	private String			 							 errorMessage;
 	private String			 							 pluralHoverMessage;
 	private String			 							 singleHoverMessage;
 	private String			 							 singleClaimMessage;
 	private String			 							 pluralClaimMessage;
+	private String			 							 pleaseWaitMessage;
 	private Gson										 notRestrictiveGson;
 
 	@Override

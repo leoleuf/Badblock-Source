@@ -16,7 +16,13 @@ public class ChatColorUtils {
 		for (String message : messages) result.add(translate(message));
 		return result;
 	}
-	
+
+	public static List<String> getTranslatedMessages(List<String> messages) {
+		List<String> result = new ArrayList<>();
+		for (String message : messages) result.add(translate(message));
+		return result;
+	}
+
 	public static List<String> getTranslatedMessages(String[] messages, Map<String, String> replace) {
 		List<String> result = new ArrayList<>();
 		for (String message : messages) {
@@ -31,5 +37,5 @@ public class ChatColorUtils {
 	public static String translate(String message) {
 		return ChatColor.translateAlternateColorCodes(CHAR, message);
 	}
-	
+
 }

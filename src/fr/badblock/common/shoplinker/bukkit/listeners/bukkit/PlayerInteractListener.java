@@ -52,6 +52,7 @@ public class PlayerInteractListener implements Listener {
 		ClickableObject signObject = signManager.getSign(signLocation);
 		// Not registered sign
 		if (signObject == null) return;
+		event.setCancelled(true);
 		// Open inventory
 		BukkitInventories.openInventory(player, signObject.getInventoryName());
 	}

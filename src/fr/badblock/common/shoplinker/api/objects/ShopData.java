@@ -8,9 +8,11 @@ public class ShopData {
 
 	private ShopType dataType;
 	private String 	 playerName;
+	private String 	 command;
 	private String   displayName;
-	private String 	 objectName;
 	private int[] 	 depends;
 	private boolean  multibuy;
+	private boolean  ingame;
+	private	long	 price;
 	
 }

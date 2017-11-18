@@ -10,6 +10,7 @@ import fr.badblock.common.shoplinker.api.objects.ShopData;
 import fr.badblock.common.shoplinker.bukkit.ShopLinkWorker;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.common.shoplinker.bukkit.events.ReceivedRemoteCommandEvent;
+import fr.badblock.common.shoplinker.bukkit.utils.FlagObject;
 import fr.badblock.rabbitconnector.RabbitConnector;
 import fr.badblock.rabbitconnector.RabbitListener;
 import lombok.Data;
@@ -30,12 +31,20 @@ public class ReceiveCommandListener extends RabbitListener {
 	@Override
 	public void onPacketReceiving(String body) {
 		if (body == null) return;
+		
+		// Flag
+		if (FlagObject.hasFlag(body, "same"))
+		{
+			return;
+		}
+		FlagObject.setTemporaryFlag(body, "same", 3000);
+		
 		ShopData shopData = gson.fromJson(body, ShopData.class);
 		if (shopData == null) return;
 		// exécution
 		if (!enabledCommands) {
 			ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RED + "A command has been executed but commands aren't enabled on this server.");
-			ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RED + "Command: " + shopData.getObjectName());
+			ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RED + "Command: " + shopData.getCommand());
 			return;
 		}
 		ReceivedRemoteCommandEvent receivedRemoteCommand = new ReceivedRemoteCommandEvent(shopData);

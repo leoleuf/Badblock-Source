@@ -1,6 +1,9 @@
 package fr.badblock.common.shoplinker.api;
 
-import fr.badblock.common.shoplinker.api.objects.*;
+import fr.badblock.common.shoplinker.api.objects.ShopData;
+import fr.badblock.common.shoplinker.api.objects.ShopDataDestination;
+import fr.badblock.common.shoplinker.api.objects.ShopTrame;
+import fr.badblock.common.shoplinker.api.objects.ShopType;
 import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
 import fr.badblock.rabbitconnector.RabbitService;
 import lombok.Data;
@@ -19,8 +22,8 @@ public class ShopLinkerAPI {
 	}
 	
 	// PUBLIC
-	public void sendShopData(ShopType shopType, String serverName, String playerName, String objectName, String displayName, int[] depends, boolean multibuy) {
-		sendShopData(serverName, buildShopData(shopType, playerName, objectName, displayName, depends, multibuy));
+	public void sendShopData(ShopType shopType, String serverName, String playerName, String command, String displayName, int[] depends, boolean multibuy, boolean ingame, long price) {
+		sendShopData(serverName, buildShopData(shopType, playerName, command, displayName, depends, multibuy, ingame, price));
 	}
 
 	// PRIVATE
@@ -48,8 +51,8 @@ public class ShopLinkerAPI {
 		return new ShopDataDestination(serverName);
 	}
 	
-	private ShopData buildShopData(ShopType shopType, String playerName, String rankName, String displayName, int[] depends, boolean multibuy) {
-		return new ShopData(shopType, playerName, rankName, displayName, depends, multibuy);
+	private ShopData buildShopData(ShopType shopType, String playerName, String command, String displayName, int[] depends, boolean multibuy, boolean ingame, long price) {
+		return new ShopData(shopType, playerName, command, displayName, depends, multibuy, ingame, price);
 	}
 	
 	private ShopTrame buildShopTrame(ShopDataDestination shopDataDestination, ShopData shopData) {

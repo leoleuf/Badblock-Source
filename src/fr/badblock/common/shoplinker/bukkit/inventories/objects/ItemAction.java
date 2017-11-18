@@ -1,10 +1,10 @@
 package fr.badblock.common.shoplinker.bukkit.inventories.objects;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryAction;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public enum ItemAction {

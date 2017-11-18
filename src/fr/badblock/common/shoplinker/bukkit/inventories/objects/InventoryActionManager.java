@@ -4,21 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
-import fr.badblock.common.shoplinker.bukkit.CrystalsBuyManager;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.common.shoplinker.bukkit.inventories.BukkitInventories;
+import fr.badblock.common.shoplinker.bukkit.players.ShopPlayer;
+import fr.badblock.common.shoplinker.bukkit.utils.Callback;
 
 public class InventoryActionManager {
 
 	protected static ShopLinkerAPI	 linkerAPI		   = new ShopLinkerAPI(ShopLinker.getInstance().getRabbitService());
 	private static Map<UUID, String> playerInventories = new HashMap<>();
 
-	public static void handle(Player player, String inventoryName, InventoryItemObject object, InventoryActionType type) {
+	public static void handle(Player player, String inventoryName, InventoryItemObject object, InventoryActionType type, ItemStack offerStack) {
 		// No defined type
 		if (type == null) return;
 		for (InventoryAction inventoryAction : object.getActions()) {
@@ -43,7 +46,7 @@ public class InventoryActionManager {
 				closeInventory(player, action, actionData);
 				break;
 			case BUY_COMMAND:
-				buyCommand(player, action, shopObject, object);
+				buyCommand(player, action, shopObject, object, offerStack);
 				break;
 			default:
 				ShopLinker.getConsole().sendMessage(ChatColor.RED + "No action set on this object. (Position: " + object.getPlace() + " / InventoryName: " + inventoryName + ")");
@@ -53,16 +56,43 @@ public class InventoryActionManager {
 		}
 	}
 
-	public static void openInventory(Player player, CustomItemAction action, String actionData) {
+	public static void openInventory(Player player, TempInventoryObject tempInventoryObject)
+	{
+		openInventory(player, tempInventoryObject.getAction(), tempInventoryObject.getActionData());
+	}
+
+	public static void openInventory(Player player, CustomItemAction action, String actionData)
+	{
+		// Shop player
+		ShopPlayer shopPlayer = ShopPlayer.get(player);
+
+		// Save last inventory
+		shopPlayer.setLastInventory(new TempInventoryObject(action, actionData));
+
+		// Inventory open
 		String inventoryName = actionData;
-		Inventory inventory = BukkitInventories.getInventory(player, inventoryName);
-		if (inventory == null) {
-			closeInventory(player, action, null);
-			return;
-		}
-		player.closeInventory(); // standby
-		player.openInventory(inventory);
-		setInventory(player, inventoryName);
+		BukkitInventories.getInventory(player, inventoryName, new Callback<Inventory>()
+		{
+
+			@Override
+			public void done(Inventory inventory, Throwable error) {
+				if (inventory == null) {
+					closeInventory(player, action, null);
+					return;
+				}
+				Bukkit.getScheduler().runTask(ShopLinker.getInstance(), new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						player.closeInventory(); // standby
+						player.openInventory(inventory);
+						setInventory(player, inventoryName);
+					}
+				});
+			}
+
+		});
 	}
 
 	private static void closeInventory(Player player, CustomItemAction action, String actionData) {
@@ -77,8 +107,8 @@ public class InventoryActionManager {
 		player.performCommand(actionData);
 	}
 
-	private static void buyCommand(Player player, CustomItemAction action, InventoryShopObject shopObject, InventoryItemObject inventoryItemObject) {
-		CrystalsBuyManager.buy(player, action, shopObject, inventoryItemObject);
+	private static void buyCommand(Player player, CustomItemAction action, InventoryShopObject shopObject, InventoryItemObject inventoryItemObject, ItemStack offerStack) {
+		BukkitInventories.createConfirmInventory(player, action, shopObject, inventoryItemObject, offerStack);
 	}
 
 	public static void setInventory(Player player, String inventoryName) {

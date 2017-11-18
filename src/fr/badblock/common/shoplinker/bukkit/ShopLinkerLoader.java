@@ -98,21 +98,32 @@ public class ShopLinkerLoader {
 		ShopLinker.setConsole(Bukkit.getConsoleSender());
 		ShopLinkerAPI.CURRENT_SERVER_NAME = getString(configuration, "queueName");
 		ReceiveCommandListener.enabledCommands = getBoolean(configuration, "enabledCommands");
+		shopLinker.setBroadcastMessage(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.broadcast")));
 		shopLinker.setBoughtMessage(ChatColorUtils.translate(getString(configuration, "messages.bought", "%0 %1")));
+		shopLinker.setConfirmInventoryName(ChatColorUtils.translate(getString(configuration, "messages.confirmInventoryName", "%0 %1")));
+		shopLinker.setBackName(ChatColorUtils.translate(getString(configuration, "messages.back.name", "Retour")));
+		shopLinker.setBackLore(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.back.lore", "test")));
+		shopLinker.setCancelName(ChatColorUtils.translate(getString(configuration, "messages.cancel.name", "Cancel")));
+		shopLinker.setCancelLore(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.cancel.lore", "test")));
+		shopLinker.setConfirmName(ChatColorUtils.translate(getString(configuration, "messages.confirm.name", "Confirm")));
+		shopLinker.setConfirmLore(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.confirm.lore", "test")));
+		shopLinker.setCancelledMessage(ChatColorUtils.translate(getString(configuration, "messages.cancelledMessage", "You've just cancelled this operation.")));
+		shopLinker.setBackName(ChatColorUtils.translate(getString(configuration, "messages.back.name", "Retour")));
 		shopLinker.setRewardMessage(ChatColorUtils.translate(getString(configuration, "messages.reward", "%0 %1")));
 		shopLinker.setNothingToClaimMessage(ChatColorUtils.translate(getString(configuration, "messages.nothingtoclaim", "Nothing to claim for now.")));
-		shopLinker.setSinglePendingMessage(ChatColorUtils.translate(getString(configuration, "messages.pending.single", "You've one pending purchase. Get your bought feature by clicking on this message. Be careful of your inventory space.")));
-		shopLinker.setPluralPendingMessage(ChatColorUtils.translate(getString(configuration, "messages.pending.plural", "You've %0 pending purchases. Get your bought features by clicking on this message. Be careful of your inventory space.")));
+		shopLinker.setSinglePendingMessage(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.pending.single", "You've one pending purchase. Get your bought feature by clicking on this message. Be careful of your inventory space.")));
+		shopLinker.setPluralPendingMessage(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.pending.plural", "You've %0 pending purchases. Get your bought features by clicking on this message. Be careful of your inventory space.")));
 		shopLinker.setSingleClaimMessage(ChatColorUtils.translate(getString(configuration, "messages.claimed.single", "You've claimed your purchase. Enjoy!")));
 		shopLinker.setPluralClaimMessage(ChatColorUtils.translate(getString(configuration, "messages.claimed.plural", "You've claimed your purchases. Enjoy!")));
 		shopLinker.setSingleHoverMessage(ChatColorUtils.translate(getString(configuration, "messages.pending.hover.single", "Click here to claim your pending purchase.")));
-		shopLinker.setSingleHoverMessage(ChatColorUtils.translate(getString(configuration, "messages.pending.hover.plural", "Click here to claim your %0 pending purchases.")));
+		shopLinker.setPluralHoverMessage(ChatColorUtils.translate(getString(configuration, "messages.pending.hover.plural", "Click here to claim your %0 pending purchases.")));
 		shopLinker.setErrorMessage(ChatColorUtils.translate(getString(configuration, "messages.error", "Error occurred while trying to fetch potential pending purchases.")));
 		shopLinker.setDependNeededMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.dependNeeded", "You need the %0 offer.")));
 		shopLinker.setUnknownDependOfferNameMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.unknownDependOfferName", "A depend offer doesn't exist on the website.")));
 		shopLinker.setAlreadyBoughtMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.alreadyBought", "You already bought this offer.")));
 		shopLinker.setYouBoughtMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.youBought", "You just bought %0 offer.")));
 		shopLinker.setUnknownOfferNameMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.unknownOffer", "This offer doesn't exist.")));
+		shopLinker.setPleaseWaitMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.pleasewait", "Please wait between each click.")));
 		// que des ING pourris
 		shopLinker.setNotEnoughCoinsMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.notEnoughCoins", "Not enough coins. You have %0 but you need %1")));
 		shopLinker.setCheckTransactionMessage(ChatColorUtils.translate(getString(configuration, "messages.buy.checkTransaction", "Checking transaction...")));
@@ -151,8 +162,15 @@ public class ShopLinkerLoader {
 
 	private void loadRabbitListeners(ShopLinker shopLinker) {
 		FileConfiguration configuration = shopLinker.getConfig();
+		String queueName = getString(configuration, "queueName");
+		
+		if (queueName.equals("-"))
+		{
+			return;
+		}
+		
 		try {
-			new ReceiveCommandListener(getString(configuration, "queueName"));
+			new ReceiveCommandListener(queueName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -186,6 +204,18 @@ public class ShopLinkerLoader {
 
 	private boolean getBoolean(FileConfiguration fileConfiguration, String key) {
 		return getBoolean(fileConfiguration, key, false);
+	}
+
+	private List<String> getStringList(FileConfiguration fileConfiguration, String key, String value) {
+		if (!fileConfiguration.contains(key)) {
+			fileConfiguration.set(key, value);
+			ShopLinker.getInstance().saveConfig();
+		}
+		return fileConfiguration.getStringList(key);
+	}
+	
+	private List<String> getStringList(FileConfiguration fileConfiguration, String key) {
+		return getStringList(fileConfiguration, key, "");
 	}
 
 	private String getString(FileConfiguration fileConfiguration, String key, String value) {

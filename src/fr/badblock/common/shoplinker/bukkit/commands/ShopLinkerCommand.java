@@ -179,9 +179,11 @@ public class ShopLinkerCommand implements CommandExecutor {
 						count++;
 						String type = resultSet.getString("type");
 						String playerName = resultSet.getString("playerName");
-						String objectName = resultSet.getString("objectName");
+						String command = resultSet.getString("command");
 						String displayName = resultSet.getString("displayName");
-						ShopLinkWorker.workCommand(new ShopData(ShopType.getFrom(type), playerName, displayName, objectName, new int[] {}, false), true);
+						boolean ingame = Boolean.parseBoolean(resultSet.getString("ingame").toUpperCase());
+						int price = resultSet.getInt("price");
+						ShopLinkWorker.workCommand(new ShopData(ShopType.getFrom(type), playerName, command, displayName, new int[] {}, false, ingame, price), true);
 					}
 					String message = count > 1 ? shopLinker.getPluralClaimMessage().replace("%0", Integer.toString(count)) : shopLinker.getSingleClaimMessage();
 					if (count > 0) {
