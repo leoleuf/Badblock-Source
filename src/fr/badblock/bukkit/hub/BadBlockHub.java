@@ -55,6 +55,7 @@ import fr.badblock.bukkit.hub.inventories.selector.submenus.items.speeduhc.Speed
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.speeduhc.SpeedUHCTeamSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.survivalgames.SurvivalGames24NoTeamSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.survivalgames.SurvivalGames24SelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.SkyWarsSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.Tower2v2SelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.submenus.items.tower.Tower4v4SelectorItem;
 import fr.badblock.bukkit.hub.listeners.entities.CreatureSpawnListener;
@@ -209,6 +210,7 @@ public class BadBlockHub extends BadblockPlugin {
 				new TowerSelectorItem();
 				new CTSSelectorItem();
 				new CTS8v8SelectorItem();
+				new SkyWarsSelectorItem();
 				new FreeBuildSelectorItem();
 				new PearlsWarSelectorItem();
 				new PvPBoxSelectorItem();
