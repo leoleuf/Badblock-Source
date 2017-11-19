@@ -35,6 +35,7 @@ import fr.badblock.bukkit.hub.inventories.selector.items.PvPBoxSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.PvPFactionSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.RushSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SkyBlockSelectorItem;
+import fr.badblock.bukkit.hub.inventories.selector.items.SkyWarsSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SpeedUHCSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.SurvivalGamesSelectorItem;
 import fr.badblock.bukkit.hub.inventories.selector.items.TowerRunSelectorItem;
@@ -220,6 +221,7 @@ public class BadBlockHub extends BadblockPlugin {
 				new DayZSelectorItem();
 				new SpeedUHCSelectorItem();
 				new SurvivalGamesSelectorItem();
+				new SkyWarsSelectorItem();
 				new TowerRunSelectorItem();
 				new TowerSelectorItem();
 				new Tower2v2SelectorItem();
