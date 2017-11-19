@@ -49,7 +49,6 @@ public class SelectorInventory extends CustomInventory {
 		this.setItem(42, new DayZSelectorItem());
 		this.setItem(43, new BuildContestSelectorItem());
 		this.setItem(45, new HubChangerSelectorItem());
-		this.setItem(49, new SkyWarsSelectorItem());
 		this.setItem(53, new QuitSelectorItem());
 		this.setNoFilledItem(new BlueStainedGlassPaneItem());
 	}
