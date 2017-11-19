@@ -195,7 +195,7 @@ public abstract class GameSelectorItem extends CustomItem {
 			Entry<String, Integer> entry = iterator.next();
 			if (entry.getKey().equalsIgnoreCase(this.getGamePrefix()))
 			{
-				addedString = GameAPI.i18n().get(locale, "hub.items.popularGame")[0];
+				addedString = GameAPI.i18n().get(locale, "hub.items.populargame")[0];
 				break;
 			}
 		}
