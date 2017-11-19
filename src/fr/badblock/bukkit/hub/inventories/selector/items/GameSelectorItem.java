@@ -1,7 +1,11 @@
 package fr.badblock.bukkit.hub.inventories.selector.items;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -108,6 +112,21 @@ public abstract class GameSelectorItem extends CustomItem {
 		}, 1, 1);
 	}
 
+	static <K,V extends Comparable<? super V>> List<Entry<K, V>> entriesSortedByValues(Map<K,V> map)
+	{
+		List<Entry<K,V>> sortedEntries = new ArrayList<Entry<K,V>>(map.entrySet());
+
+		Collections.sort(sortedEntries, 
+				new Comparator<Entry<K,V>>() {
+			@Override
+			public int compare(Entry<K,V> e1, Entry<K,V> e2) {
+				return e2.getValue().compareTo(e1.getValue());
+			}
+		});
+
+		return sortedEntries;
+	}
+
 	private static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
 		return map.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), value)).map(Map.Entry::getKey)
 				.collect(Collectors.toSet());
@@ -160,7 +179,29 @@ public abstract class GameSelectorItem extends CustomItem {
 			itemStack = ItemStackUtils.fakeEnchant(itemStack);
 		}
 		ItemMeta itemMeta = itemStack.getItemMeta();
-		itemMeta.setDisplayName(GameAPI.i18n().get(locale, this.getName())[0]);
+		
+		String addedString = "";
+		
+		List<Entry<String, Integer>> list = entriesSortedByValues(inGamePlayers);
+		Iterator<Entry<String, Integer>> iterator = list.iterator();
+		
+		for (int i = 0; i < 3; i++)
+		{
+			if (!iterator.hasNext())
+			{
+				break;
+			}
+			
+			Entry<String, Integer> entry = iterator.next();
+			if (entry.getKey().equalsIgnoreCase(this.getGamePrefix()))
+			{
+				addedString = GameAPI.i18n().get(locale, "hub.items.popularGame")[0];
+				break;
+			}
+		}
+		
+		itemMeta.setDisplayName(GameAPI.i18n().get(locale, this.getName(), addedString)[0]);
+		
 		if (this.getLore() != null && !this.getLore().isEmpty()) {
 			String boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.nobooster")[0]/*"§cAucun booster activé, on en a pas parlé avant."*/;
 			if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
