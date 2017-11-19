@@ -57,4 +57,9 @@ public class TowerRunSelectorItem extends GameSelectorItem {
 		return "towerE";
 	}
 
+	@Override
+	public String getBoosterPrefix() {
+		return "tower";
+	}
+
 }

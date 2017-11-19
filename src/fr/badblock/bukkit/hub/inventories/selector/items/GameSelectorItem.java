@@ -73,7 +73,7 @@ public abstract class GameSelectorItem extends CustomItem {
 				int waitingLinePlayersInt = waitingLinePlayers.get(getGamePrefix());
 				int inGamePlayersInt = inGamePlayers.get(getGamePrefix());
 				if (waitingLinePlayersInt == tempWaitingLinePlayers && inGamePlayersInt == tempInGamePlayers) {
-					if (!RealTimeBoosterManager.stockage.containsKey(getGamePrefix()) || (RealTimeBoosterManager.stockage.get(getGamePrefix()) != null && (!RealTimeBoosterManager.stockage.get(getGamePrefix()).isValid() || !RealTimeBoosterManager.stockage.get(getGamePrefix()).isEnabled()))) {
+					if (!RealTimeBoosterManager.stockage.containsKey(getBoosterPrefix()) || (RealTimeBoosterManager.stockage.get(getBoosterPrefix()) != null && (!RealTimeBoosterManager.stockage.get(getBoosterPrefix()).isValid() || !RealTimeBoosterManager.stockage.get(getBoosterPrefix()).isEnabled()))) {
 						return;
 					}
 				}
@@ -149,6 +149,11 @@ public abstract class GameSelectorItem extends CustomItem {
 	public abstract List<String> getGames();
 
 	public abstract String getGamePrefix();
+	
+	public String getBoosterPrefix()
+	{
+		return getGamePrefix();
+	}
 
 	public abstract BadblockGame getGame();
 
@@ -159,8 +164,8 @@ public abstract class GameSelectorItem extends CustomItem {
 		}
 		if (this.getLore() != null && !this.getLore().isEmpty()) {
 			String boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.nobooster")[0]/*"§cAucun booster activé, on en a pas parlé avant."*/;
-			if (RealTimeBoosterManager.stockage.containsKey(this.getGamePrefix())) {
-				PlayerBooster playerBooster = RealTimeBoosterManager.stockage.get(this.getGamePrefix());
+			if (RealTimeBoosterManager.stockage.containsKey(this.getBoosterPrefix())) {
+				PlayerBooster playerBooster = RealTimeBoosterManager.stockage.get(this.getBoosterPrefix());
 				if (playerBooster.isEnabled() && playerBooster.isValid()) {
 					boosterLore = GameAPI.i18n().get(locale, "hub.items.booster.boost", playerBooster.getUsername(), (int) ((playerBooster.getBooster().getCoinsMultiplier() - 1) * 100), (int) ((playerBooster.getBooster().getXpMultiplier() - 1) * 100), TimeUnit.SECOND.toShort((playerBooster.getExpire() / 1000L) - (System.currentTimeMillis() / 1000L)))[0]; 
 				}
