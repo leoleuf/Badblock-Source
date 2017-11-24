@@ -33,11 +33,11 @@ public class ReceiveCommandListener extends RabbitListener {
 		if (body == null) return;
 		
 		// Flag
-		if (FlagObject.hasFlag(body, "same"))
+		if (FlagObject.isValid(body, "same"))
 		{
 			return;
 		}
-		FlagObject.setTemporaryFlag(body, "same", 3000);
+		FlagObject.setTemporaryFlag(body, "same", 1000);
 		
 		ShopData shopData = gson.fromJson(body, ShopData.class);
 		if (shopData == null) return;
