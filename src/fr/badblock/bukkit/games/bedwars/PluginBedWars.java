@@ -19,7 +19,7 @@ import fr.badblock.bukkit.games.bedwars.listeners.JoinListener;
 import fr.badblock.bukkit.games.bedwars.listeners.MoveListener;
 import fr.badblock.bukkit.games.bedwars.listeners.PartyJoinListener;
 import fr.badblock.bukkit.games.bedwars.listeners.QuitListener;
-import fr.badblock.bukkit.games.bedwars.listeners.RushMapProtector;
+import fr.badblock.bukkit.games.bedwars.listeners.BedWarsMapProtector;
 import fr.badblock.bukkit.games.bedwars.listeners.SheepListener;
 import fr.badblock.bukkit.games.bedwars.players.BedWarsScoreboard;
 import fr.badblock.bukkit.games.bedwars.runnables.PreStartRunnable;
@@ -133,7 +133,7 @@ public class PluginBedWars extends BadblockPlugin {
 			getAPI().getJoinItems().registerVoteItem(5);
 			getAPI().getJoinItems().registerLeaveItem(8, configuration.fallbackServer);
 			
-			getAPI().setMapProtector(new RushMapProtector());
+			getAPI().setMapProtector(new BedWarsMapProtector());
 			getAPI().enableAntiSpawnKill();
 			
 			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.SPECTATOR);

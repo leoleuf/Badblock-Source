@@ -18,7 +18,7 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.servers.MapProtector;
 
-public class RushMapProtector implements MapProtector {
+public class BedWarsMapProtector implements MapProtector {
 	private boolean inGame(){
 		return GameAPI.getAPI().getGameServer().getGameState() == GameState.RUNNING;
 	}
