@@ -62,7 +62,7 @@ public class JoinListener extends BadListener {
 			player.sendTimings(0, 80, 20);
 			player.sendTranslatedTabHeader(new TranslatableString("survival.tab.header"), new TranslatableString("survival.tab.footer"));
 
-			GameMessages.joinMessage(GameAPI.getGameName(), player.getName(), Bukkit.getOnlinePlayers().size(), PluginSurvival.getInstance().getMaxPlayers()).broadcast();
+			GameMessages.joinMessage(GameAPI.getGameName(), player.getTabGroupPrefix().getAsLine(player) + player.getName(), Bukkit.getOnlinePlayers().size(), PluginSurvival.getInstance().getMaxPlayers()).broadcast();
 		}
 		PreStartRunnable.doJob();
 		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), PluginSurvival.getInstance().getMaxPlayers());
@@ -74,10 +74,16 @@ public class JoinListener extends BadListener {
 			StartRunnable.stopGame();
 			StartRunnable.time = StartRunnable.time > 60 ? StartRunnable.time : 60;
 		}
+		
+		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
+		if (!player.getGameMode().equals(GameMode.SPECTATOR) && !player.getBadblockMode().equals(BadblockMode.SPECTATOR))
+		{
+			GameMessages.quitMessage(GameAPI.getGameName(), player.getTabGroupPrefix().getAsLine(player) + player.getName(), Bukkit.getOnlinePlayers().size(), PluginSurvival.getInstance().getMaxPlayers()).broadcast();
+		}
+		
 		e.setQuitMessage(null);
 		if (!inGame())
 			return;
-		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
 		// Work with rankeds
 		String rankedGameName = RankedManager.instance.getCurrentRankedGameName();
 		player.getPlayerData().incrementTempRankedData(rankedGameName, SurvivalScoreboard.LOOSES, 1);
