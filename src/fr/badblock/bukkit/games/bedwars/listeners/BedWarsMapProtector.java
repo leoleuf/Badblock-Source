@@ -35,7 +35,7 @@ public class BedWarsMapProtector implements MapProtector {
 		}
 		
 		if(block.getType() == Material.BED_BLOCK){
-			player.sendTranslatedMessage("rush.youmustexplodetnttobreakthebed");
+			BedListenerUtils.onBreakBed(player, block, true);
 			return false;
 		}
 
