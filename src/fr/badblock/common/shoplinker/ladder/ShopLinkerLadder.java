@@ -41,6 +41,7 @@ import lombok.Setter;
 				);
 		String queueName = getString(configuration, "queueName");
 		ShopLinkerAPI.CURRENT_SERVER_NAME = queueName;
+		ReceiveCommandListener.enabledCommands = configuration.getBoolean("enabledCommands");
 		this.boughtMessage = translate(getString(configuration, "messages.bought"));
 		this.rewardMessage = translate(getString(configuration, "messages.reward"));
 		new ReceiveCommandListener(queueName);
