@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sources bedwars">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../spigot-api-latest.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../GameAPI.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../guava-19.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
