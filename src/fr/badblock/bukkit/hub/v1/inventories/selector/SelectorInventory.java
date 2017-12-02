@@ -8,6 +8,7 @@ import fr.badblock.bukkit.hub.v1.inventories.selector.items.FreeBuildSelectorIte
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.GoogleAuthSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.HubChangerSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.PearlsWarSelectorItem;
+import fr.badblock.bukkit.hub.v1.inventories.selector.items.PointOutSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.PvPBoxSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.PvPFactionSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.QuitSelectorItem;
@@ -49,6 +50,7 @@ public class SelectorInventory extends CustomInventory {
 		this.setItem(42, new DayZSelectorItem());
 		this.setItem(43, new BuildContestSelectorItem());
 		this.setItem(45, new HubChangerSelectorItem());
+		this.setItem(49, new PointOutSelectorItem());
 		this.setItem(53, new QuitSelectorItem());
 		this.setNoFilledItem(new BlueStainedGlassPaneItem());
 	}
