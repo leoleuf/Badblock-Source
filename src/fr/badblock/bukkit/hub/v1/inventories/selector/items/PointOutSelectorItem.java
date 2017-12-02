@@ -17,7 +17,7 @@ public class PointOutSelectorItem extends GameSelectorItem {
 
 	public PointOutSelectorItem() {
 		// super("§bRush", Material.BED);
-		super("hub.items.pointoutselectoritem", Material.BLAZE_POWDER, "hub.items.pointoutselectoritem.lore");
+		super("hub.items.pointoutselectoritem", Material.NETHER_STAR, "hub.items.pointoutselectoritem.lore");
 	}
 
 	@Override
