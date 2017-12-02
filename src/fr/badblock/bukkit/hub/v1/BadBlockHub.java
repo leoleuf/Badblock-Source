@@ -81,6 +81,7 @@ import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.HubPacketListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.SEntryInfosListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.WorkerListener;
 import fr.badblock.bukkit.hub.v1.tasks.BossBarTask;
+import fr.badblock.bukkit.hub.v1.tasks.CreeperTask;
 import fr.badblock.bukkit.hub.v1.tasks.DropsTask;
 import fr.badblock.bukkit.hub.v1.tasks.RebootTask;
 import fr.badblock.bukkit.hub.v1.tasks.RequestBoosterTask;
@@ -373,7 +374,7 @@ public class BadBlockHub extends BadblockPlugin {
 			}
 		}, 0, 1);*/
 		System.out.println("[HUB] Loaded BadBlockHub in " + String.format("%.2f", ((System.currentTimeMillis() - time) * 1.0F)) + " ms.");
-		//new CreeperTask();
+		new CreeperTask();
 	}
 
 }
