@@ -1,6 +1,7 @@
 package fr.badblock.bukkit.hub.v1.listeners.protectors;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -113,7 +114,7 @@ public class HubMapProtector implements MapProtector {
 
 	@Override
 	public boolean canInteract(BadblockPlayer player, Action action, Block block) {
-		return player.hasAdminMode();
+		return player.hasAdminMode() || player.getItemInHand().getType().equals(Material.SNOW_BALL);
 	}
 
 	@Override
