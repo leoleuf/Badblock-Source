@@ -30,6 +30,10 @@ public class PlayerInteractListener extends _HubListener {
 		BadblockPlayer player = (BadblockPlayer) event.getPlayer();
 		Action action = event.getAction();
 		HubPlayer lobbyPlayer = HubPlayer.get(player);
+		if (player.getItemInHand().getType().equals(Material.SNOW_BALL))
+		{
+			return;
+		}
 		if (lobbyPlayer.isChestFreeze()) {
 			event.setCancelled(true);
 			return;
