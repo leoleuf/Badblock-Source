@@ -7,7 +7,9 @@ import fr.badblock.gameapi.utils.reflection.ReflectionUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,9 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Map;
-import java.util.function.Consumer;
 
 @Getter
 public class AnvilInput {
@@ -133,37 +133,59 @@ public class AnvilInput {
 
     public void open() {
         try {
+
             Object CraftPlayerCast = ReflectionUtils.getOBCClass("entity.CraftPlayer").cast(getPlayer());
             Object EntityPlayerReflect = CraftPlayerCast.getClass().getMethod("getHandle").invoke(CraftPlayerCast);
-            Field PlayerConnectionField = EntityPlayerReflect.getClass().getField("playerConnection");
-            if (!PlayerConnectionField.isAccessible()) PlayerConnectionField.setAccessible(true);
-            Object PlayerConnectionReflect = PlayerConnectionField.get(EntityPlayerReflect);
-            Method SendPacketMethod = ReflectionUtils.getNMSClass("PlayerConnection").getMethod("sendPacket", ReflectionUtils.getNMSClass("Packet"));
+
             Field EntityPlayerInventoryField = EntityPlayerReflect.getClass().getField("inventory");
             if (!EntityPlayerInventoryField.isAccessible()) EntityPlayerInventoryField.setAccessible(true);
             Object EntityPlayerInventoryReflect = EntityPlayerInventoryField.get(EntityPlayerReflect);
+
             Field EntityPlayerWorldField = EntityPlayerReflect.getClass().getField("world");
             if (!EntityPlayerWorldField.isAccessible()) EntityPlayerWorldField.setAccessible(true);
             Object EntityPlayerWorldReflect = EntityPlayerWorldField.get(EntityPlayerReflect);
-            Object BlockPositionReflect = ReflectionUtils.getNMSClass("BlockPosition").getConstructor(Integer.TYPE, Integer.TYPE, Integer.TYPE).newInstance(0, 0, 0);
-            Object ContainerAnvilReflect = ReflectionUtils.getNMSClass("ContainerAnvil").getConstructor(EntityPlayerInventoryReflect.getClass(), ReflectionUtils.getNMSClass("World"), BlockPositionReflect.getClass(), ReflectionUtils.getNMSClass("EntityHuman")).newInstance(EntityPlayerInventoryReflect, EntityPlayerWorldReflect, BlockPositionReflect, EntityPlayerReflect);
+
+            Object BlockPositionReflect = ReflectionUtils.getNMSClass("BlockPosition").getConstructor(Integer.TYPE, Integer.TYPE, Integer.TYPE).newInstance(0, 1, 0);
+
+            //Object ContainerAnvilReflect = ReflectionUtils.getNMSClass("ContainerAnvil").getConstructor(EntityPlayerInventoryReflect.getClass(), ReflectionUtils.getNMSClass("World"), BlockPositionReflect.getClass(), ReflectionUtils.getNMSClass("EntityHuman")).newInstance(EntityPlayerInventoryReflect, EntityPlayerWorldReflect, BlockPositionReflect, EntityPlayerReflect);
+            Object ContainerAnvilReflect = new ContainerAnvil((PlayerInventory) EntityPlayerInventoryReflect, (World) EntityPlayerWorldReflect, (BlockPosition) BlockPositionReflect, (EntityHuman) EntityPlayerReflect);/** {
+                @Override
+                public boolean a(EntityHuman entityhuman) {
+                    return true;
+                }
+            };**/
+
             Object BukkitViewReflect = ContainerAnvilReflect.getClass().getMethod("getBukkitView").invoke(ContainerAnvilReflect);
             inventory = (Inventory) BukkitViewReflect.getClass().getMethod("getTopInventory").invoke(BukkitViewReflect);
             items.keySet().forEach(slot -> inventory.setItem(slot.getSlot(), items.get(slot)));
-            int ContainerIdReflect = (int) EntityPlayerReflect.getClass().getMethod("nextContainerCounter").invoke( EntityPlayerReflect);
-            Field WindowIdField = ReflectionUtils.getNMSClass("Container").getField("windowId");
-            if (!WindowIdField.isAccessible()) WindowIdField.setAccessible(true);
-            WindowIdField.set(ContainerAnvilReflect, Integer.valueOf(Integer.toString(ContainerIdReflect)));
-            ReflectionUtils.getNMSClass("Container").getMethod("addSlotListener", ReflectionUtils.getNMSClass("ICrafting")).invoke(ContainerAnvilReflect, EntityPlayerReflect);
+
+            int ContainerIdReflect = (int) EntityPlayerReflect.getClass().getMethod("nextContainerCounter").invoke(EntityPlayerReflect);
+            Object ChatMessageReflect = ReflectionUtils.getNMSClass("ChatMessage").getConstructor(String.class, Object[].class).newInstance("Repairing", new Object[]{});
+            Object PacketPlayOutOpenWindowReflect = ReflectionUtils.getNMSClass("PacketPlayOutOpenWindow").getConstructor(Integer.TYPE, String.class, ReflectionUtils.getNMSClass("IChatBaseComponent"), Integer.TYPE).newInstance(ContainerIdReflect, "minecraft:anvil", ChatMessageReflect, 0);
+
+            Field PlayerConnectionField = EntityPlayerReflect.getClass().getField("playerConnection");
+            if (!PlayerConnectionField.isAccessible()) PlayerConnectionField.setAccessible(true);
+            Object PlayerConnectionReflect = PlayerConnectionField.get(EntityPlayerReflect);
+
+            Method SendPacketMethod = ReflectionUtils.getNMSClass("PlayerConnection").getMethod("sendPacket", ReflectionUtils.getNMSClass("Packet"));
+            if (!SendPacketMethod.isAccessible()) SendPacketMethod.setAccessible(true);
+            SendPacketMethod.invoke(PlayerConnectionReflect, PacketPlayOutOpenWindowReflect);
+
             Field ActiveContainerField = ReflectionUtils.getNMSClass("EntityHuman").getDeclaredField("activeContainer");
             if (!ActiveContainerField.isAccessible()) ActiveContainerField.setAccessible(true);
             ActiveContainerField.set(EntityPlayerReflect, ContainerAnvilReflect);
-            Object ChatMessageReflect = ReflectionUtils.getNMSClass("ChatMessage").getConstructor(String.class, Object[].class).newInstance("Repairing", new Object[]{});
-            Object PacketPlayOutOpenWindowReflect = ReflectionUtils.getNMSClass("PacketPlayOutOpenWindow").getConstructor(Integer.TYPE, String.class, ReflectionUtils.getNMSClass("IChatBaseComponent"), Integer.TYPE).newInstance(ContainerIdReflect, "minecraft:anvil", ChatMessageReflect, 0);
-            SendPacketMethod.invoke(PlayerConnectionReflect, PacketPlayOutOpenWindowReflect);
 
-             } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | NoSuchFieldException e) {
+            Field WindowIdField = ReflectionUtils.getNMSClass("Container").getField("windowId");
+            if (!WindowIdField.isAccessible()) WindowIdField.setAccessible(true);
+            WindowIdField.set(ActiveContainerField.get(EntityPlayerReflect), ContainerIdReflect);
+
+            Method AddSlotListenerMethod = ReflectionUtils.getNMSClass("Container").getMethod("addSlotListener", ReflectionUtils.getNMSClass("ICrafting"));
+            if (!AddSlotListenerMethod.isAccessible()) AddSlotListenerMethod.setAccessible(true);
+            AddSlotListenerMethod.invoke(ContainerAnvilReflect, EntityPlayerReflect);
+
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | NoSuchFieldException e) {
             e.printStackTrace();
         }
+
     }
 }
