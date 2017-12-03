@@ -147,7 +147,7 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean canInteractArmorStand(BadblockPlayer player, ArmorStand entity) {
-		return false; // sait on jamais :o
+		return true;
 	}
 
 	@Override

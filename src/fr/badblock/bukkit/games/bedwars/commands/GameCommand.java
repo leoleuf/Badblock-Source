@@ -1,5 +1,9 @@
 package fr.badblock.bukkit.games.bedwars.commands;
 
+import fr.badblock.bukkit.games.bedwars.AnvilInput;
+import fr.badblock.bukkit.games.bedwars.animations.ItemSpawner;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
@@ -10,6 +14,8 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.inventory.ItemStack;
 
 public class GameCommand extends AbstractCommand {
 	public GameCommand() {
@@ -27,6 +33,9 @@ public class GameCommand extends AbstractCommand {
 		PluginBedWars plug = PluginBedWars.getInstance();
 
 		switch(args[0].toLowerCase()){
+            case "dev":
+                new AnvilInput(player).setItem(AnvilInput.AnvilInputSlot.SLOT_LEFT, new ItemStack(Material.IRON_CHESTPLATE)).open();
+                break;
 			case "start":
 				String msg = "commands.grush.start";
 				

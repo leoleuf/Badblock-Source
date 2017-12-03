@@ -34,7 +34,7 @@ public class StartRunnable extends BukkitRunnable {
 		if(time == 0){
 			for(Player player : Bukkit.getOnlinePlayers()){
 				BadblockPlayer bPlayer = (BadblockPlayer) player;
-				bPlayer.playSound(Sound.ORB_PICKUP);
+				bPlayer.playSound(Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
 			}
 			for(BadblockPlayer player : BukkitUtils.getPlayers()){
 				if (player.getCustomObjective() == null)
@@ -100,7 +100,7 @@ public class StartRunnable extends BukkitRunnable {
 		for(Player player : Bukkit.getOnlinePlayers()){
 			BadblockPlayer bPlayer = (BadblockPlayer) player;
 
-			bPlayer.playSound(Sound.NOTE_PLING);
+			bPlayer.playSound(Sound.BLOCK_NOTE_PLING);
 			bPlayer.sendTranslatedTitle(title.getKey(), title.getObjects());
 			bPlayer.sendTimings(2, 30, 2);
 		}
