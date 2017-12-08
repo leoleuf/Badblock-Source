@@ -1,5 +1,9 @@
 package fr.badblock.bukkit.games.bedwars.listeners;
 
+import fr.badblock.bukkit.games.bedwars.PluginBedWars;
+import fr.badblock.gameapi.BadListener;
+import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -7,30 +11,21 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import fr.badblock.bukkit.games.bedwars.PluginBedWars;
-import fr.badblock.gameapi.BadListener;
-import fr.badblock.gameapi.players.BadblockPlayer;
-import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
-
 public class MoveListener extends BadListener {
-	@EventHandler
+	@SuppressWarnings("deprecation")
+    @EventHandler
 	public void onMove(PlayerMoveEvent e){
 		if(e.getTo().getY() <= 0.0d && !inGame()){
 			Location spawn = PluginBedWars.getInstance().getConfiguration().spawn.getHandle();
-			
 			Entity vehicle = null;
-			
 			if(e.getPlayer().isInsideVehicle()){
 				vehicle = e.getPlayer().getVehicle();
 				vehicle.eject();
 				vehicle.teleport(spawn);
 			}
-			
 			e.setCancelled(true);
 			e.getPlayer().teleport(spawn);
-			
-			if(vehicle != null)
-				vehicle.setPassenger(e.getPlayer());
+			if(vehicle != null) vehicle.setPassenger(e.getPlayer());
 		}else if(e.getTo().getY() <= 0.0d && inGame()){
 			BadblockPlayer player = (BadblockPlayer) e.getPlayer();
 			if (player.getBadblockMode().equals(BadblockMode.PLAYER)) {

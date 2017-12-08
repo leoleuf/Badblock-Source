@@ -1,15 +1,7 @@
 package fr.badblock.bukkit.games.bedwars.listeners;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.event.block.Action;
-
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
-import fr.badblock.bukkit.games.bedwars.entities.RushTeamData;
+import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
 import fr.badblock.bukkit.games.bedwars.runnables.GameRunnable;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.configuration.values.MapMaterial;
@@ -17,6 +9,13 @@ import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.servers.MapProtector;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.event.block.Action;
 
 public class BedWarsMapProtector implements MapProtector {
 	private boolean inGame(){
@@ -30,25 +29,18 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean blockBreak(BadblockPlayer player, Block block) {
-		if(!inGame()){
-			return player.hasAdminMode();
-		}
-		
+		if(!inGame()) return player.hasAdminMode();
 		if(block.getType() == Material.BED_BLOCK){
 			BedListenerUtils.onBreakBed(player, block, true);
 			return false;
 		}
-
 		boolean can = false;
-
 		for(MapMaterial material : PluginBedWars.getInstance().getMapConfiguration().getBreakableBlocks()){
 			if(material.getHandle() == block.getType()){
 				can = true;
-
 				break;
 			}
 		}
-
 		return can || player.hasAdminMode();
 	}
 
@@ -102,62 +94,42 @@ public class BedWarsMapProtector implements MapProtector {
 					cancel = true;
 					break;
 				case BARRIER:
-					cancel = true;
-					player.sendTranslatedMessage("rush.youcantplaceablockthere");
+                    player.sendTranslatedMessage("bedwars.youcantplaceablockthere");
 					return false;
 				default: break;
 			}
-
-			if(cancel)
-				for(BadblockTeam team : GameAPI.getAPI().getTeams()){
-					if(!team.equals(player.getTeam())){
-						if(team.teamData(RushTeamData.class).getSpawnSelection().isInSelection(block)){
-							return false;
-						}
-					}
-				}
+			if(cancel) for(BadblockTeam team : GameAPI.getAPI().getTeams()) if(!team.equals(player.getTeam()) && team.teamData(BedWarsTeamData.class).getSpawnSelection().isInSelection(block)) return false;
 		}
 
 		if(block != null && block.getType() == Material.BED_BLOCK && inGame() && action == Action.RIGHT_CLICK_BLOCK){
 			BadblockTeam team = BedListenerUtils.parseBedTeam(block);
-
-			if(team == null || !team.equals(player.getTeam())){
-				player.sendTranslatedTitle("rush.noyourebed");
-			} else {
-				player.sendTranslatedTitle("rush.sleeping", player.getName());
-			}
-
+			if(team == null || !team.equals(player.getTeam())) player.sendTranslatedTitle("bedwars.noyourebed");
+			else  player.sendTranslatedTitle("bedwars.sleeping", player.getName());
 			return false;
 		}
 
 		if(block != null && block.getType() == Material.CHEST && inGame() && action == Action.RIGHT_CLICK_BLOCK){
-
 			for(BadblockTeam team : GameAPI.getAPI().getTeams()){
-				Location loc = team.teamData(RushTeamData.class).getRespawnLocation();
-
-				if(loc.getWorld().equals(block.getWorld()) && loc.distance(block.getLocation()) < 10.0d){
-					return team.equals(player.getTeam());
-				}
+				Location loc = team.teamData(BedWarsTeamData.class).getRespawnLocation();
+				if(loc.getWorld().equals(block.getWorld()) && loc.distance(block.getLocation()) < 10.0d) return team.equals(player.getTeam());
 			}
-
 		}
-
 		return inGame() || player.hasAdminMode();
 	}
 
 	@Override
 	public boolean canInteractArmorStand(BadblockPlayer player, ArmorStand entity) {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean canInteractEntity(BadblockPlayer player, Entity entity) {
-		return true; // � priori rien � bloquer ... :o
+		return true;
 	}
 
 	@Override
 	public boolean canEnchant(BadblockPlayer player, Block table) {
-		return false; // � prioris pas d'enchant � faire :3
+		return false;
 	}
 
 	@Override
@@ -187,7 +159,7 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean allowBlockFormChange(Block block) {
-		return true; //TODO test
+		return true;
 	}
 
 	@Override
