@@ -132,7 +132,7 @@ public class StartRunnable extends BukkitRunnable {
 		if(currentPlayers < PluginRush.getInstance().getConfiguration().minPlayers) return;
 		
 		startGame(false);
-		if (time >= 30 && Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers()) time = 30;
+		if (time >= 5 && Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers()) time = 5;
 	}
 
 	public static void startGame(boolean force){
@@ -148,7 +148,7 @@ public class StartRunnable extends BukkitRunnable {
 			time = TIME_BEFORE_START;
 		} else if(task != null){
 			task.cancel();
-			time = time > 10 ? time : 10;
+			time = time > 5 ? time : 5;
 			GameAPI.setJoinable(true);
 		}
 
