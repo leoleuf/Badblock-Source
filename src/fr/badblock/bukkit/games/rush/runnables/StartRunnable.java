@@ -22,7 +22,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StartRunnable extends BukkitRunnable {
-	public    static final int 		     TIME_BEFORE_START = 60;
+	public    static final int 		     TIME_BEFORE_START = 10;
 	protected static 	   StartRunnable task 		       = null;
 	public 	  static 	   GameRunnable  gameTask		   = null;
 
@@ -148,7 +148,7 @@ public class StartRunnable extends BukkitRunnable {
 			time = TIME_BEFORE_START;
 		} else if(task != null){
 			task.cancel();
-			time = time > 60 ? time : 60;
+			time = time > 10 ? time : 10;
 			GameAPI.setJoinable(true);
 		}
 
