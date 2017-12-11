@@ -23,6 +23,8 @@ import lombok.Setter;
 	private RabbitService								 rabbitService;
 
 	private String										 boughtMessage;
+	private String										 animationMessage;
+	private String										 christmasMessage;
 	private String										 rewardMessage;
 
 	@Override
@@ -41,6 +43,8 @@ import lombok.Setter;
 				);
 		String queueName = getString(configuration, "queueName");
 		ShopLinkerAPI.CURRENT_SERVER_NAME = queueName;
+		this.boughtMessage = translate(getString(configuration, "messages.christmas"));
+		this.boughtMessage = translate(getString(configuration, "messages.animation"));
 		this.boughtMessage = translate(getString(configuration, "messages.bought"));
 		this.rewardMessage = translate(getString(configuration, "messages.reward"));
 		new ReceiveCommandListener(queueName);
