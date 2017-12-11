@@ -1,7 +1,5 @@
 package fr.badblock.common.shoplinker.ladder.events;
 
-import org.bukkit.event.HandlerList;
-
 import fr.badblock.common.shoplinker.api.objects.ShopData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,12 +13,6 @@ import lombok.EqualsAndHashCode;
 	
 	public ReceivedRemoteCommandEvent(ShopData shopData) {
 		super(shopData);
-	}
-
-	private static final HandlerList handlers = new HandlerList();
-
-	public static HandlerList getHandlerList() {
-		return handlers;
 	}
 
 }
