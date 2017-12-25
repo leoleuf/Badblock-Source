@@ -6,7 +6,7 @@ public class RedAuraColorItem extends AuraColorItem
 
 	public RedAuraColorItem()
 	{
-		super("§cRouge", 255, 0, 0);
+		super("§cRouge", 255, 0, 0, (byte) 14);
 	}
 
 }

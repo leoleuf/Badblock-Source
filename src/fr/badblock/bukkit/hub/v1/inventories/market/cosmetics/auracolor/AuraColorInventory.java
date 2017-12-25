@@ -25,7 +25,7 @@ public class AuraColorInventory extends CustomInventory
 		this.addItem(new BlueAuraColorItem());
 		this.addItem(new PurpleAuraColorItem());
 		this.addItem(new PinkAuraColorItem());
-		this.setItem(35, new BackCosmeticsItem());
+		this.setItem(8, new BackCosmeticsItem());
 	}
 
 }

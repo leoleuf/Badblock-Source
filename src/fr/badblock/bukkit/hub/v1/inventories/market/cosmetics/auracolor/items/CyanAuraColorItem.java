@@ -6,7 +6,7 @@ public class CyanAuraColorItem extends AuraColorItem
 
 	public CyanAuraColorItem()
 	{
-		super("§bCyan", 0, 255, 255);
+		super("§bCyan", 0, 255, 255, (byte) 9);
 	}
 
 }

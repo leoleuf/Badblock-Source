@@ -24,9 +24,9 @@ public abstract class AuraColorItem extends CustomItem {
 	private int		green;
 	private int		blue;
 	
-	public AuraColorItem(String colorName, int red, int green, int blue) {
-		super("hub.items.auracoloritem." + ChatColor.stripColor(colorName).toLowerCase() + "_name", Material.STAINED_CLAY,
-				"hub.items.auracoloritem." + ChatColor.stripColor(colorName).toLowerCase() + "_lore");
+	public AuraColorItem(String colorName, int red, int green, int blue, byte data) {
+		super("hub.items.auracoloritem." + ChatColor.stripColor(colorName).toLowerCase() + "_name", Material.STAINED_CLAY, data,
+				"hub.items.auracoloritem." + ChatColor.stripColor(colorName).toLowerCase() + "_lore", false);
 		this.setColorName(colorName);
 		this.setRed(red);
 		this.setGreen(green);

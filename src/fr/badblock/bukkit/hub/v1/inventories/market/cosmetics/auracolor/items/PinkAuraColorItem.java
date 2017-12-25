@@ -6,7 +6,7 @@ public class PinkAuraColorItem extends AuraColorItem
 
 	public PinkAuraColorItem()
 	{
-		super("§dRose", 255, 0, 255);
+		super("§dRose", 255, 0, 255, (byte) 6);
 	}
 
 }

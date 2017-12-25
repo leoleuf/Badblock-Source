@@ -6,7 +6,7 @@ public class YellowAuraColorItem extends AuraColorItem
 
 	public YellowAuraColorItem()
 	{
-		super("§eJaune", 255, 255, 0);
+		super("§eJaune", 255, 255, 0, (byte) 4);
 	}
 
 }

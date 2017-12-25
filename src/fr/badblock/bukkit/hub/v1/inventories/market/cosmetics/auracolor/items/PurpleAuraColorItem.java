@@ -6,7 +6,7 @@ public class PurpleAuraColorItem extends AuraColorItem
 
 	public PurpleAuraColorItem()
 	{
-		super("§5Violet", 127, 0, 255);
+		super("§5Violet", 127, 0, 255, (byte) 10);
 	}
 
 }

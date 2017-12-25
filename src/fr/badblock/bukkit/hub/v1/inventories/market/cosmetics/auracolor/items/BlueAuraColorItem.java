@@ -6,7 +6,7 @@ public class BlueAuraColorItem extends AuraColorItem
 
 	public BlueAuraColorItem()
 	{
-		super("§9Bleu", 0, 128, 255);
+		super("§9Bleu", 0, 128, 255, (byte) 11);
 	}
 
 }
