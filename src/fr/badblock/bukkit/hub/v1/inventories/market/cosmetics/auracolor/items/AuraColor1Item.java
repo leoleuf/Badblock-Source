@@ -17,14 +17,14 @@ import net.md_5.bungee.api.ChatColor;
 
 @Getter
 @Setter
-public abstract class AuraColorItem extends CustomItem {
+public abstract class AuraColor1Item extends CustomItem {
 
 	private String	colorName;
 	private int		red;
 	private int		green;
 	private int		blue;
 	
-	public AuraColorItem(String colorName, int red, int green, int blue, byte data) {
+	public AuraColor1Item(String colorName, int red, int green, int blue, byte data) {
 		super("hub.items.auracoloritem." + ChatColor.stripColor(colorName).toLowerCase() + "_name", Material.STAINED_CLAY, data,
 				"hub.items.auracoloritem." + ChatColor.stripColor(colorName).toLowerCase() + "_lore", false);
 		this.setColorName(colorName);
@@ -43,9 +43,9 @@ public abstract class AuraColorItem extends CustomItem {
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
 		player.closeInventory();
 		GamePlayerData playerData = (GamePlayerData) player.getPlayerData();
-		playerData.setAuraRed(getRed());
-		playerData.setAuraGreen(getGreen());
-		playerData.setAuraBlue(getBlue());
+		playerData.setAuraRed1(getRed());
+		playerData.setAuraGreen1(getGreen());
+		playerData.setAuraBlue1(getBlue());
 		player.sendTranslatedMessage("hub.items.auracoloritem.changed", getColorName());
 	}
 
