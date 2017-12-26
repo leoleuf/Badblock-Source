@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StartRunnable extends BukkitRunnable {
-	public    static final int 		     TIME_BEFORE_START = 5;
+	public    static final int 		     TIME_BEFORE_START = 120;
 	protected static 	   StartRunnable task 		       = null;
 	public    static 	   GameRunnable  gameTask		   = null;
 
@@ -29,7 +29,7 @@ public class StartRunnable extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		GameAPI.setJoinable(time >= 5);
+		GameAPI.setJoinable(time >= 60);
 		if(time == 0){
 			for(BadblockPlayer player : BukkitUtils.getPlayers()) {
 				if (player.getCustomObjective() == null)
@@ -113,8 +113,8 @@ public class StartRunnable extends BukkitRunnable {
 		
 		startGame();
 		int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
-		if (time >= 5 && (a <= 5 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 5;
-		else if (time >= 5) time = a;
+		if (time >= 120 && (a <= 120 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 120;
+		else if (time >= 120) time = a;
 	}
 
 	public static void startGame(){
@@ -130,7 +130,7 @@ public class StartRunnable extends BukkitRunnable {
 			time = TIME_BEFORE_START;
 		} else if(task != null){
 			task.cancel();
-			time = time > 5 ? time : 5;
+			time = time > 120 ? time : 120;
 			GameAPI.setJoinable(true);
 		} else {
 			new KickRunnable();
