@@ -46,6 +46,7 @@ public abstract class AuraColor2Item extends CustomItem {
 		playerData.setAuraRed2(getRed());
 		playerData.setAuraGreen2(getGreen());
 		playerData.setAuraBlue2(getBlue());
+		player.saveGameData();
 		player.sendTranslatedMessage("hub.items.auracoloritem.changed", getColorName());
 	}
 
