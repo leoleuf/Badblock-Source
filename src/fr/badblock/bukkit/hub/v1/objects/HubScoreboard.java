@@ -79,21 +79,7 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 
 			objective.changeLine(2, "&8&m----------------------");
 		} catch(Exception e){
-			Thread current = Thread.currentThread();
-			
-			new Thread(){
-				@Override
-				public void run(){
-					try {
-						Thread.sleep(1000L);
-						current.join();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					
-					generate();
-				}
-			}.start();
+			e.printStackTrace();
 		}
 	}
 

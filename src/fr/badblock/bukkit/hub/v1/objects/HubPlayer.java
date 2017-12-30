@@ -329,8 +329,6 @@ public class HubPlayer implements InGameData {
 					TaskManager.cancelTaskByName(player.getName() + "_objective");
 					return;
 				}
-				if (player.getCustomObjective() != null)
-					player.getCustomObjective().generate();
 			}
 		}, 20, 20);
 		TempScheduler tempScheduler3 = new TempScheduler();
