@@ -18,7 +18,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 import com.google.gson.JsonArray;
@@ -258,10 +257,10 @@ public class HubPlayer implements InGameData {
 					return;
 				}
 				BadblockPlayer bbPlayer = player;
-				bbPlayer.getInventory().setItem(5, new ItemStack(Material.SNOW_BALL, 64));
+				//.getInventory().setItem(5, new ItemStack(Material.SNOW_BALL, 64));
 				/*List<String> list = Arrays.asList(GameAPI.i18n().get(player.getPlayerData().getLocale(), "hub.actionbar"));
 				 * 
-				if (id > list.size() - 1) id = 0;
+				if (id > list.size() - 1) id = 0
 				String actionBar = list.get(id).substring(2, list.get(id).length() - 1);
 				if (length <= 0) {
 					id++;
