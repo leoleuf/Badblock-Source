@@ -1,7 +1,5 @@
 package fr.badblock.bukkit.hub.v1.inventories.join;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.items.CustomItem;
@@ -10,6 +8,7 @@ import fr.badblock.bukkit.hub.v1.inventories.join.items.GadgetsPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.GameSelectorPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.HiderDisablePlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.HiderPlayerItem;
+import fr.badblock.bukkit.hub.v1.inventories.join.items.HostPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.SettingsPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.ShopPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.dev.DevSelectorInventoryOpenItem;
