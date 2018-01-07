@@ -376,8 +376,8 @@ public class BadBlockHub extends BadblockPlugin {
 		}, 0, 1);*/
 		System.out.println("[HUB] Loaded BadBlockHub in " + String.format("%.2f", ((System.currentTimeMillis() - time) * 1.0F)) + " ms.");
 		// christmas TODO remove
-		new CreeperTask();
-		new SnowmanTask();
+		//new CreeperTask();
+		//new SnowmanTask();
 	}
 
 }
