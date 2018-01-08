@@ -258,6 +258,10 @@ public class HubPlayer implements InGameData {
 					return;
 				}
 				BadblockPlayer bbPlayer = player;
+				if (scoreboard != null)
+				{
+					updateScoreboard();
+				}
 				bbPlayer.getInventory().setItem(5, new ItemStack(Material.SNOW_BALL, 64));
 				/*List<String> list = Arrays.asList(GameAPI.i18n().get(player.getPlayerData().getLocale(), "hub.actionbar"));
 				 * 
@@ -300,7 +304,7 @@ public class HubPlayer implements InGameData {
 				}
 				bbPlayer.sendBossBar(finalString3.replace("%0", Integer.toString(a)).replace("%1", player.getName()));*/
 			}
-		}, 0, 10);
+		}, 0, 20 * 10);
 		TaskManager.runAsyncTaskLater(new Runnable() {
 			@Override
 			public void run() {

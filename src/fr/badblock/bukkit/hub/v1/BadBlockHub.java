@@ -38,6 +38,7 @@ import fr.badblock.bukkit.hub.v1.inventories.selector.items.SkyBlockSelectorItem
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.SkyWarsSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.SpeedUHCSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.SurvivalGamesSelectorItem;
+import fr.badblock.bukkit.hub.v1.inventories.selector.items.TowerRun4v4SelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.TowerRunSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.TowerSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.submenus.items.buildcontest.BuildContest16SelectorItem;
@@ -228,6 +229,7 @@ public class BadBlockHub extends BadblockPlugin {
 				new TowerSelectorItem();
 				new Tower2v2SelectorItem();
 				new TowerRunSelectorItem();
+				new TowerRun4v4SelectorItem();
 				new Tower4v4SelectorItem();
 				new SurvivalGames24SelectorItem();
 				new SurvivalGames24NoTeamSelectorItem();

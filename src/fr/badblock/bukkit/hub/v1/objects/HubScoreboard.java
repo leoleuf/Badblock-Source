@@ -75,7 +75,7 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 			i--;
 			objective.changeLine(i, i18n("hub.scoreboard.players", HubPlayer.a));
 			i--;
-			objective.changeLine(i, "");
+			objective.changeLine(i, /*"TempPing : " + ((CraftPlayer)player).getHandle().ping*/"");
 
 			objective.changeLine(2, "&8&m----------------------");
 		} catch(Exception e){
