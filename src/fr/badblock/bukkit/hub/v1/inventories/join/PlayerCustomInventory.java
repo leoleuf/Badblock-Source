@@ -1,7 +1,5 @@
 package fr.badblock.bukkit.hub.v1.inventories.join;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.items.CustomItem;
@@ -10,6 +8,7 @@ import fr.badblock.bukkit.hub.v1.inventories.join.items.GadgetsPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.GameSelectorPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.HiderDisablePlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.HiderPlayerItem;
+import fr.badblock.bukkit.hub.v1.inventories.join.items.HostPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.SettingsPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.ShopPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.dev.DevSelectorInventoryOpenItem;
@@ -28,7 +27,7 @@ public enum PlayerCustomInventory {
 	SHOP(1, new ShopPlayerItem(), null),
 	CHEST(3, new ChestPlayerItem(), "hub.openchest"),
 	SELECTOR(4, new GameSelectorPlayerItem(), null),
-	//HOST(5, new HostPlayerItem(), null),
+	HOST(5, new HostPlayerItem(), null),
 	HIDER(7, new HiderPlayerItem(), null),
 	SETTINGS(8, new SettingsPlayerItem(), null),
 	STAFFROOM(9, new StaffRoomSelectorItem(), "hub.staffroom"),
@@ -51,8 +50,6 @@ public enum PlayerCustomInventory {
 			if (item.name().equalsIgnoreCase("HIDER") && hubStoredPlayer.hidePlayers) inventory.setItem(item.getSlot(), new HiderDisablePlayerItem().toItemStack(player));
 			else inventory.setItem(item.getSlot(), item.getCustomItem().getStaticItem().get(player.getPlayerData().getLocale()));
 		}
-		// TODO remove
-		inventory.setItem(5, new ItemStack(Material.SNOW_BALL, 64));
 	}
 
 	public static void load() {

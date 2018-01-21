@@ -82,13 +82,11 @@ import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.HubPacketListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.SEntryInfosListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.WorkerListener;
 import fr.badblock.bukkit.hub.v1.tasks.BossBarTask;
-import fr.badblock.bukkit.hub.v1.tasks.CreeperTask;
 import fr.badblock.bukkit.hub.v1.tasks.DropsTask;
 import fr.badblock.bukkit.hub.v1.tasks.RebootTask;
 import fr.badblock.bukkit.hub.v1.tasks.RequestBoosterTask;
 import fr.badblock.bukkit.hub.v1.tasks.RequestNPCTask;
 import fr.badblock.bukkit.hub.v1.tasks.RequestSignsTask;
-import fr.badblock.bukkit.hub.v1.tasks.SnowmanTask;
 import fr.badblock.bukkit.hub.v1.tasks.TaskListTask;
 import fr.badblock.bukkit.hub.v1.utils.MountManager;
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
@@ -378,8 +376,8 @@ public class BadBlockHub extends BadblockPlugin {
 		}, 0, 1);*/
 		System.out.println("[HUB] Loaded BadBlockHub in " + String.format("%.2f", ((System.currentTimeMillis() - time) * 1.0F)) + " ms.");
 		// christmas TODO remove
-		new CreeperTask();
-		new SnowmanTask();
+		//new CreeperTask();
+		//new SnowmanTask();
 	}
 
 }
