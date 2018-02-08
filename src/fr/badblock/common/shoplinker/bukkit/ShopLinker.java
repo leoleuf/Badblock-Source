@@ -39,7 +39,7 @@ import lombok.Setter;
 	private String			 							 notRegisteredMessage;
 	private String			 							 nothingToClaimMessage;
 	private String			 							 animationMessage;
-	private String			 							 christmasMessage;
+	private String			 							 webActionCompleteMessage;
 	private String			 							 boughtMessage;
 	private String			 							 rewardMessage;
 	private List<String>			 					 singlePendingMessage;

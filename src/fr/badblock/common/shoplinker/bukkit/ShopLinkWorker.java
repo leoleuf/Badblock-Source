@@ -78,8 +78,8 @@ public class ShopLinkWorker {
 		case VOTE:
 			message = shopLinker.getRewardMessage();
 			break;
-		case CHRISTMAS:
-			message = shopLinker.getChristmasMessage();
+		case WEBACTION_COMPLETE:
+			message = shopLinker.getWebActionCompleteMessage();
 			break;
 		}
 		message = message.replace("%0", shopData.getPlayerName()).replace("%1", shopData.getCommand()).replace("%2", shopData.getDisplayName());

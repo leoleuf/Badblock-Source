@@ -24,7 +24,7 @@ import lombok.Setter;
 
 	private String										 boughtMessage;
 	private String										 animationMessage;
-	private String										 christmasMessage;
+	private String										 webActionCompleteMessage;
 	private String										 rewardMessage;
 
 	@Override
@@ -43,7 +43,7 @@ import lombok.Setter;
 				);
 		String queueName = getString(configuration, "queueName");
 		ShopLinkerAPI.CURRENT_SERVER_NAME = queueName;
-		this.christmasMessage = translate(getString(configuration, "messages.christmas"));
+		this.webActionCompleteMessage = translate(getString(configuration, "messages.webactioncomplete"));
 		this.animationMessage = translate(getString(configuration, "messages.animation"));
 		ReceiveCommandListener.enabledCommands = configuration.getBoolean("enabledCommands");
 		this.boughtMessage = translate(getString(configuration, "messages.bought"));

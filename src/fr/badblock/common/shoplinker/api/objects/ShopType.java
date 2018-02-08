@@ -5,7 +5,7 @@ public enum ShopType {
 	VOTE,
 	BUY,
 	ANIMATION,
-	CHRISTMAS;
+	WEBACTION_COMPLETE;
 
 	public static ShopType getFrom(String type) {
 		for (ShopType shopType : values())

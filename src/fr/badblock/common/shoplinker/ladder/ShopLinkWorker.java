@@ -45,8 +45,8 @@ public class ShopLinkWorker
 		case VOTE:
 			message = ShopLinkerLadder.getInstance().getRewardMessage();
 			break;
-		case CHRISTMAS:
-			message = ShopLinkerLadder.getInstance().getChristmasMessage();
+		case WEBACTION_COMPLETE:
+			message = ShopLinkerLadder.getInstance().getWebActionCompleteMessage();
 			break;
 		}
 		message = message.replace("%0", shopData.getPlayerName()).replace("%1", shopData.getCommand()).replace("%2", shopData.getDisplayName());
