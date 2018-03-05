@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.api.objects.ShopData;
-import fr.badblock.common.shoplinker.api.objects.ShopType;
 import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
 import fr.badblock.common.shoplinker.bukkit.database.Request;
 import fr.badblock.common.shoplinker.bukkit.database.Request.RequestType;
@@ -67,7 +66,22 @@ public class ShopLinkWorker {
 
 	public static void broadcastCommand(ShopData shopData) {
 		ShopLinker shopLinker = ShopLinker.getInstance();
-		String message = shopData.getDataType().equals(ShopType.BUY) ? shopLinker.getBoughtMessage() : shopLinker.getRewardMessage();
+		String message = "";
+		switch (shopData.getDataType())
+		{
+		case BUY:
+			message = shopLinker.getBoughtMessage();
+			break;
+		case ANIMATION:
+			message = shopLinker.getAnimationMessage();
+			break;
+		case VOTE:
+			message = shopLinker.getRewardMessage();
+			break;
+		case WEBACTION_COMPLETE:
+			message = shopLinker.getWebActionCompleteMessage();
+			break;
+		}
 		message = message.replace("%0", shopData.getPlayerName()).replace("%1", shopData.getCommand()).replace("%2", shopData.getDisplayName());
 		if (message != null && !message.isEmpty()) Bukkit.broadcastMessage(message);
 
@@ -75,7 +89,7 @@ public class ShopLinkWorker {
 		if (shopData.isIngame())
 		{
 			// &6[Info] &b'.$joueur['pseudo'].' &aa acheté l\'offre '.parseHTML($offer["displayname"]).' &acontre '.$offer["price"].' Crystals sur le site !
-			for (String broadcastMessage : ShopLinker.getInstance().getBroadcastMessage())
+			for (String broadcastMessage : shopLinker.getBroadcastMessage())
 			{
 				broadcastMessage = broadcastMessage.replace("%player%", shopData.getPlayerName());
 				broadcastMessage = broadcastMessage.replace("%displayName%", shopData.getDisplayName());

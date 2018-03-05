@@ -75,7 +75,8 @@ public class BadblockDatabase {
 	}
 
 	public void addSyncRequest(Request request) {
-		try {
+		try
+		{
 			Statement statement = createStatement();
 			if (request.getRequestType().equals(RequestType.SETTER)) {
 				statement.executeUpdate(request.getRequest());
@@ -167,7 +168,7 @@ public class BadblockDatabase {
 	 * @throws SQLException
 	 */
 	public boolean isConnectionEtablished() throws SQLException {
-		return this.connection != null && !this.connection.isClosed();
+		return this.connection != null && !this.connection.isClosed() && this.connection.isValid(10);
 	}
 
 	/**

@@ -3,7 +3,9 @@ package fr.badblock.common.shoplinker.api.objects;
 public enum ShopType {
 
 	VOTE,
-	BUY;
+	BUY,
+	ANIMATION,
+	WEBACTION_COMPLETE;
 
 	public static ShopType getFrom(String type) {
 		for (ShopType shopType : values())

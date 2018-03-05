@@ -1,7 +1,6 @@
 package fr.badblock.common.shoplinker.ladder;
 
 import fr.badblock.common.shoplinker.api.objects.ShopData;
-import fr.badblock.common.shoplinker.api.objects.ShopType;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.ladder.api.Ladder;
 import fr.badblock.ladder.api.chat.ChatColor;
@@ -33,7 +32,22 @@ public class ShopLinkWorker
 	public static void broadcastCommand(Player player, ShopData shopData)
 	{
 		System.out.println(ShopLinker.getInstance().getNotRestrictiveGson().toJson(shopData));
-		String message = shopData.getDataType().equals(ShopType.BUY) ? ShopLinkerLadder.getInstance().getBoughtMessage() : ShopLinkerLadder.getInstance().getRewardMessage();
+		String message = "";
+		switch (shopData.getDataType())
+		{
+		case BUY:
+			message = ShopLinkerLadder.getInstance().getBoughtMessage();
+			break;
+		case ANIMATION:
+			message = ShopLinkerLadder.getInstance().getAnimationMessage();
+			break;
+		case VOTE:
+			message = ShopLinkerLadder.getInstance().getRewardMessage();
+			break;
+		case WEBACTION_COMPLETE:
+			message = ShopLinkerLadder.getInstance().getWebActionCompleteMessage();
+			break;
+		}
 		message = message.replace("%0", shopData.getPlayerName()).replace("%1", shopData.getCommand()).replace("%2", shopData.getDisplayName());
 		player.getBukkitServer().broadcast(message);
 

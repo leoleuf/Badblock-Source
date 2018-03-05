@@ -110,6 +110,8 @@ public class ShopLinkerLoader {
 		shopLinker.setCancelledMessage(ChatColorUtils.translate(getString(configuration, "messages.cancelledMessage", "You've just cancelled this operation.")));
 		shopLinker.setBackName(ChatColorUtils.translate(getString(configuration, "messages.back.name", "Retour")));
 		shopLinker.setRewardMessage(ChatColorUtils.translate(getString(configuration, "messages.reward", "%0 %1")));
+		shopLinker.setWebActionCompleteMessage(ChatColorUtils.translate(getString(configuration, "messages.webactioncomplete", "%0 %1")));
+		shopLinker.setAnimationMessage(ChatColorUtils.translate(getString(configuration, "messages.animation", "%0 %1")));
 		shopLinker.setNothingToClaimMessage(ChatColorUtils.translate(getString(configuration, "messages.nothingtoclaim", "Nothing to claim for now.")));
 		shopLinker.setSinglePendingMessage(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.pending.single", "You've one pending purchase. Get your bought feature by clicking on this message. Be careful of your inventory space.")));
 		shopLinker.setPluralPendingMessage(ChatColorUtils.getTranslatedMessages(getStringList(configuration, "messages.pending.plural", "You've %0 pending purchases. Get your bought features by clicking on this message. Be careful of your inventory space.")));

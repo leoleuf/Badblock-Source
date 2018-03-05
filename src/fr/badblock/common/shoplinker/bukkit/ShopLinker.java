@@ -38,6 +38,8 @@ import lombok.Setter;
 	private String			 							 searchOfferMessage;
 	private String			 							 notRegisteredMessage;
 	private String			 							 nothingToClaimMessage;
+	private String			 							 animationMessage;
+	private String			 							 webActionCompleteMessage;
 	private String			 							 boughtMessage;
 	private String			 							 rewardMessage;
 	private List<String>			 					 singlePendingMessage;
