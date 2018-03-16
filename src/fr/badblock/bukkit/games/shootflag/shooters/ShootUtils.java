@@ -53,7 +53,7 @@ public class ShootUtils
 
 		final TempScheduler s = new TempScheduler(null);
 
-		final long nextTime = time()+ 1000;
+		final long nextTime = time() + playerData.reloadTime;
 		playerData.setLastShootFlag(nextTime);
 
 		s.task = Bukkit.getScheduler().runTaskTimer(PluginShootFlag.getInstance(), new Runnable()

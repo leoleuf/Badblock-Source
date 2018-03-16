@@ -2,6 +2,8 @@ package fr.badblock.bukkit.games.shootflag;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -9,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.badblock.bukkit.games.shootflag.commands.GameCommand;
 import fr.badblock.bukkit.games.shootflag.commands.ShootFlagCommand;
@@ -35,6 +38,7 @@ import fr.badblock.bukkit.games.shootflag.listeners.PlayerShearEntityListener;
 import fr.badblock.bukkit.games.shootflag.listeners.QuitListener;
 import fr.badblock.bukkit.games.shootflag.listeners.ShootFlagMapProtector;
 import fr.badblock.bukkit.games.shootflag.listeners.WeatherChangeListener;
+import fr.badblock.bukkit.games.shootflag.players.ShootFlagData;
 import fr.badblock.bukkit.games.shootflag.players.ShootFlagScoreboard;
 import fr.badblock.bukkit.games.shootflag.runnables.PreStartRunnable;
 import fr.badblock.gameapi.BadblockPlugin;
@@ -50,6 +54,7 @@ import fr.badblock.gameapi.run.RunType;
 import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.GameRules;
 import fr.badblock.gameapi.utils.general.JsonUtils;
+import fr.badblock.gameapi.utils.itemstack.ItemStackUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -79,7 +84,85 @@ public class PluginShootFlag extends BadblockPlugin {
 	{	
 		player.clearInventory();
 		player.getInventory().setHeldItemSlot(0);
-		player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.STONE_HOE));
+
+		// Set material
+		Material material = null;
+		String displayName = null;
+		List<String> lore = null;
+		boolean fakeEnchant = false;
+		long reloadTime = 0;
+
+		if (player.getVipLevel() >= 3)
+		{
+			material = Material.STICK;
+			displayName = "§dMagic Stick";
+			lore = Arrays.asList(
+					"§7-----------------------------------",
+					"§7Temps de rechargement : 0,5 seconde",
+					"§7-----------------------------------"
+					);
+			reloadTime = 500;
+			fakeEnchant = true;
+		}
+		else if (player.getVipLevel() >= 2)
+		{
+			material = Material.DIAMOND_HOE;
+			displayName = "§bHoue en diamant";
+			lore = Arrays.asList(
+					"§7-----------------------------------",
+					"§7Temps de rechargement : 0,75 seconde",
+					"§7 ",
+					"§dMagic Stick §7à partir du grade",
+					"§aÉmeraude §7(0,5 seconde de rechargement)",
+					"§7 ",
+					"§7-----------------------------------"
+					);
+			reloadTime = 750;
+		}
+		else if (player.getVipLevel() >= 1)
+		{
+			material = Material.GOLD_HOE;
+			displayName = "§6Houe en or";
+			lore = Arrays.asList(
+					"§7-----------------------------------",
+					"§7Temps de rechargement : 1 seconde",
+					"§7 ",
+					"§bHoue en diamant §7à partir du grade",
+					"§bDiamant §7(0,75 seconde de rechargement)",
+					"§7 ",
+					"§7-----------------------------------"
+					);
+			reloadTime = 1000;
+		}
+		else
+		{
+			material = Material.STONE_HOE;
+			displayName = "§3Houe en pierre";
+			lore = Arrays.asList(
+					"§7-----------------------------------",
+					"§7Temps de rechargement : 1,25 seconde",
+					"§7 ",
+					"§6Houe en or §7à partir du grade",
+					"§6Gold §7(1 seconde de rechargement)",
+					"§7 ",
+					"§7-----------------------------------"
+					);
+			reloadTime = 1250;
+		}
+
+		ItemStack itemStack = new ItemStack(material);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		itemMeta.setDisplayName(displayName);
+		itemMeta.setLore(lore);
+
+		if (fakeEnchant)
+		{
+			itemStack = ItemStackUtils.fakeEnchant(itemStack);
+		}
+		
+		player.inGameData(ShootFlagData.class).reloadTime = reloadTime;
+
+		player.getInventory().setItem(player.getInventory().getHeldItemSlot(), itemStack);
 	}
 
 	@Override
@@ -193,11 +276,11 @@ public class PluginShootFlag extends BadblockPlugin {
 				world.setTime(2000L);
 				world.getEntities().forEach(entity -> entity.remove());
 			});
-			
+
 			// Ranked
 			RankedManager.instance.initialize(RankedManager.instance.getCurrentRankedGameName(), 
 					ShootFlagScoreboard.KILLS, ShootFlagScoreboard.DEATHS, ShootFlagScoreboard.FLAGS, ShootFlagScoreboard.WINS, ShootFlagScoreboard.LOOSES, ShootFlagScoreboard.SHOOTS_OK, ShootFlagScoreboard.SHOOTS_ERR);
-			
+
 		} catch(Throwable e){
 			e.printStackTrace();
 		}

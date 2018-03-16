@@ -14,6 +14,8 @@ public class ShootFlagData implements InGameData
 	public int  marks	    = 0;
 	public long nextMark    = 0;
 	public long cooldown	= 0;
+	
+	public long reloadTime	= 0;
 
 	private long lastItemFrameFlag;
 	@Getter@Setter

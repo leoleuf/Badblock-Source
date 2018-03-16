@@ -25,7 +25,8 @@ public class PlayerInteractListener extends BadListener
 		Action action = event.getAction();
 		if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))
 		{
-			if (player.getItemInHand().getType().equals(Material.STONE_HOE))
+			if (player.getItemInHand().getType().name().contains("HOE") ||
+					player.getItemInHand().getType().equals(Material.STICK))
 			{
 				ShootUtils.shoot(player);
 			}
