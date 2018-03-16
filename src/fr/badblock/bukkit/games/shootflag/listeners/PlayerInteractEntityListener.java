@@ -86,7 +86,7 @@ public class PlayerInteractEntityListener extends BadListener
 				return;
 			}
 
-			playerData.lastFlag = time + 300;
+			playerData.lastFlag = time + 100;
 
 			if (flag.ownPart(team, player, itemFrame))
 			{
