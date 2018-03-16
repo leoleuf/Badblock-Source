@@ -22,6 +22,8 @@ public class ShootFlagData implements InGameData
 	private long lastShootFlag;
 	
 	public long canHurt;
+
+	public long lastFlag;
 	
 	public void itemFrameFlag()
 	{

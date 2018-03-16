@@ -1,7 +1,6 @@
 package fr.badblock.bukkit.games.shootflag.listeners;
 
 import org.bukkit.Location;
-import org.bukkit.Rotation;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -49,8 +48,6 @@ public class PlayerInteractEntityListener extends BadListener
 				}
 			}
 
-			System.out.println("FLAG: " + flag);
-
 			if (flag == null)
 			{
 				event.setCancelled(true);
@@ -60,6 +57,14 @@ public class PlayerInteractEntityListener extends BadListener
 			ShootFlagData playerData = player.inGameData(ShootFlagData.class);
 
 			if (playerData.isItemFrameFlagged())
+			{
+				event.setCancelled(true);
+				return;
+			}
+
+			long time = System.currentTimeMillis();
+
+			if (playerData.lastFlag > time)
 			{
 				event.setCancelled(true);
 				return;
@@ -81,12 +86,10 @@ public class PlayerInteractEntityListener extends BadListener
 				return;
 			}
 
+			playerData.lastFlag = time + 300;
+
 			if (flag.ownPart(team, player, itemFrame))
 			{
-				Rotation r = itemFrame.getRotation();
-
-				System.out.println(r.name());
-
 				int percent = flag.getPercent();
 				String color = percent < 40 ? "§c" : percent < 60 ? "§e" : percent < 80 ? "§9" : "§a";
 
