@@ -78,7 +78,9 @@ public class ShootUtils
 
 				ticks--;
 				float f = (10 * ticks);
-				player.setExp(f / 100F);
+				f = f / 100F;
+				f = Math.min(f, 0.99f);
+				player.setExp(f);
 			}
 		}, 0L, 1L);
 
