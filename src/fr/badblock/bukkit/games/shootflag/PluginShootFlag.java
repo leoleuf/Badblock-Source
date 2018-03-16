@@ -154,6 +154,7 @@ public class PluginShootFlag extends BadblockPlugin {
 		ItemMeta itemMeta = itemStack.getItemMeta();
 		itemMeta.setDisplayName(displayName);
 		itemMeta.setLore(lore);
+		itemStack.setItemMeta(itemMeta);
 
 		if (fakeEnchant)
 		{

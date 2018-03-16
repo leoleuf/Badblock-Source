@@ -90,19 +90,19 @@ public class ShootFlagScoreboard extends BadblockScoreboardGenerator {
 			i--;
 		}
 
-		objective.changeLine(i,  ""); i--;
-		objective.changeLine(i,  i18n("shootflag.scoreboard.monthrank", monthRank)); i--;
-		objective.changeLine(i,  i18n("shootflag.scoreboard.totalrank", totalRank)); i--;
-		objective.changeLine(i,  i18n("shootflag.scoreboard.wins", stat(WINS))); i--;
-		objective.changeLine(i,  i18n("shootflag.scoreboard.kills", stat(KILLS))); i--;
-		objective.changeLine(i,  i18n("shootflag.scoreboard.ratio", MathsUtils.round((double) stat(KILLS) / (double) Math.max(1, (double) stat(DEATHS)), 2))); i--;
-		objective.changeLine(i,  i18n("shootflag.scoreboard.deaths", stat(DEATHS))); i--;
-		objective.changeLine(i,  i18n("shootflag.scoreboard.flags", stat(FLAGS))); i--;
+		objective.changeLine(11,  "");
+		objective.changeLine(10,  i18n("shootflag.scoreboard.monthrank", monthRank));
+		objective.changeLine(9,  i18n("shootflag.scoreboard.totalrank", totalRank));
+		objective.changeLine(8,  "");
+		objective.changeLine(7,  i18n("shootflag.scoreboard.wins", stat(WINS)));
+		objective.changeLine(6,  i18n("shootflag.scoreboard.kills", stat(KILLS), stat(DEATHS)));
+		objective.changeLine(5,  i18n("shootflag.scoreboard.ratio", MathsUtils.round((double) stat(KILLS) / (double) Math.max(1, (double) stat(DEATHS)), 2))); i--;
+		objective.changeLine(4,  i18n("shootflag.scoreboard.flags", stat(FLAGS)));
 		double prc = (double) stat(SHOOTS_OK) / (double) Math.max(1, (double) stat(SHOOTS_OK) + (double) stat(SHOOTS_ERR)) * 100.0D;
 		prc = MathsUtils.round(prc, 2);
-		objective.changeLine(i,  i18n("shootflag.scoreboard.accurate", prc)); i--;
+		objective.changeLine(3,  i18n("shootflag.scoreboard.accurate", prc)); i--;
 
-		objective.changeLine(i,  "&8&m----------------------");
+		objective.changeLine(2,  "&8&m----------------------");
 	}
 
 	private String time(int time){
