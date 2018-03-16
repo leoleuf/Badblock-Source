@@ -22,11 +22,14 @@ import fr.badblock.bukkit.games.shootflag.result.ShootFlagResults;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.PlayerAchievement;
 import fr.badblock.gameapi.game.GameState;
+import fr.badblock.gameapi.game.rankeds.RankedCalc;
+import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.players.data.PlayerAchievementState;
 import fr.badblock.gameapi.players.scoreboard.CustomObjective;
+import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.general.TimeUnit;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import lombok.Getter;
@@ -118,7 +121,7 @@ public class GameRunnable extends BukkitRunnable {
 			BadblockTeam winner = max;
 
 			GameAPI.getAPI().getGameServer().setGameState(GameState.FINISHED);
-			
+
 			Location winnerLocation = PluginShootFlag.getInstance().getMapConfiguration().getSpawnLocation();
 			Location looserLocation = winnerLocation.clone().add(0d, 7d, 0d);
 
@@ -166,12 +169,12 @@ public class GameRunnable extends BukkitRunnable {
 					if(bp.getBadblockMode() == BadblockMode.PLAYER)
 						bp.getPlayerData().incrementStatistic("shootflag", ShootFlagScoreboard.LOOSES);
 				}
-				
+
 				if(badcoins > 20 * bp.getPlayerData().getBadcoinsMultiplier())
 					badcoins = 20 * bp.getPlayerData().getBadcoinsMultiplier();
 				if(xp > 50 * bp.getPlayerData().getXpMultiplier())
 					xp = 50 * bp.getPlayerData().getXpMultiplier();
-				
+
 				int rbadcoins = badcoins < 2 ? 2 : (int) badcoins;
 				int rxp		  = xp < 5 ? 5 : (int) xp;
 
@@ -192,6 +195,31 @@ public class GameRunnable extends BukkitRunnable {
 				if(bp.getCustomObjective() != null)
 					bp.getCustomObjective().generate();
 			}
+
+			// Work with rankeds
+			String rankedGameName = RankedManager.instance.getCurrentRankedGameName();
+			for (BadblockPlayer player : BukkitUtils.getPlayers())
+			{
+				RankedManager.instance.calcPoints(rankedGameName, player, new RankedCalc()
+				{
+
+					@Override
+					public long done() {
+						double kills = RankedManager.instance.getData(rankedGameName, player, ShootFlagScoreboard.KILLS);
+						double deaths = RankedManager.instance.getData(rankedGameName, player, ShootFlagScoreboard.DEATHS);
+						double wins = RankedManager.instance.getData(rankedGameName, player, ShootFlagScoreboard.WINS);
+						double looses = RankedManager.instance.getData(rankedGameName, player, ShootFlagScoreboard.LOOSES);
+						double flags = RankedManager.instance.getData(rankedGameName, player, ShootFlagScoreboard.FLAGS);
+						double total = 
+								( (kills / 0.5D) + (wins * 4) + 
+										( (kills * flags) + (flags * 2) * (kills / (deaths > 0 ? deaths : 1) ) ) )
+								/ (1 + looses);
+						return (long) total;
+					}
+
+				});
+			}
+			RankedManager.instance.fill(rankedGameName);
 
 			new ShootFlagResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
 			new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
