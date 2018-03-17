@@ -23,14 +23,6 @@ public class PlayerInteractListener extends BadListener
 		BadblockPlayer player = (BadblockPlayer) event.getPlayer();
 		// Shoot
 		Action action = event.getAction();
-		if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))
-		{
-			if (player.getItemInHand().getType().name().contains("HOE") ||
-					player.getItemInHand().getType().equals(Material.STICK))
-			{
-				ShootUtils.shoot(player);
-			}
-		}
 		// Setup
 		if (GameCommand.setup != -1)
 		{
@@ -61,6 +53,17 @@ public class PlayerInteractListener extends BadListener
 				else
 				{
 					player.sendMessage("§cVeuillez être le plus près possible d'un drapeau pour l'ajouter.");
+				}
+			}
+		}
+		else
+		{
+			if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))
+			{
+				if (player.getItemInHand().getType().name().contains("HOE") ||
+						player.getItemInHand().getType().equals(Material.STICK))
+				{
+					ShootUtils.shoot(player);
 				}
 			}
 		}
