@@ -15,6 +15,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.badblock.bukkit.games.shootflag.PluginShootFlag;
 import fr.badblock.bukkit.games.shootflag.entities.ShootFlagTeamData;
@@ -23,6 +25,7 @@ import fr.badblock.bukkit.games.shootflag.players.ShootFlagScoreboard;
 import fr.badblock.game.core18R3.players.GameTeam;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.BadblockTeam;
 import lombok.Data;
 
 @Data
@@ -47,7 +50,7 @@ public class Flag implements Runnable
 	{
 		this(name, toLocation(glass), toLocation(beacon), toLocations(itemFrames), toLocations(wools));
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public Flag(String name, Location glass, Location beacon, List<Location> itemFrames, List<Location> wools)
 	{
@@ -118,6 +121,19 @@ public class Flag implements Runnable
 				po.playSound(po.getLocation(), Sound.ENDERMAN_DEATH, 10F, 1F);
 			}
 
+			for (BadblockTeam gameTeam : GameAPI.getAPI().getTeams())
+			{
+				if (gameTeam.equals(team))
+				{
+					gameTeam.getOnlinePlayers().forEach(pl -> pl.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 1)));
+				}
+				else
+				{
+					gameTeam.getOnlinePlayers().forEach(pl -> pl.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1)));
+					gameTeam.getOnlinePlayers().forEach(pl -> pl.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 6)));
+				}
+			}
+
 			// Wools
 			byte data = team.getDyeColor().getData();
 			for (Location location : getRealWools())
@@ -152,15 +168,15 @@ public class Flag implements Runnable
 					{
 						continue;
 					}
-					
+
 					location.getBlock().setData(data);
 					setCache(0);
 					break;
-					
+
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -272,7 +288,7 @@ public class Flag implements Runnable
 	{
 		return toLocations(getItemFrames());
 	}
-	
+
 	private Location getRealGlass()
 	{
 		return toLocation(getGlass());
