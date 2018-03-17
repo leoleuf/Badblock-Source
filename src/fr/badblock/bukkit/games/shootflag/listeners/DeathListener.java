@@ -42,7 +42,7 @@ public class DeathListener extends BadListener {
 			incrementAchievements(killer, ShootFlagAchievementList.SHOOTFLAG_KILL_1, ShootFlagAchievementList.SHOOTFLAG_KILL_2, ShootFlagAchievementList.SHOOTFLAG_KILL_3, ShootFlagAchievementList.SHOOTFLAG_KILL_4, ShootFlagAchievementList.SHOOTFLAG_KILLER, ShootFlagAchievementList.SHOOTFLAG_UKILLER);
 		}
 	}
-	
+
 	@EventHandler
 	public void onRespawn(PlayerFakeRespawnEvent e){
 		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
@@ -51,7 +51,7 @@ public class DeathListener extends BadListener {
 	}
 
 	private Map<String, Long> lastDeath = new HashMap<>();
-	
+
 	private void death(FakeDeathEvent e, BadblockPlayer player, Entity killer, DamageCause last){
 		e.getDrops().clear();
 		if(player.getTeam() == null) return; //WTF
@@ -65,7 +65,7 @@ public class DeathListener extends BadListener {
 
 		if (player.getOpenInventory() != null && player.getOpenInventory().getCursor() != null)
 			player.getOpenInventory().setCursor(null);
-		
+
 		Location respawnPlace = findRespawnPlace(player);
 
 		player.getPlayerData().incrementStatistic("shootflag", ShootFlagScoreboard.DEATHS);
@@ -95,37 +95,30 @@ public class DeathListener extends BadListener {
 		player.setGameMode(GameMode.ADVENTURE);
 		e.setRespawnPlace(respawnPlace);
 	}
-	
+
 	private Location findRespawnPlace(BadblockPlayer player)
 	{
 		Location location = null;
 		double x = 0;
 		for (Location l : PluginShootFlag.getInstance().getMapConfiguration().getRespawnLocations())
 		{
-			if (location != null)
+			double q = 0.0d;
+			for (BadblockPlayer p : BukkitUtils.getPlayers())
 			{
-				for (BadblockPlayer p : BukkitUtils.getPlayers())
+				if (p.equals(player))
 				{
-					if (p.equals(player))
-					{
-						continue;
-					}
-					double b = l.distance(p.getLocation());
-					if (b > x)
-					{
-						x = b;
-						location = l;
-					}
-					else
-					{
-						break;
-					}
+					continue;
+				}
+				double b = l.distance(p.getLocation());
+				if (b > q)
+				{
+					q = b;
 				}
 			}
-			else
+			if (q > x || location == null)
 			{
+				x = q;
 				location = l;
-				x = 1;
 			}
 		}
 		return location;
