@@ -41,6 +41,7 @@ import fr.badblock.gameapi.databases.SQLRequestType;
 import fr.badblock.gameapi.fakeentities.FakeEntity;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.data.InGameData;
+import fr.badblock.gameapi.players.data.PlayerData;
 import fr.badblock.gameapi.players.data.boosters.PlayerBooster;
 import fr.badblock.gameapi.players.scoreboard.BadblockScoreboardGenerator;
 import fr.badblock.gameapi.utils.ConfigUtils;
@@ -166,8 +167,17 @@ public class HubPlayer implements InGameData {
 		if (gbp.getRealName() != null) return gbp.getRealName();
 		return gbp.getName();
 	}
-	
+
 	public void lodad(BadblockPlayer player) {
+		PlayerData playerData = player.getPlayerData();
+		if (!playerData.isTempAccess())
+		{
+			if (!player.getMainGroup().equals("default"))
+			{
+				playerData.setTempAccess(true);
+				player.saveGameData();
+			}
+		}
 		BadBlockHub hub = BadBlockHub.getInstance();
 		final TempScheduler tempScheduler0 = new TempScheduler();
 		tempScheduler0.task = TaskManager.scheduleSyncRepeatingTask("hub_" + player.getName() + "_" + player.getEntityId(), new Runnable() {
