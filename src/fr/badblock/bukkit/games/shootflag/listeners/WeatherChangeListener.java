@@ -7,14 +7,17 @@ import fr.badblock.gameapi.BadListener;
 
 public class WeatherChangeListener extends BadListener
 {
+	
+	private boolean denyRain = false;
 
 	@EventHandler
 	public void onWeatherChange(WeatherChangeEvent event)
 	{
 		if (event.toWeatherState())
 		{
-			event.setCancelled(true);
+			event.setCancelled(denyRain);
 		}
+		denyRain = true;
 	}
 
 }

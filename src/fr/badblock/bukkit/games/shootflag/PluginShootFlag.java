@@ -275,6 +275,9 @@ public class PluginShootFlag extends BadblockPlugin {
 			Bukkit.getWorlds().forEach(world -> {
 				world.setTime(2000L);
 				world.setWeatherDuration(0);
+				world.setStorm(false);
+				world.setThunderDuration(0);
+				world.setThundering(false);
 				world.getEntities().forEach(entity -> entity.remove());
 			});
 
