@@ -85,7 +85,7 @@ public class FlagCreator
 				i++;
 			}
 		}
-		return i == itemFrames;
+		return i >= itemFrames;
 	}
 	
 	protected boolean isMakeable()
