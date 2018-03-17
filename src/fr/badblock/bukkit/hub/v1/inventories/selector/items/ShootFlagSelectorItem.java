@@ -35,7 +35,7 @@ public class ShootFlagSelectorItem extends GameSelectorItem
 
 	public ShootFlagSelectorItem()
 	{
-		super("hub.items.shootflagselectoritem", Material.CHEST, "hub.items.shootflagselectoritem.lore");
+		super("hub.items.shootflagselectoritem", Material.DIAMOND_HOE, "hub.items.shootflagselectoritem.lore");
 		this.setFakeEnchantment(true);
 	}
 
