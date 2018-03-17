@@ -31,7 +31,7 @@ public class SelectorInventory extends CustomInventory {
 	public SelectorInventory() {
 		super("hub.items.selectorinventory", 6);
 		LightBlueStainedGlassPaneItem lightBlueStainedGlassPaneItem = new LightBlueStainedGlassPaneItem();
-		this.setItem(lightBlueStainedGlassPaneItem, 19, 20, 21, 13, 23, 24, 25, 27, 35, 37, 43, 47, 48, 50, 51);
+		this.setItem(lightBlueStainedGlassPaneItem, 22);
 		this.setItem(0, new SpawnSelectorItem());
 		this.setItem(4, new GoogleAuthSelectorItem());
 		this.setItem(8, new VIPZoneSelectorItem());
