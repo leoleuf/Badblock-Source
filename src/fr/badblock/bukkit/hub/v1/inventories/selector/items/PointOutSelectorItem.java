@@ -21,9 +21,7 @@ import fr.badblock.utils.Encodage;
 public class PointOutSelectorItem extends GameSelectorItem {
 
 	public PointOutSelectorItem() {
-		// super("§bRush", Material.BED);
 		super("hub.items.pointoutselectoritem", Material.NETHER_STAR, "hub.items.pointoutselectoritem.lore");
-		this.setFakeEnchantment(true);
 	}
 
 	@Override
