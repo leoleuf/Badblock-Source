@@ -144,7 +144,7 @@ public class Flag implements Runnable
 				{
 					gameTeam.getOnlinePlayers().forEach(pl -> {
 						pl.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
-						pl.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 6));
+						pl.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2));
 						if (lastFlaggedTeam != null && lastFlaggedTeam.equals(team))
 						{
 							pl.playSound(pl.getLocation(), Sound.ENDERMAN_DEATH, 10F, 1F);
