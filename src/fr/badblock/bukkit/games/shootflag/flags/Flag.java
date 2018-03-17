@@ -186,17 +186,34 @@ public class Flag implements Runnable
 
 			team.teamData(ShootFlagTeamData.class).addPoints(30);
 
+			return true;
 		}
 
-		setCache(getCache() + 2);
+		int neededWool = (int) (((double) getPercent() / 100D) * (double) getRealWools().size());
+		int currentWool = 0;
 
-		boolean needGetPartOfWool = (int) 100 / getRealWools().size() <= cache;
-
-		if (needGetPartOfWool)
+		byte data = team.getDyeColor().getData();
+		for (Location location : getRealWools())
 		{
-			byte data = team.getDyeColor().getData();
+			if (location.getBlock().getType().equals(Material.WOOL))
+			{
+				if (location.getBlock().getData() == data)
+				{
+					currentWool++;
+				}
+			}
+		}
+		
+		
+		if (neededWool > currentWool)
+		{
+			int i = neededWool - currentWool;
 			for (Location location : getRealWools())
 			{
+				if (i <= 0)
+				{
+					break;
+				}
 				if (location.getBlock().getType().equals(Material.WOOL))
 				{
 					if (location.getBlock().getData() == data)
@@ -205,9 +222,7 @@ public class Flag implements Runnable
 					}
 
 					location.getBlock().setData(data);
-					setCache(0);
-					break;
-
+					i--;
 				}
 			}
 		}

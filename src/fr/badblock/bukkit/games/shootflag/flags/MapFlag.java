@@ -32,9 +32,9 @@ public class MapFlag implements MapValue<Flag>
 	}
 	
 	private String name = "world";
+	private List<FakeLocation> glass = null;
 	private List<FakeLocation> itemframes = null;
 	private List<FakeLocation> wools = null;
-	private List<FakeLocation> glass = null;
 	/**
 	 * Créé une MapLocation depuis une location Bukkit
 	 * 

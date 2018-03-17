@@ -53,11 +53,11 @@ public class FlagCreator
 	protected List<Block> getNearbyBlocks(Material material)
 	{
 		final List<Block> blocks = new ArrayList<>(); 
-		for (double x = -flagMaxRadius; x <= flagMaxRadius; x++)
+		for (double x = -(flagMaxRadius / 2); x <= (flagMaxRadius / 2); x++)
 		{
-			for (double y = -flagMaxRadius; y <= flagMaxRadius; y++)
+			for (double y = -(flagMaxRadius / 2); y <= (flagMaxRadius / 2); y++)
 			{
-				for (double z = -flagMaxRadius; z <= flagMaxRadius; z++)
+				for (double z = -(flagMaxRadius / 2); z <= (flagMaxRadius / 2); z++)
 				{
 					Location location = getLocation().clone().add(x, y, z);
 					if (location.getBlock().getType().equals(material))
@@ -108,7 +108,7 @@ public class FlagCreator
 		}
 		List<Location> itemFrames = getNearbyEntitiesLocation(EntityType.ITEM_FRAME);
 		List<Location> wools = getNearbyBlocksLocation(Material.WOOL);
-		List<Location> glass = getNearbyBlocksLocation(Material.BEACON);
+		List<Location> glass = getNearbyBlocksLocation(Material.STAINED_GLASS);
 		flagId = flagId + 1 < 6 ? flagId + 1 : 1;
 		String name = FlagType.values()[flagId - 1].name();
 		ShootFlagMapConfiguration shConfig = PluginShootFlag.getInstance().getMapConfiguration();
