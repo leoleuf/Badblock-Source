@@ -100,6 +100,7 @@ public class Flag implements Runnable
 
 		if (getPercent() == 100)
 		{
+			BadblockTeam lastFlaggedTeam = getFlaggedBy();
 			setFlaggedBy(team);
 			setLastFlagging(0);
 			player.getPlayerData().incrementStatistic("shootflag", ShootFlagScoreboard.FLAGS);
@@ -118,19 +119,32 @@ public class Flag implements Runnable
 			for (BadblockPlayer po : GameAPI.getAPI().getRealOnlinePlayers())
 			{
 				po.sendTranslatedMessage("shootflag.capturedby", team.getChatName(), player.getName(), getName());
-				po.playSound(po.getLocation(), Sound.ENDERMAN_DEATH, 10F, 1F);
 			}
 
 			for (BadblockTeam gameTeam : GameAPI.getAPI().getTeams())
 			{
 				if (gameTeam.equals(team))
 				{
-					gameTeam.getOnlinePlayers().forEach(pl -> pl.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 1)));
+					gameTeam.getOnlinePlayers().forEach(pl ->
+					{
+						pl.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 1));
+						pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 10F, 1F);
+					});
 				}
 				else
 				{
-					gameTeam.getOnlinePlayers().forEach(pl -> pl.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1)));
-					gameTeam.getOnlinePlayers().forEach(pl -> pl.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 6)));
+					gameTeam.getOnlinePlayers().forEach(pl -> {
+						pl.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
+						pl.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 6));
+						if (lastFlaggedTeam != null && lastFlaggedTeam.equals(team))
+						{
+							pl.playSound(pl.getLocation(), Sound.ENDERMAN_DEATH, 10F, 1F);
+						}
+						else
+						{
+							pl.playSound(pl.getLocation(), Sound.ENDERDRAGON_WINGS, 10F, 1F);
+						}
+					});
 				}
 			}
 
