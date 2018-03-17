@@ -160,7 +160,7 @@ public class PluginShootFlag extends BadblockPlugin {
 		{
 			itemStack = ItemStackUtils.fakeEnchant(itemStack);
 		}
-		
+
 		player.inGameData(ShootFlagData.class).reloadTime = reloadTime;
 
 		player.getInventory().setItem(player.getInventory().getHeldItemSlot(), itemStack);
@@ -251,7 +251,6 @@ public class PluginShootFlag extends BadblockPlugin {
 			new PlayerDropItemListener();
 			new PlayerInteractListener();
 			new PlayerMountListener();
-			new WeatherChangeListener();
 			new PlayerItemBreakListener();
 			new PlayerItemConsumeListener();
 			new PlayerItemHeldListener();
@@ -275,8 +274,18 @@ public class PluginShootFlag extends BadblockPlugin {
 
 			Bukkit.getWorlds().forEach(world -> {
 				world.setTime(2000L);
+				world.setWeatherDuration(0);
 				world.getEntities().forEach(entity -> entity.remove());
 			});
+
+			Bukkit.getScheduler().runTaskLater(this, new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					new WeatherChangeListener();
+				}
+			}, 20 * 5);
 
 			// Ranked
 			RankedManager.instance.initialize(RankedManager.instance.getCurrentRankedGameName(), 
