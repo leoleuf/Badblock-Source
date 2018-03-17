@@ -22,7 +22,7 @@ public class FlagCreator
 
 	// Some config
 	private static int flagId		 = 0;
-	private static int flagMaxRadius = 15;
+	private static int flagMaxRadius = 25;
 	private static int itemFrames	 = 4;
 	
 	private Location location;
