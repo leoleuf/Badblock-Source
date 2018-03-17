@@ -108,34 +108,11 @@ public class FlagCreator
 		}
 		List<Location> itemFrames = getNearbyEntitiesLocation(EntityType.ITEM_FRAME);
 		List<Location> wools = getNearbyBlocksLocation(Material.WOOL);
-		Location beacon = null;
-		Location glass = null;
-		for (Block block : getNearbyBlocks(Material.BEACON))
-		{
-			if (beacon == null)
-			{
-				beacon = block.getLocation();
-			}
-			else
-			{
-				break;
-			}
-		}
-		for (Block block : getNearbyBlocks(Material.STAINED_GLASS))
-		{
-			if (glass == null)
-			{
-				glass = block.getLocation();
-			}
-			else
-			{
-				break;
-			}
-		}
+		List<Location> glass = getNearbyBlocksLocation(Material.BEACON);
 		flagId = flagId + 1 < 6 ? flagId + 1 : 1;
 		String name = FlagType.values()[flagId - 1].name();
 		ShootFlagMapConfiguration shConfig = PluginShootFlag.getInstance().getMapConfiguration();
-		Flag flag = new Flag(name, glass, beacon, itemFrames, wools);
+		Flag flag = new Flag(name, glass, itemFrames, wools, true);
 		shConfig.getFlags().add(flag);
 		shConfig.save(GameCommand.generatedFile);
 		return true;

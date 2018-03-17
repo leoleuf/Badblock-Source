@@ -32,10 +32,9 @@ public class MapFlag implements MapValue<Flag>
 	}
 	
 	private String name = "world";
-	private FakeLocation glass = null;
-	private FakeLocation beacon = null;
 	private List<FakeLocation> itemframes = null;
 	private List<FakeLocation> wools = null;
+	private List<FakeLocation> glass = null;
 	/**
 	 * Créé une MapLocation depuis une location Bukkit
 	 * 
@@ -43,13 +42,13 @@ public class MapFlag implements MapValue<Flag>
 	 *            La location
 	 */
 	public MapFlag(Flag flag) {
-		this(flag.getName(), flag.getGlass(), flag.getBeacon(), flag.getItemFrames(), flag.getWools());
+		this(flag.getName(), flag.getGlass(), flag.getItemFrames(), flag.getWools());
 
 	}
 
 	@Override
 	public Flag getHandle() {
-		return new Flag(name, glass, beacon, itemframes, wools);
+		return new Flag(name, glass, itemframes, wools);
 	}
 	
 	@Override

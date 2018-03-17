@@ -35,8 +35,7 @@ public class Flag implements Runnable
 	public static Map<String, Flag>	flags = new HashMap<>();
 
 	private String				name;
-	private FakeLocation		glass;
-	private FakeLocation		beacon;
+	private List<FakeLocation>	glass;
 	private List<FakeLocation>	itemFrames;
 	private List<FakeLocation>	wools;
 
@@ -46,17 +45,16 @@ public class Flag implements Runnable
 	private transient long		lastFlagging;
 	private transient long		cache;
 
-	public Flag(String name, FakeLocation glass, FakeLocation beacon, List<FakeLocation> itemFrames, List<FakeLocation> wools)
+	public Flag(String name, List<FakeLocation> glass, List<FakeLocation> itemFrames, List<FakeLocation> wools)
 	{
-		this(name, toLocation(glass), toLocation(beacon), toLocations(itemFrames), toLocations(wools));
+		this(name, toLocations(glass), toLocations(itemFrames), toLocations(wools), false);
 	}
 
 	@SuppressWarnings("deprecation")
-	public Flag(String name, Location glass, Location beacon, List<Location> itemFrames, List<Location> wools)
+	public Flag(String name, List<Location> glass, List<Location> itemFrames, List<Location> wools, boolean b)
 	{
 		setName(name);
-		setGlass(toFakeLocation(glass));
-		setBeacon(toFakeLocation(beacon));
+		setGlass(toFakeLocations(glass));
 		setItemFrames(toFakeLocations(itemFrames));
 		setWools(toFakeLocations(wools));
 
@@ -76,8 +74,19 @@ public class Flag implements Runnable
 			}
 		}
 
-		// Set glass towhite
-		glass.getBlock().setData(DyeColor.WHITE.getData());
+		// Set to white
+		for (Location location : getRealGlass())
+		{
+			Block block = location.getBlock();
+			if (block.getType().equals(Material.STAINED_GLASS))
+			{
+				if (block.getData() == DyeColor.WHITE.getData())
+				{
+					continue;
+				}
+				block.setData(DyeColor.WHITE.getData());
+			}
+		}
 
 		// Task
 		Bukkit.getScheduler().runTaskTimer(PluginShootFlag.getInstance(), this, 20, 20);
@@ -161,8 +170,20 @@ public class Flag implements Runnable
 					location.getBlock().setData(data);
 				}
 			}
+			
 
-			getRealGlass().getBlock().setData(data);
+			for (Location location : getRealGlass())
+			{
+				if (location.getBlock().getType().equals(Material.STAINED_GLASS))
+				{
+					if (location.getBlock().getData() == data)
+					{
+						continue;
+					}
+					location.getBlock().setData(data);
+				}
+			}
+
 			team.teamData(ShootFlagTeamData.class).addPoints(30);
 
 		}
@@ -303,9 +324,9 @@ public class Flag implements Runnable
 		return toLocations(getItemFrames());
 	}
 
-	private Location getRealGlass()
+	private List<Location> getRealGlass()
 	{
-		return toLocation(getGlass());
+		return toLocations(getGlass());
 	}
 
 }
