@@ -60,7 +60,7 @@ public class ShopLinkWorker
 			{
 				broadcastMessage = broadcastMessage.replace("%player%", player.getName());
 				broadcastMessage = broadcastMessage.replace("%displayName%", shopData.getDisplayName());
-				broadcastMessage = broadcastMessage.replace("%price%", Long.toString(shopData.getPrice()));
+				broadcastMessage = broadcastMessage.replace("%price%", Double.toString(shopData.getPrice()));
 				broadcastMessage = ChatColor.translateAlternateColorCodes('&', broadcastMessage);
 				ShopLinkerLadder.getInstance().getRabbitService().sendSyncPacket("guardian.broadcast", broadcastMessage, Encodage.UTF8, RabbitPacketType.MESSAGE_BROKER, 5000, false);
 			}

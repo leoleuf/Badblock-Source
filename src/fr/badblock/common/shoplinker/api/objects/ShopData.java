@@ -13,6 +13,6 @@ public class ShopData {
 	private int[] 	 depends;
 	private boolean  multibuy;
 	private boolean  ingame;
-	private	long	 price;
+	private	double	 price;
 	
 }

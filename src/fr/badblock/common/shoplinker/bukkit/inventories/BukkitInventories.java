@@ -28,8 +28,7 @@ import fr.badblock.common.shoplinker.bukkit.inventories.objects.InventoryShopObj
 import fr.badblock.common.shoplinker.bukkit.inventories.utils.ChatColorUtils;
 import fr.badblock.common.shoplinker.bukkit.permissions.AbstractPermissions;
 import fr.badblock.common.shoplinker.bukkit.players.ShopPlayer;
-import fr.badblock.common.shoplinker.bukkit.utils.Callback;
-import fr.badblock.common.shoplinker.bukkit.utils.NumberFormat;	
+import fr.badblock.common.shoplinker.bukkit.utils.Callback;	
 
 public class BukkitInventories {
 
@@ -56,10 +55,10 @@ public class BukkitInventories {
 		shopPlayer.setBuy(new TempBuyObject(action, shopObject, inventoryItemObject, itemOffer));
 		ShopLinker shopLinker = ShopLinker.getInstance();
 		Inventory inventory = Bukkit.createInventory(null, 9, shopLinker.getConfirmInventoryName().replace("%0", inventoryItemObject.getName()));
-		CrystalsBuyManager.getAsyncNeededCoins(shopObject.getOfferId(), new Callback<Integer>()
+		CrystalsBuyManager.getAsyncNeededCoins(shopObject.getOfferId(), new Callback<Double>()
 		{
 			@Override
-			public void done(Integer integer, Throwable throwable)
+			public void done(Double integer, Throwable throwable)
 			{
 				// 0 Retour
 				ItemStack itemStack = new ItemStack(Material.WOOD_DOOR);
@@ -79,7 +78,7 @@ public class BukkitInventories {
 				// Replace
 				Map<String, String> replace = new HashMap<>();
 				replace.put("%0", ChatColorUtils.translate(inventoryItemObject.getName()));
-				replace.put("%1", goodNumberFormat.format(integer.intValue()));
+				replace.put("%1", goodNumberFormat.format(integer.doubleValue()));
 				
 				// 7 : redstone no
 				itemStack = new ItemStack(Material.REDSTONE_BLOCK);
@@ -136,17 +135,17 @@ public class BukkitInventories {
 		replace.put("%1", AbstractPermissions.getPermissions().getPrefix(player.getName()));
 		DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance(Locale.FRANCE);
 		DecimalFormat goodNumberFormat = new DecimalFormat("#,##0.###", dfs);
-		CrystalsBuyManager.getCrystals(player.getName(), new Callback<Integer>()
+		CrystalsBuyManager.getCrystals(player.getName(), new Callback<Double>()
 		{
 			@Override
-			public void done(Integer shopPoints, Throwable throwable)
+			public void done(Double shopPoints, Throwable throwable)
 			{
-				replace.put("%2", NumberFormat.format(shopPoints.intValue()));
+				replace.put("%2", Double.toString(shopPoints.doubleValue()));
 				for (InventoryItemObject inventoryItemObject : inventoryObject.getItems()) {
 					for (InventoryAction inventoryAction : inventoryItemObject.getActions())
 					{
 						InventoryShopObject shopData = inventoryAction.getShopData();
-						int price = shopData != null ? CrystalsBuyManager.getNeededCoins(shopData.getOfferId()) : -1;
+						double price = shopData != null ? CrystalsBuyManager.getNeededCoins(shopData.getOfferId()) : -1;
 						String[] splitter = inventoryItemObject.getType().split(":");
 						String material = splitter[0];
 						byte data = 0;

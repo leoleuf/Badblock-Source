@@ -22,7 +22,7 @@ public class ShopLinkerAPI {
 	}
 	
 	// PUBLIC
-	public void sendShopData(ShopType shopType, String serverName, String playerName, String command, String displayName, int[] depends, boolean multibuy, boolean ingame, long price) {
+	public void sendShopData(ShopType shopType, String serverName, String playerName, String command, String displayName, int[] depends, boolean multibuy, boolean ingame, double price) {
 		sendShopData(serverName, buildShopData(shopType, playerName, command, displayName, depends, multibuy, ingame, price));
 	}
 
@@ -51,7 +51,7 @@ public class ShopLinkerAPI {
 		return new ShopDataDestination(serverName);
 	}
 	
-	private ShopData buildShopData(ShopType shopType, String playerName, String command, String displayName, int[] depends, boolean multibuy, boolean ingame, long price) {
+	private ShopData buildShopData(ShopType shopType, String playerName, String command, String displayName, int[] depends, boolean multibuy, boolean ingame, double price) {
 		return new ShopData(shopType, playerName, command, displayName, depends, multibuy, ingame, price);
 	}
 	

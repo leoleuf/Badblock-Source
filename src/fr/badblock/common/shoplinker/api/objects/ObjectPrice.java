@@ -7,9 +7,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode (callSuper = false)
 @AllArgsConstructor
 @Data
-public class PriceObject
+public class ObjectPrice
 {
 
-	private	int	price;
+	private	double	price;
 	
 }
