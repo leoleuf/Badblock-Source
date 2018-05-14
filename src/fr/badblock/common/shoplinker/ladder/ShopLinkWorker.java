@@ -1,10 +1,9 @@
 package fr.badblock.common.shoplinker.ladder;
 
-import org.bukkit.ChatColor;
-
 import fr.badblock.common.shoplinker.api.objects.ShopData;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.ladder.api.Ladder;
+import fr.badblock.ladder.api.chat.ChatColor;
 import fr.badblock.ladder.api.entities.Player;
 import fr.badblock.rabbitconnector.RabbitPacketType;
 import fr.badblock.utils.Encodage;
