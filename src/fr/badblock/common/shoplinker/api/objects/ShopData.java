@@ -14,5 +14,6 @@ public class ShopData {
 	private boolean  multibuy;
 	private boolean  ingame;
 	private	double	 price;
+	private boolean  forceCommand;
 	
 }

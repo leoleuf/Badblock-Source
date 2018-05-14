@@ -43,7 +43,7 @@ public class CrystalsBuyManager {
 			public void done(ResultSet resultSet) {
 				try {
 					if (resultSet.next()) {
-						searchOffer(player, shopObject, inventoryItemObject, resultSet);
+						searchOffer(player, shopObject, inventoryItemObject, true, resultSet);
 					}else{
 						player.sendMessage(ShopLinker.getInstance().getNotRegisteredMessage());
 					}
@@ -111,7 +111,7 @@ public class CrystalsBuyManager {
 		});
 	}
 	
-	private static void searchOffer(Player player, InventoryShopObject shopObject, InventoryItemObject inventoryItemObject, ResultSet resultSet) throws Exception {
+	private static void searchOffer(Player player, InventoryShopObject shopObject, InventoryItemObject inventoryItemObject, boolean forceCommand, ResultSet resultSet) throws Exception {
 		player.sendMessage(ShopLinker.getInstance().getSearchOfferMessage());
 		int playerId = resultSet.getInt("id");
 		double shopPoints = resultSet.getDouble("ptsboutique");
@@ -129,7 +129,7 @@ public class CrystalsBuyManager {
 						if (depends != -1) dependsI = new int[] { depends };
 						String commands = resultSet.getString("commande");
 						String server = resultSet.getString("server");
-						checkDepends(player, shopObject, displayName, resultSet, playerId, shopPoints, neededCoins, dependsI, multyBuy, commands, server);
+						checkDepends(player, shopObject, displayName, resultSet, playerId, shopPoints, neededCoins, dependsI, multyBuy, commands, server, forceCommand);
 					}
 					else
 					{
@@ -145,7 +145,7 @@ public class CrystalsBuyManager {
 		});
 	}
 
-	private static void checkDepends(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, double neededCoins, int[] depends, boolean multyBuy, String commands, String server) throws Exception {
+	private static void checkDepends(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, double neededCoins, int[] depends, boolean multyBuy, String commands, String server, boolean forceCommand) throws Exception {
 		player.sendMessage(ShopLinker.getInstance().getCheckTransactionMessage());
 		int offerId = resultSet.getInt("id");
 		BadblockDatabase.getInstance().addRequest(new Request("SELECT COUNT(id) AS count FROM boutique_buy WHERE offer = '" + offerId + "' AND player = '" + playerId + "'", RequestType.GETTER) {
@@ -157,7 +157,7 @@ public class CrystalsBuyManager {
 						if (count > 0 && !multyBuy) {
 							player.sendMessage(ShopLinker.getInstance().getAlreadyBoughtMessage());
 						}else{
-							checkTransaction(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, neededCoins, depends, multyBuy, commands, server);
+							checkTransaction(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, neededCoins, depends, multyBuy, commands, server, forceCommand);
 						}
 					}else{
 						player.sendMessage(ShopLinker.getInstance().getErrorMessage());
@@ -173,7 +173,7 @@ public class CrystalsBuyManager {
 		});
 	}
 
-	private static void checkTransaction(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, int offerId, double neededCoins, int[] depends, boolean multyBuy, String commands, String server) throws Exception {
+	private static void checkTransaction(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, int offerId, double neededCoins, int[] depends, boolean multyBuy, String commands, String server, boolean forceCommand) throws Exception {
 		BadblockDatabase.getInstance().addRequest(new Request("SELECT COUNT(id) AS count FROM boutique_buy WHERE offer = '" + offerId + "' AND player = '" + playerId + "'", RequestType.GETTER) {
 			@Override
 			public void done(ResultSet resultSet) {
@@ -186,7 +186,7 @@ public class CrystalsBuyManager {
 							if (neededCoins < shopPoints) {
 								System.out.println(ShopLinker.getInstance().getNotRestrictiveGson().toJson(depends));
 								if (depends != null && depends.length == 0) {
-									buy(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, neededCoins, depends, multyBuy, commands, server);
+									buy(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, neededCoins, depends, multyBuy, commands, server, forceCommand);
 								}else{
 									String sqlBuilder = "";
 									boolean first = true;
@@ -195,7 +195,7 @@ public class CrystalsBuyManager {
 										else first = false;
 										sqlBuilder += "offer = '" + depend + "'";
 									}
-									checkOfferDepends(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, sqlBuilder, neededCoins, depends, multyBuy, commands, server);
+									checkOfferDepends(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, sqlBuilder, neededCoins, depends, multyBuy, commands, server, forceCommand);
 								}
 							}else {
 								double diff = neededCoins - shopPoints;
@@ -216,7 +216,7 @@ public class CrystalsBuyManager {
 		});
 	}
 
-	private static void checkOfferDepends(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, int offerId, String sqlBuilder, double neededCoins, int[] depends, boolean multyBuy, String commands, String server) throws Exception {
+	private static void checkOfferDepends(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, int offerId, String sqlBuilder, double neededCoins, int[] depends, boolean multyBuy, String commands, String server, boolean forceCommand) throws Exception {
 		BadblockDatabase.getInstance().addRequest(new Request("SELECT COUNT(id) AS count FROM boutique_buy WHERE player = '" + playerId + "' AND (" + sqlBuilder + ")", RequestType.GETTER) {
 			@Override
 			public void done(ResultSet resultSet) {
@@ -231,7 +231,7 @@ public class CrystalsBuyManager {
 						}
 						else
 						{
-							buy(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, neededCoins, depends, multyBuy, commands, server);
+							buy(player, shopObject, displayName, resultSet, playerId, shopPoints, offerId, neededCoins, depends, multyBuy, commands, server, forceCommand);
 						}
 					}
 					else 
@@ -271,7 +271,7 @@ public class CrystalsBuyManager {
 		});
 	}
 
-	private static void buy(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, int offerId, double neededCoins, int[] depends, boolean multyBuy, String commands, String server) throws Exception {
+	private static void buy(Player player, InventoryShopObject shopObject, String displayName, ResultSet resultSet, int playerId, double shopPoints, int offerId, double neededCoins, int[] depends, boolean multyBuy, String commands, String server, boolean forceCommand) throws Exception {
 		if (Flags.isValid(player, "current_buy"))
 		{
 			player.sendRawMessage(ShopLinker.getInstance().getPleaseWaitMessage());
@@ -281,7 +281,7 @@ public class CrystalsBuyManager {
 		BadblockDatabase.getInstance().addRequest(new Request("UPDATE joueurs SET ptsboutique=ptsboutique-" + neededCoins + " WHERE pseudo = '" + player.getName() + "'", RequestType.SETTER));
 		String date = simpleDateFormat.format(new Date());
 		BadblockDatabase.getInstance().addRequest(new Request("INSERT INTO boutique_buy(offer, player, price, day) VALUES('" + offerId + "', '" + playerId + "', '" + neededCoins + "', '" + date + "')", RequestType.SETTER));
-		linkerAPI.sendShopData(ShopType.BUY, server, player.getName(), commands, displayName, depends, multyBuy, true, neededCoins);
+		linkerAPI.sendShopData(ShopType.BUY, server, player.getName(), commands, displayName, depends, multyBuy, true, neededCoins, forceCommand);
 		player.sendMessage(ShopLinker.getInstance().getYouBoughtMessage().replace("%0", displayName));
 	}
 

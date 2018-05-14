@@ -22,7 +22,7 @@ public class ShopLinkWorker {
 		}
 		String playerName = shopData.getPlayerName();
 		Player player = Bukkit.getPlayer(playerName);
-		if (player == null) 
+		if (player == null && !shopData.isForceCommand()) 
 			if (onlyIfOnline) return;
 			else cacheAction(shopData);
 		else {
@@ -40,14 +40,17 @@ public class ShopLinkWorker {
 				ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RESET + "Executed command to " + shopData.getPlayerName() + ".");
 				ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RESET + "Command: " + command);
 			}
-			if (Flags.isValid(player, "work"))
+			if (player != null)
 			{
-				return;
-			}
-			else
-			{
-				Flags.setTemporaryFlag(player, "work", 1000);
-				broadcastCommand(shopData);			
+				if (Flags.isValid(player, "work"))
+				{
+					return;
+				}
+				else
+				{
+					Flags.setTemporaryFlag(player, "work", 1000);
+					broadcastCommand(shopData);			
+				}
 			}
 		}
 	}
