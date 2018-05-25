@@ -13,6 +13,7 @@ import fr.badblock.gameapi.utils.i18n.TranslatableString;
 
 public class PvPRunnable extends BukkitRunnable {
 	public static boolean pvp = false;
+	public static boolean fall = false;
 	public static PvPRunnable ins;
 	
 	public int time;
@@ -25,6 +26,18 @@ public class PvPRunnable extends BukkitRunnable {
 	@Override
 	public void run() {
 		time--;
+		
+		if(time < 0)
+		{
+			if(time == -5)
+			{
+				fall = true;
+				cancel();
+			}
+			
+			return;
+		}
+		
 		for (BadblockPlayer bp : BukkitUtils.getPlayers())
 		if (bp.getCustomObjective() != null)
 			bp.getCustomObjective().generate();
@@ -40,8 +53,6 @@ public class PvPRunnable extends BukkitRunnable {
 				bPlayer.sendTimings(2, 30, 2);
 			}
 		} else if(time == 0){
-			cancel();
-
 			pvp = true;
 			
 			TranslatableString title = new TranslatableString("uhcspeed.pvp.title");

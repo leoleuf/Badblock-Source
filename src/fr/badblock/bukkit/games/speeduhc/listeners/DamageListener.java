@@ -23,7 +23,7 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 public class DamageListener extends BadListener  {
 	@EventHandler(ignoreCancelled=true)
 	public void onDamageNormal(EntityDamageEvent e){
-		if(e.getCause() == DamageCause.FALL)
+		if(e.getCause() == DamageCause.FALL && !PvPRunnable.pvp)
 		{
 			e.setCancelled(true);
 			return;
