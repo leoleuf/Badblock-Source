@@ -40,7 +40,7 @@ public class NPC {
 		npcs.put(entityPlayer.getId(), this);
 		return entityPlayer;
 	}
-	@SuppressWarnings("unlikely-arg-type")
+	
 	public void despawn(EntityPlayer entityPlayer) {
 		npcs.remove(this);
 		entityPlayer.die();
