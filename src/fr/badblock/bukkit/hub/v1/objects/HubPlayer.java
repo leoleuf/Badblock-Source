@@ -266,8 +266,6 @@ public class HubPlayer implements InGameData {
 					tempScheduler2.task.cancel();
 					return;
 				}
-				player.setAllowFlight(true);
-				player.setFlying(true);
 				BadblockPlayer bbPlayer = player;
 				if (scoreboard != null)
 				{
@@ -292,7 +290,6 @@ public class HubPlayer implements InGameData {
 				}else length++;
 				String character = list.get(id).substring(0, 2) + actionBar.substring(actionBar.length() / 2 - length, actionBar.length() / 2 + (length / 2));
 				bbPlayer.sendActionBar(character);*/
-				bbPlayer.sendActionBar("§4Mode cheater: §c§lActivé !");
 				String finalString = "";
 				Iterator<String> iterator = Arrays
 						.asList(GameAPI.i18n().get(bbPlayer.getPlayerData().getLocale(), "hub.tablist.header"))
