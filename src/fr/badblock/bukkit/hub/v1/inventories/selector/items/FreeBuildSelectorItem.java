@@ -2,7 +2,6 @@ package fr.badblock.bukkit.hub.v1.inventories.selector.items;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,11 +9,9 @@ import org.bukkit.block.Block;
 
 import fr.badblock.bukkit.hub.v1.BadBlockHub;
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.actions.ItemAction;
-import fr.badblock.bukkit.hub.v1.utils.TimeUtils;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.run.BadblockGame;
 import fr.badblock.gameapi.utils.ConfigUtils;
-import fr.badblock.gameapi.utils.threading.TaskManager;
 
 public class FreeBuildSelectorItem extends GameSelectorItem {
 
@@ -38,16 +35,20 @@ public class FreeBuildSelectorItem extends GameSelectorItem {
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
 		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "freebuild");
 		if (location == null)
+		{
 			player.sendTranslatedMessage("hub.gameunavailable");
-		else {
-			if (itemAction.equals(ItemAction.INVENTORY_LEFT_CLICK)) {
+		}
+		else
+		{
+			if (itemAction.equals(ItemAction.INVENTORY_LEFT_CLICK))
+			{
 				player.sendPlayer("fb");
-				player.sendMessage("§b➤ §7Téléportation  §7en § FreeBuild§7...");
-	            player.closeInventory();
-	     	}
-		    else
-		    {
-		        player.teleport(location);
+				player.sendMessage("§b➤ §7Téléportation §7en §bFreeBuild§7...");
+				player.closeInventory();
+			}
+			else
+			{
+				player.teleport(location);
 			}
 		}
 	}
