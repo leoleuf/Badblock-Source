@@ -42,7 +42,7 @@ public class SkyBlockSelectorItem extends GameSelectorItem {
 		{
 			if (itemAction.equals(ItemAction.INVENTORY_LEFT_CLICK))
 			{
-				player.sendPlayer("fb");
+				player.sendPlayer("skyb");
 				player.sendMessage("§b➤ §7Téléportation §7en §bSkyBlock§7...");
 				player.closeInventory();
 			}
