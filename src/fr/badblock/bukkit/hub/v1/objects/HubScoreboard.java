@@ -46,9 +46,9 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 			objective.changeLine(i, "");
 			i--;
 			objective.changeLine(i, i18n("hub.scoreboard.shoppoints", (player.getShopPoints() != -1
-					? NumberFormat.format(player.getShopPoints() * 10000) : i18n("hub.scoreboard.shoppoints_nowebsiteaccount"))));
+					? NumberFormat.format(player.getShopPoints()) : i18n("hub.scoreboard.shoppoints_nowebsiteaccount"))));
 			i--;
-			objective.changeLine(i, i18n("hub.scoreboard.badcoins", NumberFormat.format(player.getPlayerData().getBadcoins() * 10000)));
+			objective.changeLine(i, i18n("hub.scoreboard.badcoins", NumberFormat.format(player.getPlayerData().getBadcoins())));
 			i--;
 			objective.changeLine(i, "");
 			double calc = (((double) (player.getPlayerData().getXp()) * 1.0D) / ((double) (player.getPlayerData().getXpUntilNextLevel()) * 1.0D)) * 1.0D;
@@ -71,7 +71,7 @@ public class HubScoreboard extends BadblockScoreboardGenerator {
 			i--;
 			objective.changeLine(i, "");
 			i--;
-			objective.changeLine(i, i18n("hub.scoreboard.rank", "§4Fondateur & Roi"));
+			objective.changeLine(i, i18n("hub.scoreboard.rank", player.getTabGroupPrefix()));
 			i--;
 			objective.changeLine(i, i18n("hub.scoreboard.players", HubPlayer.a));
 			i--;
