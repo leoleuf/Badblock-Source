@@ -1,0 +1,30 @@
+{
+  "name": "almasaeed2010/adminlte",
+  "description": "AdminLTE - admin control panel and dashboard that's based on Bootstrap 3",
+  "homepage": "http://almsaeedstudio.com/",
+  "keywords": [
+    "css",
+    "js",
+    "less",
+    "responsive",
+    "back-end",
+    "template",
+    "theme",
+    "web",
+    "admin"
+  ],
+  "authors": [
+    {
+      "name": "Abdullah Almsaeed",
+      "email": "support@almsaeedstudio.com"
+    }
+  ],
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/almasaeed2010/AdminLTE/issues"
+  },
+  "require": {
+    "php-amqplib/php-amqplib": "2.5.*",
+    "funnyitselmo/minecraftserverstatus": "^1.0"
+  }
+}
