@@ -3,6 +3,8 @@ package fr.badblock.common.shoplinker.ladder.listeners.rabbitmq;
 
 import com.google.gson.Gson;
 
+import fr.badblock.api.common.tech.rabbitmq.RabbitService;
+import fr.badblock.api.common.tech.rabbitmq.listener.RabbitListener;
 import fr.badblock.common.shoplinker.api.ShopLinkerSettings;
 import fr.badblock.common.shoplinker.api.objects.ShopData;
 import fr.badblock.common.shoplinker.ladder.ShopLinkWorker;
@@ -10,21 +12,23 @@ import fr.badblock.common.shoplinker.ladder.ShopLinkerLadder;
 import fr.badblock.common.shoplinker.ladder.events.ReceivedRemoteCommandEvent;
 import fr.badblock.ladder.api.Ladder;
 import fr.badblock.ladder.api.chat.ChatColor;
-import fr.badblock.rabbitconnector.RabbitConnector;
-import fr.badblock.rabbitconnector.RabbitListener;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
-@Data @EqualsAndHashCode(callSuper=false)
-public class ReceiveCommandListener extends RabbitListener {
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper=false)
+public class ReceiveCommandListener extends RabbitListener
+{
 
 	@Getter public static Gson gson	= new Gson();
 
 	public static boolean enabledCommands;
 
-	public ReceiveCommandListener(String queueName) {
-		super(RabbitConnector.getInstance().getService("default"), ShopLinkerSettings.QUEUE_PREFIX + queueName, ShopLinkerSettings.DEBUG, ShopLinkerSettings.LISTENER_TYPE);
+	public ReceiveCommandListener(RabbitService rabbitService, String queueName)
+	{
+		super(rabbitService, ShopLinkerSettings.QUEUE_PREFIX + queueName, ShopLinkerSettings.LISTENER_TYPE, ShopLinkerSettings.DEBUG);
 	}
 
 	@Override

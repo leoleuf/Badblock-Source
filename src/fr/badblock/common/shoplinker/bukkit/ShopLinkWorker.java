@@ -4,14 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacket;
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketEncoder;
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketMessage;
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketType;
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.api.objects.ShopData;
 import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
 import fr.badblock.common.shoplinker.bukkit.database.Request;
 import fr.badblock.common.shoplinker.bukkit.database.Request.RequestType;
 import fr.badblock.common.shoplinker.bukkit.utils.Flags;
-import fr.badblock.rabbitconnector.RabbitPacketType;
-import fr.badblock.utils.Encodage;
 
 public class ShopLinkWorker {
 
@@ -98,7 +100,9 @@ public class ShopLinkWorker {
 				broadcastMessage = broadcastMessage.replace("%displayName%", shopData.getDisplayName());
 				broadcastMessage = broadcastMessage.replace("%price%", Double.toString(shopData.getPrice()));
 				broadcastMessage = ChatColor.translateAlternateColorCodes('&', broadcastMessage);
-				ShopLinker.getInstance().getRabbitService().sendSyncPacket("guardian.broadcast", broadcastMessage, Encodage.UTF8, RabbitPacketType.MESSAGE_BROKER, 86400_000, false);
+				RabbitPacketMessage rabbitPacketMessage = new RabbitPacketMessage(8640000, broadcastMessage);
+				RabbitPacket rabbitPacket = new RabbitPacket(rabbitPacketMessage, "guardian.broadcast", false, RabbitPacketEncoder.UTF8, RabbitPacketType.MESSAGE_BROKER);
+				ShopLinker.getInstance().getRabbitService().sendPacket(rabbitPacket);
 			}
 		}
 

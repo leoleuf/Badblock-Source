@@ -4,7 +4,8 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.BukkitUtils;
 import net.md_5.bungee.api.ChatColor;
 
-public class APIPermissionsManager extends AbstractPermissions {
+public class APIPermissionsManager extends AbstractPermissions
+{
 
 	@Override
 	public String getGroup(String playerName) {

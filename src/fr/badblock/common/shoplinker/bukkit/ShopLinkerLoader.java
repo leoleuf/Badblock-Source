@@ -12,6 +12,9 @@ import org.bukkit.plugin.PluginManager;
 
 import com.google.gson.reflect.TypeToken;
 
+import fr.badblock.api.common.tech.rabbitmq.RabbitConnector;
+import fr.badblock.api.common.tech.rabbitmq.RabbitService;
+import fr.badblock.api.common.tech.rabbitmq.setting.RabbitSettings;
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.api.utils.JsonUtils;
 import fr.badblock.common.shoplinker.bukkit.clickers.ClickableObject;
@@ -28,7 +31,6 @@ import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInteractListe
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInventoryClickListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerJoinListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
-import fr.badblock.rabbitconnector.RabbitConnector;
 
 public class ShopLinkerLoader {
 
@@ -144,11 +146,21 @@ public class ShopLinkerLoader {
 		if (stockList == null | stockList.isEmpty()) configuration.set("rabbit.hostname", Arrays.asList("example.com"));
 		String[] stockArr = new String[stockList.size()];
 		stockArr = stockList.toArray(stockArr);
-		shopLinker.setRabbitService(
-				RabbitConnector.getInstance().newService("default", getInt(configuration, "rabbit.port"),
-						getString(configuration, "rabbit.username"), getString(configuration, "rabbit.password"),
-						getString(configuration, "rabbit.virtualhost"), stockArr)
-				);
+		/*
+		 * private String[]	hostnames;
+	private int			port;
+	private String		username;
+	private String		virtualHost;
+	private String		password;
+	private boolean		automaticRecovery;
+	private int			connectionTimeout;
+	private int			requestedHeartbeat;
+	private int			workerThreads			= 32;
+		 */
+		RabbitSettings rabbitSettings = new RabbitSettings(stockArr, getInt(configuration, "rabbit.port"),
+				getString(configuration, "rabbit.username"), getString(configuration, "rabbit.virtualhost"),
+				getString(configuration, "rabbit.password"), true, 30000, 60, 32);
+		shopLinker.setRabbitService(RabbitConnector.getInstance().registerService(new RabbitService("default", rabbitSettings)));
 	}
 
 	private void loadDatabase(ShopLinker shopLinker) {
@@ -162,18 +174,22 @@ public class ShopLinkerLoader {
 		loadBukkitListeners(shopLinker);
 	}
 
-	private void loadRabbitListeners(ShopLinker shopLinker) {
+	private void loadRabbitListeners(ShopLinker shopLinker)
+	{
 		FileConfiguration configuration = shopLinker.getConfig();
 		String queueName = getString(configuration, "queueName");
-		
+
 		if (queueName.equals("-"))
 		{
 			return;
 		}
-		
-		try {
-			new ReceiveCommandListener(queueName);
-		} catch (Exception e) {
+
+		try
+		{
+			new ReceiveCommandListener(shopLinker.getRabbitService(), queueName);
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -215,7 +231,7 @@ public class ShopLinkerLoader {
 		}
 		return fileConfiguration.getStringList(key);
 	}
-	
+
 	private List<String> getStringList(FileConfiguration fileConfiguration, String key) {
 		return getStringList(fileConfiguration, key, "");
 	}

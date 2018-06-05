@@ -3,13 +3,16 @@ package fr.badblock.common.shoplinker.bukkit.events;
 import org.bukkit.event.HandlerList;
 
 import fr.badblock.common.shoplinker.api.objects.ShopData;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author xMalware
  */
-@Data@EqualsAndHashCode(callSuper=false) public class ReceivedRemoteCommandEvent extends ShopDataEvent {
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper=false) public class ReceivedRemoteCommandEvent extends ShopDataEvent {
 
 	private boolean cancelled;
 	

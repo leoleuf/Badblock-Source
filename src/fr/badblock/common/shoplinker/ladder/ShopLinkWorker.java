@@ -1,12 +1,14 @@
 package fr.badblock.common.shoplinker.ladder;
 
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacket;
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketEncoder;
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketMessage;
+import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketType;
 import fr.badblock.common.shoplinker.api.objects.ShopData;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.ladder.api.Ladder;
 import fr.badblock.ladder.api.chat.ChatColor;
 import fr.badblock.ladder.api.entities.Player;
-import fr.badblock.rabbitconnector.RabbitPacketType;
-import fr.badblock.utils.Encodage;
 
 public class ShopLinkWorker
 {
@@ -61,7 +63,9 @@ public class ShopLinkWorker
 				broadcastMessage = broadcastMessage.replace("%displayName%", shopData.getDisplayName());
 				broadcastMessage = broadcastMessage.replace("%price%", Double.toString(shopData.getPrice()));
 				broadcastMessage = ChatColor.translateAlternateColorCodes('&', broadcastMessage);
-				ShopLinkerLadder.getInstance().getRabbitService().sendSyncPacket("guardian.broadcast", broadcastMessage, Encodage.UTF8, RabbitPacketType.MESSAGE_BROKER, 5000, false);
+				RabbitPacketMessage rabbitPacketMessage = new RabbitPacketMessage(8640000, broadcastMessage);
+				RabbitPacket rabbitPacket = new RabbitPacket(rabbitPacketMessage, "guardian.broadcast", false, RabbitPacketEncoder.UTF8, RabbitPacketType.MESSAGE_BROKER);
+				ShopLinker.getInstance().getRabbitService().sendPacket(rabbitPacket);
 			}
 		}
 

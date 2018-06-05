@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
 
-import fr.badblock.rabbitconnector.RabbitService;
+import fr.badblock.api.common.tech.rabbitmq.RabbitService;
 import lombok.Getter;
 import lombok.Setter;
 

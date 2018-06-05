@@ -3,6 +3,9 @@ package fr.badblock.common.shoplinker.ladder;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.badblock.api.common.tech.rabbitmq.RabbitConnector;
+import fr.badblock.api.common.tech.rabbitmq.RabbitService;
+import fr.badblock.api.common.tech.rabbitmq.setting.RabbitSettings;
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.ladder.listeners.rabbitmq.ReceiveCommandListener;
 import fr.badblock.ladder.api.Ladder;
@@ -10,8 +13,6 @@ import fr.badblock.ladder.api.chat.ChatColor;
 import fr.badblock.ladder.api.config.Configuration;
 import fr.badblock.ladder.api.entities.CommandSender;
 import fr.badblock.ladder.api.plugins.Plugin;
-import fr.badblock.rabbitconnector.RabbitConnector;
-import fr.badblock.rabbitconnector.RabbitService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,11 +37,10 @@ import lombok.Setter;
 		if (stockList == null | stockList.isEmpty()) configuration.set("rabbit.hostname", Arrays.asList("example.com"));
 		String[] stockArr = new String[stockList.size()];
 		stockArr = stockList.toArray(stockArr);
-		this.setRabbitService(
-				RabbitConnector.getInstance().newService("default", getInt(configuration, "rabbit.port"),
-						getString(configuration, "rabbit.username"), getString(configuration, "rabbit.password"),
-						getString(configuration, "rabbit.virtualhost"), stockArr)
-				);
+		RabbitSettings rabbitSettings = new RabbitSettings(stockArr, getInt(configuration, "rabbit.port"),
+				getString(configuration, "rabbit.username"), getString(configuration, "rabbit.virtualhost"),
+				getString(configuration, "rabbit.password"), true, 30000, 60, 32);
+		setRabbitService(RabbitConnector.getInstance().registerService(new RabbitService("default", rabbitSettings)));
 		String queueName = getString(configuration, "queueName");
 		ShopLinkerAPI.CURRENT_SERVER_NAME = queueName;
 		this.webActionCompleteMessage = translate(getString(configuration, "messages.webactioncomplete"));
@@ -48,7 +48,7 @@ import lombok.Setter;
 		ReceiveCommandListener.enabledCommands = configuration.getBoolean("enabledCommands");
 		this.boughtMessage = translate(getString(configuration, "messages.bought"));
 		this.rewardMessage = translate(getString(configuration, "messages.reward"));
-		new ReceiveCommandListener(queueName);
+		new ReceiveCommandListener(rabbitService, queueName);
 	}
 	
 	@Override
