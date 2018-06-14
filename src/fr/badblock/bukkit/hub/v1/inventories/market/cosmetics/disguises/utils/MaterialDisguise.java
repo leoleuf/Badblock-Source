@@ -8,10 +8,12 @@ import fr.badblock.gameapi.disguise.Disguise;
 import fr.badblock.gameapi.fakeentities.FakeEntity;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class MaterialDisguise extends Disguise {
 
