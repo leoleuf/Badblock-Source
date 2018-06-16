@@ -40,6 +40,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class PluginRush extends BadblockPlugin {
+	
 	@Getter private static PluginRush instance;
 	
 	public static 	     File   MAP;
