@@ -84,7 +84,10 @@ public class JoinListener extends BadListener {
 		player.changePlayerDimension(BukkitUtils.getEnvironment( PluginShootFlag.getInstance().getMapConfiguration().getDimension() ));
 		player.teleport(location);
 		player.setGameMode(GameMode.ADVENTURE);
-		player.getCustomObjective().generate();
+		if (player.getCustomObjective() != null)
+		{
+			player.getCustomObjective().generate();
+		}
 		player.setWalkSpeed(0.45F);
 		player.playSound(Sound.LEVEL_UP);
 		PluginShootFlag.getInstance().giveDefaultKit(player);
