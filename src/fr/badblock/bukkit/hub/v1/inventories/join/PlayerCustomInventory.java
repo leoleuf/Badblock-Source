@@ -7,8 +7,6 @@ import fr.badblock.bukkit.hub.v1.inventories.join.items.ChestPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.GadgetsPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.GameSelectorPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.HiderDisablePlayerItem;
-import fr.badblock.bukkit.hub.v1.inventories.join.items.HiderPlayerItem;
-import fr.badblock.bukkit.hub.v1.inventories.join.items.HostPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.SettingsPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.join.items.ShopPlayerItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.dev.DevSelectorInventoryOpenItem;
@@ -25,10 +23,9 @@ public enum PlayerCustomInventory {
 
 	GADGETS(0, new GadgetsPlayerItem(), null),
 	SHOP(1, new ShopPlayerItem(), null),
-	CHEST(3, new ChestPlayerItem(), "hub.openchest"),
 	SELECTOR(4, new GameSelectorPlayerItem(), null),
-	HOST(5, new HostPlayerItem(), null),
-	HIDER(7, new HiderPlayerItem(), null),
+	//HIDER(7, new HiderPlayerItem(), null),
+	CHEST(7, new ChestPlayerItem(), "hub.openchest"),
 	SETTINGS(8, new SettingsPlayerItem(), null),
 	STAFFROOM(9, new StaffRoomSelectorItem(), "hub.staffroom"),
 	_BLUE_10(10, new BlueStainedGlassPaneItem(), "hub.staffroom"),

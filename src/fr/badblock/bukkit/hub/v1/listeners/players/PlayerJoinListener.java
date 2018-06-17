@@ -7,7 +7,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -18,7 +17,6 @@ import fr.badblock.bukkit.hub.v1.objects.HubPlayer;
 import fr.badblock.bukkit.hub.v1.objects.HubScoreboard;
 import fr.badblock.bukkit.hub.v1.objects.HubStoredPlayer;
 import fr.badblock.game.core18R3.players.GameBadblockPlayer;
-import fr.badblock.game.core18R3.players.ingamedata.CommandInGameData;
 import fr.badblock.gameapi.events.api.PlayerLoadedEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.utils.ConfigUtils;
@@ -82,7 +80,7 @@ public class PlayerJoinListener extends _HubListener {
 						new TranslatableString("hub.joined", player.getGroupPrefix(), player.getName()).broadcast();
 					}
 				}
-				// For sur tous les joueurs pour voir s'ils peuvent voir celui qui vient de se co
+				/*// For sur tous les joueurs pour voir s'ils peuvent voir celui qui vient de se co
 				for (Player pl : Bukkit.getOnlinePlayers()) {
 					BadblockPlayer plo = (BadblockPlayer) player;
 					HubStoredPlayer pls = HubStoredPlayer.get(plo);
@@ -100,7 +98,7 @@ public class PlayerJoinListener extends _HubListener {
 					else if (player.inGameData(HubPlayer.class).getFriends().contains(plo.getName())) player.showPlayer(plo);
 					else if (hubStoredPlayer.isHidePlayers()) player.hidePlayer(plo);
 					else player.showPlayer(pl);
-				}
+				}*/
 
 				//for (BadblockPlayer po : BukkitUtils.getPlayers())
 				//	if (HubStoredPlayer.get(po).hidePlayers) po.hidePlayer(player);
