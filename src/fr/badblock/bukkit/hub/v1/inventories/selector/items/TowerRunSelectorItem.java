@@ -34,7 +34,7 @@ public class TowerRunSelectorItem extends GameSelectorItem {
 
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
-		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "towerRUN");
+		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "towerrun");
 		if (location == null)
 			player.sendTranslatedMessage("hub.gameunavailable");
 		else{
