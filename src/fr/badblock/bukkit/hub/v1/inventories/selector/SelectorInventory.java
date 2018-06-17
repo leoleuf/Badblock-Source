@@ -21,7 +21,7 @@ import fr.badblock.bukkit.hub.v1.inventories.settings.settings.LightBlueStainedG
 public class SelectorInventory extends CustomInventory {
 
 	public SelectorInventory() {
-		super("hub.items.selectorinventory", 6);
+		super("hub.items.selectorinventory", 5);
 		LightBlueStainedGlassPaneItem lightBlueStainedGlassPaneItem = new LightBlueStainedGlassPaneItem();
 		this.setItem(lightBlueStainedGlassPaneItem, 31);
 		this.setItem(0, new SpawnSelectorItem());
@@ -44,8 +44,8 @@ public class SelectorInventory extends CustomInventory {
 		this.setItem(33, new FreeBuildSelectorItem());
 		//this.setItem(42, new DayZSelectorItem());
 		//this.setItem(43, new PointOutSelectorItem());
-		this.setItem(45, new HubChangerSelectorItem());
-		this.setItem(53, new QuitSelectorItem());
+		this.setItem(36, new HubChangerSelectorItem());
+		this.setItem(44, new QuitSelectorItem());
 		this.setNoFilledItem(new BlueStainedGlassPaneItem());
 	}
 
