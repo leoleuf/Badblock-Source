@@ -11,7 +11,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import fr.badblock.bukkit.hub.v1.BadBlockHub;
+import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.v1.inventories.join.PlayerCustomInventory;
+import fr.badblock.bukkit.hub.v1.inventories.selector.SelectorInventory;
 import fr.badblock.bukkit.hub.v1.listeners._HubListener;
 import fr.badblock.bukkit.hub.v1.objects.HubPlayer;
 import fr.badblock.bukkit.hub.v1.objects.HubScoreboard;
@@ -44,6 +46,14 @@ public class PlayerJoinListener extends _HubListener {
 		//player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, Integer.MAX_VALUE, 0));
 		PlayerCustomInventory.give(player);
 		System.out.println("[HUB] Loaded " + player.getName() + ".");
+		Bukkit.getScheduler().runTaskLater(BadBlockHub.getInstance(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				CustomInventory.get(SelectorInventory.class).open(player);
+			}
+		}, 1);
 	}
 
 
