@@ -1,16 +1,15 @@
 package fr.badblock.bukkit.hub.v1.listeners.players;
 
-import java.security.SecureRandom;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import fr.badblock.bukkit.hub.v1.BadBlockHub;
+import fr.badblock.bukkit.hub.v1.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.v1.inventories.join.PlayerCustomInventory;
 import fr.badblock.bukkit.hub.v1.inventories.selector.SelectorInventory;
@@ -46,14 +45,7 @@ public class PlayerJoinListener extends _HubListener {
 		//player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, Integer.MAX_VALUE, 0));
 		PlayerCustomInventory.give(player);
 		System.out.println("[HUB] Loaded " + player.getName() + ".");
-		Bukkit.getScheduler().runTaskLater(BadBlockHub.getInstance(), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				CustomInventory.get(SelectorInventory.class).open(player);
-			}
-		}, 1);
+		
 	}
 
 
@@ -70,13 +62,6 @@ public class PlayerJoinListener extends _HubListener {
 				HubStoredPlayer hubStoredPlayer = HubStoredPlayer.get(player);
 				hubStoredPlayer.getMountConfigs().values().stream().forEach(mount -> mount.setBaby(false));
 				Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "worldspawn");
-				location = location.clone();
-				location.setX((-2)+new SecureRandom().nextInt(4));
-				location.setZ((-2)+new SecureRandom().nextInt(4));
-				Block block = location.getBlock();
-				location = block.getWorld().getHighestBlockAt(location).getLocation();
-				while (!location.getBlock().getType().equals(Material.AIR))
-					location.setY(location.getY() + 1);
 				player.teleport(location);
 				hubPlayer.setScoreboard(new HubScoreboard(player));
 				if (hubPlayer.getScoreboard() != null)

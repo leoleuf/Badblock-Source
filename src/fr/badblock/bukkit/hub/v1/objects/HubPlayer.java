@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -16,6 +17,8 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -25,6 +28,7 @@ import com.google.gson.JsonObject;
 
 import fr.badblock.bukkit.hub.v1.BadBlockHub;
 import fr.badblock.bukkit.hub.v1.effectlib.Effect;
+import fr.badblock.bukkit.hub.v1.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.chests.objects.ChestLoader;
 import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.chests.objects.ChestOpener;
@@ -48,6 +52,7 @@ import fr.badblock.gameapi.utils.ConfigUtils;
 import fr.badblock.gameapi.utils.entities.CustomCreature;
 import fr.badblock.gameapi.utils.entities.CustomCreature.CreatureBehaviour;
 import fr.badblock.gameapi.utils.general.Callback;
+import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.threading.TaskManager;
 import fr.badblock.gameapi.utils.threading.TempScheduler;
 import lombok.Getter;
@@ -178,6 +183,7 @@ public class HubPlayer implements InGameData {
 				player.saveGameData();
 			}
 		}
+		
 		BadBlockHub hub = BadBlockHub.getInstance();
 		final TempScheduler tempScheduler0 = new TempScheduler();
 		tempScheduler0.task = TaskManager.scheduleSyncRepeatingTask("hub_" + player.getName() + "_" + player.getEntityId(), new Runnable() {
@@ -267,6 +273,12 @@ public class HubPlayer implements InGameData {
 					tempScheduler2.task.cancel();
 					return;
 				}
+				// Floating texts
+				for (Entry<Location, TranslatableString> entry : LinkedInventoryEntity.getFloatingTexts().entrySet())
+				{
+					player.showFloatingText(entry.getValue().getAsLine(player), entry.getKey(), 20 * 15, 0);
+				}
+				
 				BadblockPlayer bbPlayer = player;
 				if (scoreboard != null)
 				{
@@ -445,7 +457,7 @@ public class HubPlayer implements InGameData {
 			}
 		}, 20 * 5, 20 * 30);*/
 	}
-
+	
 	public void use() {
 		long time = System.currentTimeMillis();
 		this.setAntiSpamClicked(time + 500);

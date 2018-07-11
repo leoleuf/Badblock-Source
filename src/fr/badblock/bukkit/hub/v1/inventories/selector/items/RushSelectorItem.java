@@ -3,15 +3,20 @@ package fr.badblock.bukkit.hub.v1.inventories.selector.items;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import com.google.gson.Gson;
+
 import fr.badblock.bukkit.hub.v1.BadBlockHub;
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.actions.ItemAction;
+import fr.badblock.bukkit.hub.v1.objects.HubPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.run.BadblockGame;
-import fr.badblock.gameapi.utils.ConfigUtils;
+import fr.badblock.rabbitconnector.RabbitPacketType;
+import fr.badblock.rabbitconnector.RabbitService;
+import fr.badblock.sentry.SEntry;
+import fr.badblock.utils.Encodage;
 
 public class RushSelectorItem extends GameSelectorItem {
 
@@ -33,12 +38,11 @@ public class RushSelectorItem extends GameSelectorItem {
 
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
-		Location location = ConfigUtils.getLocation(BadBlockHub.getInstance(), "rush");
-		if (location == null) // player.sendMessage("§cCe jeu est
-								// indisponible.");
-			player.sendTranslatedMessage("hub.gameunavailable");
-		else
-			player.teleport(location);
+		BadBlockHub instance = BadBlockHub.getInstance();
+		RabbitService service = instance.getRabbitService();
+		Gson gson = instance.getGson();
+		service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), "rush2v2", false)),
+				Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
 	}
 
 	@Override

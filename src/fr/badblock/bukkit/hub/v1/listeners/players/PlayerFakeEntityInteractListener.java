@@ -5,13 +5,22 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 
+import com.google.gson.Gson;
+
+import fr.badblock.bukkit.hub.v1.BadBlockHub;
 import fr.badblock.bukkit.hub.v1.inventories.LinkedInventoryEntity;
-import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
+import fr.badblock.bukkit.hub.v1.inventories.ServerJoinerVillager;
 import fr.badblock.bukkit.hub.v1.listeners._HubListener;
+import fr.badblock.bukkit.hub.v1.objects.HubPlayer;
 import fr.badblock.bukkit.hub.v1.utils.pnj.NPCData;
 import fr.badblock.gameapi.events.PlayerFakeEntityInteractEvent;
 import fr.badblock.gameapi.fakeentities.FakeEntity;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.utils.general.Flags;
+import fr.badblock.rabbitconnector.RabbitPacketType;
+import fr.badblock.rabbitconnector.RabbitService;
+import fr.badblock.sentry.SEntry;
+import fr.badblock.utils.Encodage;
 
 public class PlayerFakeEntityInteractListener extends _HubListener {
 
@@ -33,11 +42,36 @@ public class PlayerFakeEntityInteractListener extends _HubListener {
 			Battle.npcClick(player);
 			return;
 		}*/
-		Map<Location, CustomInventory> data = LinkedInventoryEntity.getData();
+		Map<Location, ServerJoinerVillager> data = LinkedInventoryEntity.getData();
 		if (!data.containsKey(location))
 			return;
-		CustomInventory customInventory = data.get(location);
-		CustomInventory.get(customInventory.getClass()).open(player);
+		ServerJoinerVillager serverJoinerVillager = data.get(location);
+		if (serverJoinerVillager == null)
+		{
+			return;
+		}
+
+		if (Flags.isValid(player, "fakeEntity"))
+		{
+			return;
+		}
+		
+		Flags.setTemporaryFlag(player, "fakeEntity", 150);
+		
+		if (serverJoinerVillager.getServerName() != null && !serverJoinerVillager.getServerName().isEmpty())
+		{
+			player.sendMessage("§aTéléportation (" + serverJoinerVillager.getServerName() + ")...");
+			player.sendPlayer(serverJoinerVillager.getServerName());
+		}
+		else
+		{
+			player.sendMessage("§aTéléportation en jeu (" + serverJoinerVillager.getQueueName() + ")...");
+			BadBlockHub instance = BadBlockHub.getInstance();
+			RabbitService service = instance.getRabbitService();
+			Gson gson = instance.getGson();
+			service.sendAsyncPacket("networkdocker.sentry.join", gson.toJson(new SEntry(HubPlayer.getRealName(player), serverJoinerVillager.getQueueName(), false)),
+					Encodage.UTF8, RabbitPacketType.PUBLISHER, 5000, false);
+		}
 	}
 
 }

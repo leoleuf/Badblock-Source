@@ -89,7 +89,6 @@ import fr.badblock.bukkit.hub.v1.tasks.RequestNPCTask;
 import fr.badblock.bukkit.hub.v1.tasks.RequestSignsTask;
 import fr.badblock.bukkit.hub.v1.tasks.TaskListTask;
 import fr.badblock.bukkit.hub.v1.utils.MountManager;
-import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.fakeentities.FakeEntity;
@@ -121,7 +120,7 @@ public class BadBlockHub extends BadblockPlugin {
 	public HubPacketThread hubPacketThread;
 	public RabbitConnector rabbitConnector;
 	public RabbitService rabbitService;
-	public ShopLinkerAPI	shopLinkerAPI;
+	//public ShopLinkerAPI	shopLinkerAPI;
 
 	// NPCs
 	private FakeEntity<?> npcxMalware;
@@ -194,7 +193,7 @@ public class BadBlockHub extends BadblockPlugin {
 		this.setRabbitConnector(RabbitConnector.getInstance());
 		this.setRabbitService(this.getRabbitConnector().getService("default"));
 		this.setHubPacketThread(new HubPacketThread(this.getRabbitService()));
-		this.setShopLinkerAPI(new ShopLinkerAPI(this.getRabbitService()));
+//		this.setShopLinkerAPI(new ShopLinkerAPI(this.getRabbitService()));
 		// Hub changer
 		CustomInventory.get(HubChangerInventory.class);
 		new HubPacketListener();

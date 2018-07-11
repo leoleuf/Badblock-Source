@@ -277,7 +277,7 @@ public class MountManager {
 	public static <T extends WatcherEntity> FakeEntity<T> spawn(Location location, EntityType type, Class<T> clazz,
 			boolean movable, boolean rideable, boolean canFly, boolean inversed, String customName) {
 		FakeEntity<T> fakeEntity = GameAPI.getAPI().spawnFakeLivingEntity(location, type, clazz);
-		if (customName != null) {
+		if (customName != null && !customName.isEmpty()) {
 			fakeEntity.getWatchers().setCustomName(customName);
 			fakeEntity.getWatchers().setCustomNameVisible(true);
 		} else if (inversed) {
