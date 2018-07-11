@@ -1,5 +1,5 @@
-name: BadblockRush
-main: fr.badblock.bukkit.games.rush.PluginRush
+name: BadblockBedWars
+main: fr.badblock.bukkit.games.bedwars.PluginBedWars
 version: 2.0
 depends: ['BadblockGameAPI']
-authors: ['LeLanN']
+authors: ['xMalware']
