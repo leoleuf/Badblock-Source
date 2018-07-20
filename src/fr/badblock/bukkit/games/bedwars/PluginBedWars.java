@@ -12,16 +12,21 @@ import fr.badblock.bukkit.games.bedwars.commands.BedWarsCommand;
 import fr.badblock.bukkit.games.bedwars.commands.GameCommand;
 import fr.badblock.bukkit.games.bedwars.configuration.BedWarsConfiguration;
 import fr.badblock.bukkit.games.bedwars.configuration.BedWarsMapConfiguration;
+import fr.badblock.bukkit.games.bedwars.entities.PathwayHandler;
+import fr.badblock.bukkit.games.bedwars.inventories.InventoriesLoader;
 import fr.badblock.bukkit.games.bedwars.listeners.BedExplodeListener;
 import fr.badblock.bukkit.games.bedwars.listeners.BedWarsMapProtector;
 import fr.badblock.bukkit.games.bedwars.listeners.DeathListener;
 import fr.badblock.bukkit.games.bedwars.listeners.FakeEntityInteractListener;
+import fr.badblock.bukkit.games.bedwars.listeners.GolemListener;
 import fr.badblock.bukkit.games.bedwars.listeners.InventoryListener;
 import fr.badblock.bukkit.games.bedwars.listeners.JoinListener;
 import fr.badblock.bukkit.games.bedwars.listeners.MoveListener;
 import fr.badblock.bukkit.games.bedwars.listeners.PartyJoinListener;
 import fr.badblock.bukkit.games.bedwars.listeners.QuitListener;
 import fr.badblock.bukkit.games.bedwars.listeners.SheepListener;
+import fr.badblock.bukkit.games.bedwars.listeners.SilverfishListener;
+import fr.badblock.bukkit.games.bedwars.listeners.ThrowEggListener;
 import fr.badblock.bukkit.games.bedwars.players.BedWarsScoreboard;
 import fr.badblock.bukkit.games.bedwars.runnables.PreStartRunnable;
 import fr.badblock.gameapi.BadblockPlugin;
@@ -139,15 +144,22 @@ public class PluginBedWars extends BadblockPlugin {
 			
 			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.SPECTATOR);
 			
+			InventoriesLoader.loadInventories(this);
+			
 			new MoveListener();
 			new DeathListener();
 			new JoinListener();
+			new ThrowEggListener();
 			new QuitListener();
 			new InventoryListener();
 			new PartyJoinListener();
+			new GolemListener();
+			new SilverfishListener();
 			new BedExplodeListener();	// 
 			new SheepListener();		// Gère les moutons en début de partie :3
 			new FakeEntityInteractListener();
+			
+			new PathwayHandler();
 			
 			File votesFile = new File(getDataFolder(), VOTES_CONFIG);
 

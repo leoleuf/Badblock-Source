@@ -26,7 +26,7 @@ public class BlockRotationRunnable extends BukkitRunnable {
 		for (MapBreakableBlock block : blocks)
 		{
 			BreakableBlock handle = block.getHandle();
-			Location location = ConfigUtils.convertStringToBlockLocation(handle.location);
+			Location location = ConfigUtils.convertStringToLocation(handle.location);
 			ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND); //Spawn the ArmorStands
 			
 			as.setGravity(false); //Make sure it doesn't fall
@@ -61,7 +61,14 @@ public class BlockRotationRunnable extends BukkitRunnable {
 	{
 		for (Entry<ArmorStand, Material> entry : armorStands.entrySet())
 		{
-			entry.getKey().getEyeLocation().setYaw(entry.getKey().getEyeLocation().getYaw() + 1);
+			ArmorStand armorStand = entry.getKey();
+			Location location = armorStand.getLocation();
+			if (location.getYaw() >= 180)
+			{
+				location.setYaw(-180);
+			}
+			location.setYaw(location.getYaw() + 4);
+			armorStand.teleport(location);
 		}
 	}
 

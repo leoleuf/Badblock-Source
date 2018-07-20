@@ -21,6 +21,7 @@ import fr.badblock.bukkit.games.bedwars.configuration.BedWarsMapConfiguration;
 import fr.badblock.bukkit.games.bedwars.configuration.floatingtexts.FloatingText;
 import fr.badblock.bukkit.games.bedwars.configuration.floatingtexts.MapFloatingText;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
+import fr.badblock.bukkit.games.bedwars.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.games.bedwars.players.BedWarsData;
 import fr.badblock.bukkit.games.bedwars.players.BedWarsScoreboard;
 import fr.badblock.bukkit.games.bedwars.result.BedWarsResults;
@@ -49,6 +50,14 @@ public class GameRunnable extends BukkitRunnable {
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
 		GameAPI.getAPI().getGameServer().saveTeamsAndPlayersForResult();
 
+		Bukkit.getWorlds().forEach(world -> {
+			world.setTime(config.getTime());
+			world.getEntities().forEach(entity -> {
+				if(entity.getType() != EntityType.PLAYER)
+					entity.remove();
+			});
+		});
+		
 		for(SpawnableItem item : PluginBedWars.getInstance().getConfiguration().items){
 			new ItemSpawnRunnable(Material.matchMaterial(item.item), item.ticks).start();
 		}
@@ -59,7 +68,9 @@ public class GameRunnable extends BukkitRunnable {
 		}
 
 		new BlockRotationRunnable(PluginBedWars.getInstance().getMapConfiguration().getBlockRotations());
-		
+
+		new TierRunnable();
+
 		for (MapFloatingText mapFloatingText : PluginBedWars.getInstance().getMapConfiguration().getFloatingTexts())
 		{
 			FloatingText floatingText = mapFloatingText.getHandle();
@@ -68,13 +79,7 @@ public class GameRunnable extends BukkitRunnable {
 			spawnNametag(location, text);
 		}
 		
-		Bukkit.getWorlds().forEach(world -> {
-			world.setTime(config.getTime());
-			world.getEntities().forEach(entity -> {
-				if(entity.getType() != EntityType.PLAYER)
-					entity.remove();
-			});
-		});
+		LinkedInventoryEntity.load(PluginBedWars.getInstance().getMapConfiguration());
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 
@@ -89,7 +94,7 @@ public class GameRunnable extends BukkitRunnable {
 		GameAPI.getAPI().getJoinItems().end();
 	}
 
-	public static void spawnNametag(Location location, String text) {
+	public static ArmorStand spawnNametag(Location location, String text) {
 		ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND); //Spawn the ArmorStand
 
 		as.setGravity(false); //Make sure it doesn't fall
@@ -97,6 +102,8 @@ public class GameRunnable extends BukkitRunnable {
 		as.setCustomName(text); //Set this to the text you want
 		as.setCustomNameVisible(true); //This makes the text appear no matter if your looking at the entity or not
 		as.setVisible(false); //Makes the ArmorStand invisible
+		
+		return as;
     }
 	
 	public static void handle(BadblockPlayer player) {

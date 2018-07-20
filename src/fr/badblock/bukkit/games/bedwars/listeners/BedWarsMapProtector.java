@@ -1,31 +1,52 @@
 package fr.badblock.bukkit.games.bedwars.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.event.block.Action;
+import org.bukkit.potion.PotionEffectType;
 
-import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
 import fr.badblock.bukkit.games.bedwars.runnables.GameRunnable;
 import fr.badblock.gameapi.GameAPI;
-import fr.badblock.gameapi.configuration.values.MapMaterial;
 import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.servers.MapProtector;
 
 public class BedWarsMapProtector implements MapProtector {
+
+	public static List<Location> breakableBlocks = new ArrayList<>();
+	public static List<Location> glassBlocks = new ArrayList<>();
+
 	private boolean inGame(){
 		return GameAPI.getAPI().getGameServer().getGameState() == GameState.RUNNING;
 	}
 
 	@Override
 	public boolean blockPlace(BadblockPlayer player, Block block) {
-		return inGame() || player.hasAdminMode();
+
+		boolean can = inGame() || player.hasAdminMode();
+
+		if (can)
+		{
+			breakableBlocks.add(block.getLocation());
+
+			if (block.getType().equals(Material.GLASS))
+			{
+				glassBlocks.add(block.getLocation());
+			}
+		}
+
+		return can;
 	}
 
 	@Override
@@ -33,19 +54,22 @@ public class BedWarsMapProtector implements MapProtector {
 		if(!inGame()){
 			return player.hasAdminMode();
 		}
-		
-		if(block.getType() == Material.BED_BLOCK){
-			player.sendTranslatedMessage("bedwars.youmustexplodetnttobreakthebed");
-			return false;
-		}
 
 		boolean can = false;
 
-		for(MapMaterial material : PluginBedWars.getInstance().getMapConfiguration().getBreakableBlocks()){
-			if(material.getHandle() == block.getType()){
-				can = true;
+		if (BedListenerUtils.onBreakBed(player, block, false))
+		{
+			can = true;
+		}
 
-				break;
+		if (breakableBlocks.contains(block.getLocation()))
+		{
+			can = true;
+			breakableBlocks.remove(block.getLocation());
+
+			if (block.getType().equals(Material.GLASS))
+			{
+				glassBlocks.remove(block.getLocation());
 			}
 		}
 
@@ -59,7 +83,7 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean canLostFood(BadblockPlayer player) {
-		return inGame();
+		return false;
 	}
 
 	@Override
@@ -98,14 +122,14 @@ public class BedWarsMapProtector implements MapProtector {
 			boolean cancel = false;
 
 			switch(block.getType()){
-				case CHEST: case TRAPPED_CHEST: case ENDER_CHEST: case FURNACE: case ENCHANTMENT_TABLE: case WORKBENCH:
-					cancel = true;
-					break;
-				case BARRIER:
-					cancel = true;
-					player.sendTranslatedMessage("bedwars.youcantplaceablockthere");
-					return false;
-				default: break;
+			case CHEST: case TRAPPED_CHEST: case ENDER_CHEST: case FURNACE: case ENCHANTMENT_TABLE: case WORKBENCH:
+				cancel = true;
+				break;
+			case BARRIER:
+				cancel = true;
+				player.sendTranslatedMessage("bedwars.youcantplaceablockthere");
+				return false;
+			default: break;
 			}
 
 			if(cancel)
@@ -162,6 +186,16 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean canBeingDamaged(BadblockPlayer player) {
+		if (player.getActivePotionEffects() != null)
+		{
+			if (player.getActivePotionEffects().parallelStream().filter(effect ->
+			effect.getType().equals(PotionEffectType.INVISIBILITY)).count() > 0)
+			{
+				player.removePotionEffect(PotionEffectType.INVISIBILITY);
+				player.playSound(Sound.ENDERMAN_HIT);
+				player.sendTranslatedMessage("bedwars.invisibilitystop");
+			}
+		}
 		return GameRunnable.damage;
 	}
 
@@ -227,7 +261,12 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean canCreatureSpawn(Entity creature, boolean isPlugin) {
-		return isPlugin;
+		if (creature != null && creature.getType().equals(EntityType.ARMOR_STAND))
+		{
+			return true;
+		}
+		System.out.println("Creature spawn : " + creature.getType());
+		return isPlugin || creature.getType().equals(EntityType.IRON_GOLEM);
 	}
 
 	@Override
@@ -264,7 +303,7 @@ public class BedWarsMapProtector implements MapProtector {
 	public boolean destroyArrow() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean canEntityBeingDamaged(Entity entity, BadblockPlayer badblockPlayer) {
 		return false;

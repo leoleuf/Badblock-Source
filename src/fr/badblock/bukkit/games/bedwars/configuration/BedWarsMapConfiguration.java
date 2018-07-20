@@ -52,8 +52,11 @@ public class BedWarsMapConfiguration {
 	private List<MapBreakableBlock> blockRotations = new ArrayList<>();
 
 	private List<MapInventoryNPC> inventoryNPC = new ArrayList<>();
-	
+
 	private List<MapFloatingText> floatingTexts = new ArrayList<>();
+
+	private List<MapLocation> spawnDiamonds = new ArrayList<>();
+	private List<MapLocation> spawnEmeralds = new ArrayList<>();
 	
 	private BadConfiguration  config;
 	
@@ -69,6 +72,12 @@ public class BedWarsMapConfiguration {
 		blockRotations = config.getValueList("blockRotations", MapBreakableBlock.class, Arrays.asList());
 		inventoryNPC = config.getValueList("inventoryNPC", MapInventoryNPC.class, Arrays.asList());
 		floatingTexts = config.getValueList("floatingTexts", MapFloatingText.class, Arrays.asList());
+		
+		spawnDiamonds = config.getValueList("spawnDiamonds", MapLocation.class, Arrays.asList());
+		spawnEmeralds = config.getValueList("spawnEmeralds", MapLocation.class, Arrays.asList());
+
+		System.out.println("Load floating texts : " + floatingTexts.size());
+		System.out.println("block rotations: " + blockRotations.size());
 		
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			team.teamData(BedWarsTeamData.class).load(config.getSection(team.getKey()));

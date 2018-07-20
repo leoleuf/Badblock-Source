@@ -1,11 +1,10 @@
 package fr.badblock.bukkit.games.bedwars.players;
 
-import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
 import fr.badblock.bukkit.games.bedwars.runnables.GameRunnable;
+import fr.badblock.bukkit.games.bedwars.runnables.TierRunnable;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.players.BadblockPlayer;
-import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.players.scoreboard.BadblockScoreboardGenerator;
 import fr.badblock.gameapi.players.scoreboard.CustomObjective;
@@ -39,13 +38,16 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 		int i = 14;
 
 		objective.changeLine(i--,  i18n("bedwars.scoreboard.time-desc"));
+
+		String nextDiamondTier = TierRunnable.diamondTier == 1 ? "II " : TierRunnable.diamondTier == 2 ? "III " : " ";
+		String nextEmeraldTier = TierRunnable.emeraldTier == 1 ? "II " : TierRunnable.emeraldTier == 2 ? "III " : " ";
+		
 		objective.changeLine(i--,  i18n("bedwars.scoreboard.time", time(GameRunnable.time)));
-		if (PluginBedWars.getInstance().getMapConfiguration() != null) {
-			objective.changeLine(i,  ""); i--;
-			if (!PluginBedWars.getInstance().getMapConfiguration().getAllowBows())
-				objective.changeLine(i--,  i18n("bedwars.scoreboard.nobows"));
-			else objective.changeLine(i--,  i18n("bedwars.scoreboard.withbows"));
-		}
+		
+		objective.changeLine(i--, "");		
+		
+		objective.changeLine(i--,  i18n("bedwars.scoreboard.time-diamondtier", nextDiamondTier, time(TierRunnable.diamondTierTime)));
+		objective.changeLine(i--,  i18n("bedwars.scoreboard.time-emeraldtier", nextEmeraldTier, time(TierRunnable.emeraldTierTime)));
 
 		objective.changeLine(i--, "");		
 
@@ -58,15 +60,6 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 			i--;
 		}
 
-		if(player.getBadblockMode() != BadblockMode.SPECTATOR){
-			objective.changeLine(i,  ""); i--;
-
-			objective.changeLine(i,  i18n("bedwars.scoreboard.wins", stat(WINS))); i--;
-			objective.changeLine(i,  i18n("bedwars.scoreboard.kills", stat(KILLS))); i--;
-			objective.changeLine(i,  i18n("bedwars.scoreboard.deaths", stat(DEATHS))); i--;
-			objective.changeLine(i,  i18n("bedwars.scoreboard.brokenbeds", stat(BROKENBEDS))); i--;
-		}
-
 		for(int a=3;a<=i;a++)
 			objective.removeLine(a);
 
@@ -74,6 +67,11 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 	}
 
 	private String time(int time){
+		if (time < 0)
+		{
+			return "Max";
+		}
+		
 		String res = "m";
 		int    sec = time % 60;
 
@@ -83,10 +81,6 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 		}
 
 		return res + sec + "s";
-	}
-
-	private int stat(String name){
-		return (int) player.getPlayerData().getStatistics("bedwars", name);
 	}
 
 	private String i18n(String key, Object... args){

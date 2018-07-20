@@ -1,16 +1,23 @@
 package fr.badblock.bukkit.games.bedwars.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.BedWarsAchievementList;
+import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
 import fr.badblock.bukkit.games.bedwars.players.BedWarsData;
 import fr.badblock.bukkit.games.bedwars.players.BedWarsScoreboard;
@@ -31,6 +38,9 @@ import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 
 public class DeathListener extends BadListener {
+	
+	List<Player> shears = new ArrayList<>();
+	
 	@EventHandler
 	public void onDeath(NormalDeathEvent e){
 		death(e, e.getPlayer(), null, e.getLastDamageCause());
@@ -114,7 +124,14 @@ public class DeathListener extends BadListener {
 				respawnPlace = killer.getLocation();
 			}
 		} else {
+			
 			e.setTimeBeforeRespawn(3);
+			
+			if (!shears.contains(player) && player.getInventory().contains(Material.SHEARS))
+			{
+				shears.add(player);
+			}
+			
 			respawnPlace = player.getTeam().teamData(BedWarsTeamData.class).getRespawnLocation();
 
 			player.setMaxHealth(20 + player.getTeam().teamData(BedWarsTeamData.class).health);
@@ -144,6 +161,44 @@ public class DeathListener extends BadListener {
 		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
 			e.getPlayer().getOpenInventory().setCursor(null);
 		PluginBedWars.getInstance().giveDefaultKit(e.getPlayer());
+		
+		if (shears.contains(e.getPlayer()))
+		{
+			e.getPlayer().getInventory().addItem(new ItemStack(Material.SHEARS, 1));
+		}
+		
+		BadblockTeam team = e.getPlayer().getTeam();
+		if (team == null)
+		{
+			return;
+		}
+		
+		BedWarsTeamData teamData = team.teamData(BedWarsTeamData.class);
+		
+		if (teamData.speed > 1)
+		{
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, teamData.speed));
+		}
+		
+		if (teamData.speedMining > 1)
+		{
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, teamData.speedMining));
+		}
+
+		if (teamData.strength > 1)
+		{
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, teamData.strength));
+		}
+		
+		if (teamData.protection > 1)
+		{
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, teamData.protection));
+		}
+		
+		if (teamData.heal > 1)
+		{
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, teamData.heal));
+		}
 	}
 
 	private void incrementAchievements(BadblockPlayer player, PlayerAchievement... achievements){

@@ -13,10 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
 import fr.badblock.gameapi.BadListener;
-import fr.badblock.gameapi.configuration.values.MapMaterial;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 
@@ -70,13 +68,11 @@ public class BedExplodeListener extends BadListener {
 
 			} else {
 				Block block = e.blockList().get(i);
-				boolean can = false;
+				boolean can = BedWarsMapProtector.breakableBlocks.contains(block.getLocation());
 				
-				for(MapMaterial material : PluginBedWars.getInstance().getMapConfiguration().getBreakableBlocks()){
-					if(material.match(block)){
-						can = true;
-						break;
-					}
+				if (block.getType().equals(Material.GLASS) && BedWarsMapProtector.glassBlocks.contains(block.getLocation()))
+				{
+					can = false;
 				}
 				
 				if(!can){

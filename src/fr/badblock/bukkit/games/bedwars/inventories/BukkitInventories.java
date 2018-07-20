@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.material.MaterialData;
 
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.inventories.config.ItemLoader;
@@ -19,6 +20,7 @@ import fr.badblock.bukkit.games.bedwars.inventories.objects.InventoryItemObject;
 import fr.badblock.bukkit.games.bedwars.inventories.objects.InventoryObject;
 import fr.badblock.bukkit.games.bedwars.inventories.utils.ChatColorUtils;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.utils.general.Callback;	
 
 public class BukkitInventories {
@@ -43,11 +45,13 @@ public class BukkitInventories {
 	private static void createInventory(BadblockPlayer player, InventoryObject inventoryObject, Callback<Inventory> callback) {
 		if (inventoryObject == null)
 		{
+			System.out.println("Err1");
 			callback.done(null, null);
 			return;
 		}
 		if (player == null) 
 		{
+			System.out.println("Err2");
 			callback.done(null, null);
 			return;
 		}
@@ -77,12 +81,12 @@ public class BukkitInventories {
 		Map<String, String> replace = new HashMap<>();
 		replace.put("%0", player.getName());
 		replace.put("%1", Integer.toString(diamonds));
-		replace.put("%1", Integer.toString(emeralds));
+		replace.put("%2", Integer.toString(emeralds));
 		for (InventoryItemObject inventoryItemObject : inventoryObject.getItems()) {
 			String[] splitter = inventoryItemObject.getType().split(":");
 			String material = splitter[0];
-			byte data = 0;
-			if (splitter.length >= 2) data = Byte.parseByte(splitter[1]);
+			short data = 0;
+			if (splitter.length >= 2) data = Short.parseShort(splitter[1]);
 			Material type = null;
 			try {
 				int o = Integer.parseInt(material);
@@ -91,6 +95,16 @@ public class BukkitInventories {
 				type = Material.getMaterial(material);
 			}
 			ItemStack itemStack = new ItemStack(type, inventoryItemObject.getAmount(), data);
+
+			BadblockTeam team = player.getTeam();
+			if (team != null)
+			{
+				if (itemStack.getType().equals(Material.WOOL))
+				{
+					itemStack.setData(new MaterialData(team.getDyeColor().getWoolData())); 
+				}
+			}
+
 			if (inventoryItemObject.isFakeEnchant()) itemStack = ItemLoader.fakeEnchant(itemStack);
 			ItemMeta itemMeta = itemStack.getItemMeta();
 			if (itemStack.getType().equals(Material.SKULL_ITEM)) {
@@ -104,6 +118,8 @@ public class BukkitInventories {
 			itemStack.setItemMeta(itemMeta);
 			inventory.setItem(inventoryItemObject.getPlace(), itemStack);
 		}
+
+		callback.done(inventory, null);
 	}
 
 	public static void openInventory(BadblockPlayer player, String inventoryName) {
@@ -112,12 +128,7 @@ public class BukkitInventories {
 			player.sendMessage(ChatColor.RED + "Unknown inventory with name '" + inventoryName + "'.");
 			return;
 		}
-		String permission = inventoryObject.getPermission();
-		if (permission != null && !permission.isEmpty()) {
-			if (!player.hasPermission(permission)) {
-				return;
-			}
-		}
+
 		InventoryActionManager.openInventory(player, CustomItemAction.OPEN_INV, inventoryName);
 	}
 
