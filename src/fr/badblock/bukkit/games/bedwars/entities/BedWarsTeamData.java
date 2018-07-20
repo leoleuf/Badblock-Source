@@ -29,6 +29,7 @@ public class BedWarsTeamData implements TeamData {
 	public int				  strength;
 	public int				  protection;
 	public int				  heal;
+	public int				  strengthenArmor;
 	public long			  slowDig;
 	public boolean	      trespassing;
 

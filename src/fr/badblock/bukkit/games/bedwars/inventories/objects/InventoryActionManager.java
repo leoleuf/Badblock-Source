@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -81,6 +82,9 @@ public class InventoryActionManager
 				break;
 			case HEAL:
 				heal(player, action, actionData);
+				break;
+			case STRENGTHEN_ARMOR:
+				strengthenArmor(player, action, actionData);
 				break;
 			default:
 				break;
@@ -282,9 +286,116 @@ public class InventoryActionManager
 
 		teamData.heal++;
 
-		player.getTeam().getOnlinePlayers().forEach(op -> op.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, teamData.heal)));
 		player.getTeam().getOnlinePlayers().forEach(op -> op.playSound(Sound.ANVIL_USE));
 		player.getTeam().getOnlinePlayers().forEach(op -> op.sendTranslatedMessage("bedwars.improveheal", player.getName(), teamData.heal));
+	}	
+	
+	private static void strengthenArmor(BadblockPlayer player, CustomItemAction action, String actionData) {
+		if (player.getTeam() == null)
+		{
+			return;
+		}
+
+		BedWarsTeamData teamData = player.getTeam().teamData(BedWarsTeamData.class);
+		if (teamData.strengthenArmor >= 4)
+		{
+			teamData.strengthenArmor = 4;
+			return;
+		}
+
+		String[] levelSplitter = actionData.split(";");
+
+		String rawExchanger = levelSplitter[teamData.strengthenArmor - 1];
+
+		ExchangeObject exchanger = ExchangeObject.toExchange(rawExchanger);
+
+		// If the player has the needed items
+		if (!player.getInventory().contains(exchanger.getMaterial(), exchanger.getAmount()))
+		{
+			TranslatableWord word = GameMessages.material(exchanger.getMaterial(), exchanger.getAmount() > 1, WordDeterminant.UNDEFINED);
+			player.sendTranslatedMessage("bedwars.youmusthavetoimprovearmor", exchanger.getAmount(), word.getWord(player.getPlayerData().getLocale()));
+			return;
+		}
+
+		int amount = exchanger.getAmount();
+
+		for (int i = 0; i < player.getInventory().getContents().length; i++)
+		{
+			ItemStack item = player.getInventory().getContents()[i];
+			if (amount <= 0)
+			{
+				break;
+			}
+
+			if (item == null || item.getType() == null)
+			{
+				continue;
+			}
+
+			if (!item.getType().equals(exchanger.getMaterial()))
+			{
+				continue;
+			}
+
+			int a = item.getAmount();
+
+			if (a > amount && amount > 0)
+			{
+				a -= amount;
+				amount = 0;
+				item.setAmount(a);
+				player.getInventory().setItem(i, item);
+			}
+			else if (amount > 0)
+			{
+				amount -= a;
+				player.getInventory().setItem(i, new ItemStack(Material.AIR, 1));
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		player.updateInventory();
+
+		teamData.strengthenArmor++;
+
+		player.getTeam().getOnlinePlayers().forEach(op ->
+		{
+			ItemStack helmet = op.getInventory().getHelmet();
+			if (helmet != null && !helmet.getType().equals(Material.AIR))
+			{
+				helmet.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, teamData.strengthenArmor);
+				op.getInventory().setHelmet(helmet);
+			}
+			
+			ItemStack chestplate = op.getInventory().getChestplate();
+			if (chestplate != null && !chestplate.getType().equals(Material.AIR))
+			{
+				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, teamData.strengthenArmor);
+				op.getInventory().setChestplate(chestplate);
+			}
+			
+			ItemStack leggings = op.getInventory().getLeggings();
+			if (leggings != null && !leggings.getType().equals(Material.AIR))
+			{
+				leggings.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, teamData.strengthenArmor);
+				op.getInventory().setLeggings(leggings);
+			}
+			
+			ItemStack boots = op.getInventory().getBoots();
+			if (boots != null && !boots.getType().equals(Material.AIR))
+			{
+				boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, teamData.strengthenArmor);
+				op.getInventory().setBoots(boots);
+			}
+			
+			op.updateInventory();
+		});
+		
+		player.getTeam().getOnlinePlayers().forEach(op -> op.playSound(Sound.ANVIL_USE));
+		player.getTeam().getOnlinePlayers().forEach(op -> op.sendTranslatedMessage("bedwars.improvearmor", player.getName(), teamData.strengthenArmor));
 	}	
 
 	private static void speedMining(BadblockPlayer player, CustomItemAction action, String actionData) {
@@ -294,7 +405,7 @@ public class InventoryActionManager
 		}
 
 		BedWarsTeamData teamData = player.getTeam().teamData(BedWarsTeamData.class);
-		if (teamData.speedMining >= 1)
+		if (teamData.speedMining >= 3)
 		{
 			player.sendTranslatedMessage("bedwars.alreadymaxmininglevel");
 			return;

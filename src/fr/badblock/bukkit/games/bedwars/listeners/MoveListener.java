@@ -7,6 +7,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
@@ -53,6 +55,13 @@ public class MoveListener extends BadListener {
 			{
 				return;
 			}
+			
+			BedWarsTeamData tdo = team.teamData(BedWarsTeamData.class);
+			
+			if (tdo != null)
+			{
+				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 5, tdo.heal));
+			}
 
 			for (BadblockTeam t : GameAPI.getAPI().getTeams())
 			{
@@ -74,9 +83,11 @@ public class MoveListener extends BadListener {
 				{
 					if (td.trespassing)
 					{
-						player.getTeam().getOnlinePlayers().forEach(op -> op.playSound(Sound.ENDERMAN_DEATH));
-						player.getTeam().getOnlinePlayers().forEach(op -> op.sendTranslatedMessage("bedwars.trespassingchat", player.getName()));
-						player.getTeam().getOnlinePlayers().forEach(op -> op.sendTranslatedTitle("bedwars.trespassing", player.getName()));
+						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 5 * 20, 3));
+						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 5 * 20, 3));
+						t.getOnlinePlayers().forEach(op -> op.playSound(Sound.ENDERMAN_DEATH));
+						t.getOnlinePlayers().forEach(op -> op.sendTranslatedMessage("bedwars.trespassingchat", player.getName()));
+						t.getOnlinePlayers().forEach(op -> op.sendTranslatedTitle("bedwars.trespassing", player.getName()));
 						td.trespassing = false;
 					}
 					break;

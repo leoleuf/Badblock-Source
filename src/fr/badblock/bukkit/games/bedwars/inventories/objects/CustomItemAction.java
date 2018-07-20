@@ -14,6 +14,7 @@ public enum CustomItemAction {
 	TRESPASSING,
 	SLOW_DIG,
 	HEAL,
+	STRENGTHEN_ARMOR,
 	NOTHING;
 	
 }

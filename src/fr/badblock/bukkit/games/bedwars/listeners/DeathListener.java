@@ -194,11 +194,6 @@ public class DeathListener extends BadListener {
 		{
 			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, teamData.protection));
 		}
-		
-		if (teamData.heal > 1)
-		{
-			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, teamData.heal));
-		}
 	}
 
 	private void incrementAchievements(BadblockPlayer player, PlayerAchievement... achievements){
