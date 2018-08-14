@@ -1,5 +1,6 @@
 package fr.badblock.common.shoplinker.bukkit.listeners.bukkit;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +21,6 @@ import fr.badblock.common.shoplinker.bukkit.inventories.objects.InventoryObject;
 import fr.badblock.common.shoplinker.bukkit.inventories.objects.ItemAction;
 import fr.badblock.common.shoplinker.bukkit.inventories.objects.TempInventoryObject;
 import fr.badblock.common.shoplinker.bukkit.players.ShopPlayer;
-import fr.badblock.ladder.api.chat.ChatColor;
 
 public class PlayerInventoryClickListener implements Listener {
 

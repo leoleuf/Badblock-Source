@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.Gson;
 
 import fr.badblock.api.common.tech.rabbitmq.RabbitService;
+import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,10 @@ import lombok.Setter;
 	@Getter@Setter   private static ConsoleCommandSender console;
 	
 	private RabbitService								 rabbitService;
+	
+	private ReceiveCommandListener			receiveCommandListener;
+	private boolean										unloaded;
+	
 	// bordel
 	private List<String>							     broadcastMessage;
 	private List<String>							     backLore;
@@ -61,6 +66,8 @@ import lombok.Setter;
 	public void onDisable() {
 		if (this.getRabbitService() != null)
 			this.getRabbitService().remove();
+		
+		
 	}
 	
 }

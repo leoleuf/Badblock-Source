@@ -1,9 +1,6 @@
 package fr.badblock.common.shoplinker.bukkit.inventories;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -72,13 +69,11 @@ public class BukkitInventories {
 				inventory.setItem(4, itemOffer);
 
 				// Format
-				DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance(Locale.FRANCE);
-				DecimalFormat goodNumberFormat = new DecimalFormat("#,##0.###", dfs);
 
 				// Replace
 				Map<String, String> replace = new HashMap<>();
 				replace.put("%0", ChatColorUtils.translate(inventoryItemObject.getName()));
-				replace.put("%1", goodNumberFormat.format(integer.doubleValue()));
+				replace.put("%1", Double.toString(integer.doubleValue()));
 				
 				// 7 : redstone no
 				itemStack = new ItemStack(Material.REDSTONE_BLOCK);
@@ -133,8 +128,7 @@ public class BukkitInventories {
 		Map<String, String> replace = new HashMap<>();
 		replace.put("%0", player.getName());
 		replace.put("%1", AbstractPermissions.getPermissions().getPrefix(player.getName()));
-		DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance(Locale.FRANCE);
-		DecimalFormat goodNumberFormat = new DecimalFormat("#,##0.###", dfs);
+		
 		CrystalsBuyManager.getCrystals(player.getName(), new Callback<Double>()
 		{
 			@Override
@@ -164,7 +158,7 @@ public class BukkitInventories {
 							SkullMeta skullMeta = (SkullMeta) itemMeta;
 							skullMeta.setOwner(player.getName());
 						}
-						replace.put("%3", goodNumberFormat.format(price));
+						replace.put("%3", Double.toString(price));
 						if (inventoryItemObject.getName() != null && !inventoryItemObject.getName().isEmpty())
 							itemMeta.setDisplayName(ChatColorUtils.translate(inventoryItemObject.getName().replace("%0", replace.get("%0")).replace("%1", replace.get("%1")).replace("%2", replace.get("%2"))));
 						if (inventoryItemObject.getLore() != null && inventoryItemObject.getLore().length != 0)

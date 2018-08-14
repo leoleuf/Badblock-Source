@@ -28,14 +28,11 @@ public class PlayerInteractAtEntityListener implements Listener {
 		String inventoryName = ShopLinkerCommand.armorSet.get(uniquePlayerId);
 		Location entityLocation = entity.getLocation();
 		if (inventoryName == null) {
-			System.out.println("ok");
 			// manage as an inventory opener
 			ArmorStandManager armorStandManager = ArmorStandManager.getInstance();
 			ClickableObject clickableObject = armorStandManager.getArmorStand(entityLocation);
-			System.out.println("okA");
 			// Not registered sign
 			if (clickableObject == null) return;
-			System.out.println("okB");
 			// Open inventory
 			BukkitInventories.openInventory(player, clickableObject.getInventoryName());
 			return;

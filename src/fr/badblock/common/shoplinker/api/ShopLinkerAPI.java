@@ -1,5 +1,7 @@
 package fr.badblock.common.shoplinker.api;
 
+import com.google.gson.Gson;
+
 import fr.badblock.api.common.tech.rabbitmq.RabbitService;
 import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacket;
 import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketMessage;
@@ -9,6 +11,7 @@ import fr.badblock.common.shoplinker.api.objects.ShopTrame;
 import fr.badblock.common.shoplinker.api.objects.ShopType;
 import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
 public class ShopLinkerAPI
@@ -16,6 +19,8 @@ public class ShopLinkerAPI
 
 	public transient static String CURRENT_SERVER_NAME = null;
 
+	@Getter public static Gson gson	= new Gson();
+	
 	private RabbitService		   	rabbitService;
 	private ReceiveCommandListener  receiveCommandListener;
 
@@ -57,7 +62,7 @@ public class ShopLinkerAPI
 	}
 
 	private String buildPacketData(ShopTrame shopTrame) {
-		return ReceiveCommandListener.getGson().toJson(shopTrame.getShopData());
+		return gson.toJson(shopTrame.getShopData());
 	}
 	private ShopDataDestination buildDataDestination(String serverName) {
 		return new ShopDataDestination(serverName);

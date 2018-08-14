@@ -2,8 +2,12 @@ name: BadBlockShopLinker
 author: xMalware
 version: 1.0
 description: The best shop ever
+softdepends: [BadblockGameAPI]
 main: fr.badblock.common.shoplinker.bukkit.ShopLinker
 commands:
    shoplinker:
      description: ShopLinker main command
      aliases: [sl]
+   store:
+     description: Store main command
+     aliases: [shop, boutique]

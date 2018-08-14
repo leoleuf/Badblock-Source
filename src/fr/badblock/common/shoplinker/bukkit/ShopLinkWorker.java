@@ -24,6 +24,7 @@ public class ShopLinkWorker {
 		}
 		String playerName = shopData.getPlayerName();
 		Player player = Bukkit.getPlayer(playerName);
+		System.out.println(player + " / " + shopData.isForceCommand());
 		if (player == null && !shopData.isForceCommand()) 
 			if (onlyIfOnline) return;
 			else cacheAction(shopData);
@@ -93,7 +94,7 @@ public class ShopLinkWorker {
 		// En jeu
 		if (shopData.isIngame())
 		{
-			// &6[Info] &b'.$joueur['pseudo'].' &aa acheté l\'offre '.parseHTML($offer["displayname"]).' &acontre '.$offer["price"].' Crystals sur le site !
+			// &6[Info] &b'.$joueur['pseudo'].' &aa achetï¿½ l\'offre '.parseHTML($offer["displayname"]).' &acontre '.$offer["price"].' Crystals sur le site !
 			for (String broadcastMessage : shopLinker.getBroadcastMessage())
 			{
 				broadcastMessage = broadcastMessage.replace("%player%", shopData.getPlayerName());

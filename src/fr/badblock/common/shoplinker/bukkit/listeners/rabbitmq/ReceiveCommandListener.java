@@ -1,6 +1,5 @@
 package fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.google.gson.Gson;
@@ -30,12 +29,18 @@ public class ReceiveCommandListener extends RabbitListener
 	public ReceiveCommandListener(RabbitService rabbitService, String queueName)
 	{
 		super(rabbitService, ShopLinkerSettings.QUEUE_PREFIX + queueName, ShopLinkerSettings.LISTENER_TYPE, ShopLinkerSettings.DEBUG);
+		this.load();
 	}
 
 	@Override
 	public void onPacketReceiving(String body)
 	{
 		if (body == null)
+		{
+			return;
+		}
+		
+		if (ShopLinker.getInstance().isUnloaded())
 		{
 			return;
 		}
@@ -52,16 +57,20 @@ public class ReceiveCommandListener extends RabbitListener
 		{
 			return;
 		}
-		// exécution
+		// exÃ©cution
 		if (!enabledCommands)
 		{
 			ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RED + "A command has been executed but commands aren't enabled on this server.");
 			ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RED + "Command: " + shopData.getCommand());
 			return;
 		}
+		
 		ReceivedRemoteCommandEvent receivedRemoteCommand = new ReceivedRemoteCommandEvent(shopData);
-		Bukkit.getPluginManager().callEvent(receivedRemoteCommand);
+		
+		ShopLinker.getInstance().getServer().getPluginManager().callEvent(receivedRemoteCommand);
+		
 		if (receivedRemoteCommand.isCancelled()) return;
+		
 		ShopLinkWorker.workCommand(receivedRemoteCommand.getShopData(), false);
 	}
 
