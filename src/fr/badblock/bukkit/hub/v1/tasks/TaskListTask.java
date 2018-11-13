@@ -8,7 +8,7 @@ import fr.badblock.gameapi.utils.threading.TaskManager;
 public class TaskListTask extends CustomTask {
 	
 	public TaskListTask() {
-		super(0, 20 * 60);
+		super(0, 20 * 60, true);
 	}
 
 	@Override

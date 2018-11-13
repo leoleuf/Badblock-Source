@@ -20,7 +20,7 @@ public class SnowmanTask extends CustomTask {
 	private int					 max 		= 16;
 
 	public SnowmanTask() {
-		super(0, 20 * 30);
+		super(0, 20 * 30, true);
 	}
 
 	@Override

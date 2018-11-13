@@ -10,6 +10,9 @@ import com.google.gson.Gson;
 import fr.badblock.bukkit.hub.v1.BadBlockHub;
 import fr.badblock.bukkit.hub.v1.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.hub.v1.inventories.ServerJoinerVillager;
+import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
+import fr.badblock.bukkit.hub.v1.inventories.selector.submenus.inventories.BedWarsChooserInventory;
+import fr.badblock.bukkit.hub.v1.inventories.selector.submenus.inventories.SkyBlockChooserInventory;
 import fr.badblock.bukkit.hub.v1.listeners._HubListener;
 import fr.badblock.bukkit.hub.v1.objects.HubPlayer;
 import fr.badblock.bukkit.hub.v1.utils.pnj.NPCData;
@@ -60,11 +63,21 @@ public class PlayerFakeEntityInteractListener extends _HubListener {
 		
 		if (serverJoinerVillager.getServerName() != null && !serverJoinerVillager.getServerName().isEmpty())
 		{
+			if (serverJoinerVillager.getServerName().equalsIgnoreCase("skyb"))
+			{
+				CustomInventory.get(SkyBlockChooserInventory.class).open(player);
+				return;
+			}
 			player.sendMessage("§aTéléportation (" + serverJoinerVillager.getServerName() + ")...");
 			player.sendPlayer(serverJoinerVillager.getServerName());
 		}
 		else
 		{
+			if (serverJoinerVillager.getQueueName().equalsIgnoreCase("bedwars"))
+			{
+				CustomInventory.get(BedWarsChooserInventory.class).open(player);
+				return;
+			}
 			player.sendMessage("§aTéléportation en jeu (" + serverJoinerVillager.getQueueName() + ")...");
 			BadBlockHub instance = BadBlockHub.getInstance();
 			RabbitService service = instance.getRabbitService();

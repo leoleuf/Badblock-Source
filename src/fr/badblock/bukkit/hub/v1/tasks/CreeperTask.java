@@ -20,7 +20,7 @@ public class CreeperTask extends CustomTask {
 	private int					 max 		= 2;
 
 	public CreeperTask() {
-		super(0, 20);
+		super(0, 20, true);
 	}
 
 	@Override

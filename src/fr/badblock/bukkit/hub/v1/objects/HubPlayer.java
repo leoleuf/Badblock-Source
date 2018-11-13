@@ -16,9 +16,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -30,6 +29,7 @@ import fr.badblock.bukkit.hub.v1.BadBlockHub;
 import fr.badblock.bukkit.hub.v1.effectlib.Effect;
 import fr.badblock.bukkit.hub.v1.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
+import fr.badblock.bukkit.hub.v1.inventories.connect.ConnectInventory;
 import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.chests.objects.ChestLoader;
 import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.chests.objects.ChestOpener;
 import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.chests.objects.CustomChest;
@@ -39,6 +39,8 @@ import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.mounts.defaults.Mo
 import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.particles.defaults.ParticleItem;
 import fr.badblock.bukkit.hub.v1.inventories.market.cosmetics.particles.utils.Wings;
 import fr.badblock.bukkit.hub.v1.inventories.market.ownitems.OwnableItem;
+import fr.badblock.bukkit.hub.v1.listeners.players.DoubleJumpListener;
+import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.ReconnectionInvitationsListener;
 import fr.badblock.game.core18R3.players.GameBadblockPlayer;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.databases.SQLRequestType;
@@ -57,6 +59,10 @@ import fr.badblock.gameapi.utils.threading.TaskManager;
 import fr.badblock.gameapi.utils.threading.TempScheduler;
 import lombok.Getter;
 import lombok.Setter;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 @Getter
 @Setter
@@ -183,76 +189,89 @@ public class HubPlayer implements InGameData {
 				player.saveGameData();
 			}
 		}
-		
+
+		// Reconnection
+		if (ReconnectionInvitationsListener.getReconnections().containsKey(player.getName().toLowerCase()))
+		{
+			String serverName = ReconnectionInvitationsListener.getReconnections().get(player.getName());
+
+			TextComponent message = new TextComponent("");
+			StringBuilder stringBuilder = new StringBuilder();
+			Iterator<String> iterator = Arrays
+					.asList(new TranslatableString("hub.reconnectserver.info", player.getName(), serverName).get(player))
+					.iterator();
+			while (iterator.hasNext()) {
+				String msg = iterator.next();
+				stringBuilder.append(msg + (iterator.hasNext() ? System.lineSeparator() : ""));
+			}
+			message.setText(stringBuilder.toString());
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reconnect"));
+			message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+					new ComponentBuilder(new TranslatableString("hub.reconnectserver.info_hover",
+							player.getGroupPrefix().getAsLine(player) + player.getName()).getAsLine(player))
+					.create()));
+			player.spigot().sendMessage(message);
+		}
+
 		BadBlockHub hub = BadBlockHub.getInstance();
 		final TempScheduler tempScheduler0 = new TempScheduler();
 		tempScheduler0.task = TaskManager.scheduleSyncRepeatingTask("hub_" + player.getName() + "_" + player.getEntityId(), new Runnable() {
-			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
-				if (player == null || !player.isOnline()) {
-					TaskManager.taskList.remove("hub_" + player.getName() + "_" + player.getEntityId());
-					tempScheduler0.task.cancel();
-					return;
-				}
-				if (lastMove < System.currentTimeMillis()) {
-					/*if (player.getPlayerData().getBadcoins() <= 0 && player.getPlayerData().getLevel() <= 1 && player.getPlayerData().getXp() <= 0) {
-						player.kickPlayer("§cVous êtes resté trop longtemps inactif sur le hub.");
-					}*/
-				}
-				if (getLastVipCuboid() != -1 && getLastVipCuboid() < System.currentTimeMillis()) {
-					setLastVipCuboid(-1);
-					hub.getNpcxMalware().setHeadYaw(hub.getNpcxMalwareNormal().getYaw());
-					hub.getNpcLeLanN().setHeadYaw(hub.getNpcLeLanNNormal().getYaw());
-					hub.getVipPortalCuboid().getBlocks().parallelStream()
-					.filter(block -> block.getType().equals(Material.AIR))
-					.forEach(block -> player.sendBlockChange(block.getLocation(), Material.AIR, (byte) 0));
-				}
-				// Vérification du dernier coffre gratuit
-				for (CustomChestType chestType : ChestLoader.getInstance().getChests()) {
-					if (chestType.getGiveEachSeconds() <= -1) continue;
-					HubStoredPlayer hubStoredPlayer = HubStoredPlayer.get(player);
-					boolean has = false;
-					for (CustomChest customChest : hubStoredPlayer.getChests())
-						if (customChest.getTypeId() == chestType.getId() && !customChest.isOpened()) 
-							has = true;
-					if (has) continue;
-					if (!hubStoredPlayer.getLastGivenChests().containsKey(chestType.getId()) || (hubStoredPlayer.getLastGivenChests().containsKey(chestType.getId()) && hubStoredPlayer.getLastGivenChests().get(chestType.getId()) + (chestType.getGiveEachSeconds() * 1000L) < System.currentTimeMillis())) {
-						hubStoredPlayer.getLastGivenChests().put(chestType.getId(), System.currentTimeMillis());
-						hubStoredPlayer.getChests().add(new CustomChest(chestType.getId(), false));
-						player.sendTranslatedMessage("hub.chests.youhavereceivednewchest", player.getTranslatedMessage("hub.chests." + chestType.getId() + ".name")[0]);
-						player.saveData();
-						player.saveGameData();
-					}
-				}
-				GameAPI.getAPI().getSqlDatabase().call("SELECT id, xp, badcoins FROM debts WHERE playerName = '" + HubPlayer.getRealName(player) + "'", SQLRequestType.QUERY, new Callback<ResultSet>() {
-
+				new Thread()
+				{
 					@Override
-					public void done(ResultSet result, Throwable error) {
-						try {
-							boolean a = false;
-							while (result.next()) {
-								GameAPI.getAPI().getSqlDatabase().createStatement().executeUpdate("DELETE FROM debts WHERE id = '" + result.getLong("id") + "'");	
-								if (result.getLong("badcoins") > 0) {
-									player.getPlayerData().addBadcoins(result.getInt("badcoins"), false);
-								}
-								if (result.getLong("xp") > 0) {
-									player.getPlayerData().addXp(result.getInt("xp"), false);
-									a = true;
-								}
-							}
-							if (a) {
-								player.saveGameData();
-								if (player.getCustomObjective() != null)
-									player.getCustomObjective().generate();
-
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
+					public void run()
+					{
+						if (player == null || !player.isOnline()) {
+							TaskManager.taskList.remove("hub_" + player.getName() + "_" + player.getEntityId());
+							tempScheduler0.task.cancel();
+							return;
 						}
-					}
 
-				});
+						// Vérification du dernier coffre gratuit
+						for (CustomChestType chestType : ChestLoader.getInstance().getChests()) {
+							if (chestType.getGiveEachSeconds() <= -1) continue;
+							HubStoredPlayer hubStoredPlayer = HubStoredPlayer.get(player);
+							boolean has = false;
+							for (CustomChest customChest : hubStoredPlayer.getChests())
+								if (customChest.getTypeId() == chestType.getId() && !customChest.isOpened()) 
+									has = true;
+							if (has) continue;
+							if (!hubStoredPlayer.getLastGivenChests().containsKey(chestType.getId()) || (hubStoredPlayer.getLastGivenChests().containsKey(chestType.getId()) && hubStoredPlayer.getLastGivenChests().get(chestType.getId()) + (chestType.getGiveEachSeconds() * 1000L) < System.currentTimeMillis())) {
+								hubStoredPlayer.getLastGivenChests().put(chestType.getId(), System.currentTimeMillis());
+								hubStoredPlayer.getChests().add(new CustomChest(chestType.getId(), false));
+								player.sendTranslatedMessage("hub.chests.youhavereceivednewchest", player.getTranslatedMessage("hub.chests." + chestType.getId() + ".name")[0]);
+								player.saveGameData();
+							}
+						}
+						GameAPI.getAPI().getSqlDatabase().call("SELECT id, xp, badcoins FROM debts WHERE playerName = '" + HubPlayer.getRealName(player) + "'", SQLRequestType.QUERY, new Callback<ResultSet>() {
+
+							@Override
+							public void done(ResultSet result, Throwable error) {
+								try {
+									boolean a = false;
+									while (result.next()) {
+										GameAPI.getAPI().getSqlDatabase().createStatement().executeUpdate("DELETE FROM debts WHERE id = '" + result.getLong("id") + "'");	
+										if (result.getLong("badcoins") > 0) {
+											player.getPlayerData().addBadcoins(result.getInt("badcoins"), false);
+										}
+										if (result.getLong("xp") > 0) {
+											player.getPlayerData().addXp(result.getInt("xp"), false);
+											a = true;
+										}
+									}
+									if (a) {
+										player.saveGameData();
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+
+						});
+					}
+				}.start();
 			}
 		}, 1, 5 * 300);
 		HubStoredPlayer hubStoredPlayer = HubStoredPlayer.get(player);
@@ -278,7 +297,7 @@ public class HubPlayer implements InGameData {
 				{
 					player.showFloatingText(entry.getValue().getAsLine(player), entry.getKey(), 20 * 15, 0);
 				}
-				
+
 				BadblockPlayer bbPlayer = player;
 				if (scoreboard != null)
 				{
@@ -346,16 +365,6 @@ public class HubPlayer implements InGameData {
 				});
 			}
 		}, 5);
-		TaskManager.scheduleAsyncRepeatingTask(player.getName() + "_objective", new Runnable() {
-			@Override
-			public void run() {
-				if (!player.isOnline())
-				{
-					TaskManager.cancelTaskByName(player.getName() + "_objective");
-					return;
-				}
-			}
-		}, 20, 20);
 		TempScheduler tempScheduler3 = new TempScheduler();
 		tempScheduler3.task = TaskManager.scheduleSyncRepeatingTask(player.getName() + "_funmode", new Runnable() {
 			@SuppressWarnings("deprecation")
@@ -444,20 +453,70 @@ public class HubPlayer implements InGameData {
 				}
 			}
 		}, 1, 20);
-		/*TempScheduler tempScheduler4 = new TempScheduler();
-		tempScheduler4.task = TaskManager.scheduleSyncRepeatingTask(player.getName() + "_halloween", new Runnable() {
+
+		TempScheduler tempScheduler4 = new TempScheduler();
+		tempScheduler4.task = TaskManager.scheduleSyncRepeatingTask(player.getName() + "_connect", new Runnable() {
 			@Override
 			public void run() {
 				if (player == null || !player.isOnline()) {
-					TaskManager.taskList.remove(player.getName() + "_halloween");
+					TaskManager.taskList.remove(player.getName() + "_connect");
 					tempScheduler4.task.cancel();
 					return;
 				}
-				player.playSound(Sound.AMBIENCE_CAVE);
+
+				HubStoredPlayer hsp = HubStoredPlayer.get(player);
+
+				if (hsp.connectInventory)
+				{
+					TaskManager.taskList.remove(player.getName() + "_connect");
+					tempScheduler4.task.cancel();
+					return;
+				}
+
+				if (getCurrentInventory() != null && !getCurrentInventory().getName().equalsIgnoreCase("hub.items.connectinventory.name"))
+				{
+					return;
+				}
+
+				CustomInventory.get(ConnectInventory.class).open(player);
 			}
-		}, 20 * 5, 20 * 30);*/
+		}, 1, 20 * 1);
+
+		Bukkit.getScheduler().runTaskLater(BadBlockHub.getInstance(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (!player.isOnline())
+				{
+					return;
+				}
+				
+				if (!player.hasPermission("hub.fly"))
+				{
+					player.playSound(player.getLocation(), Sound.HORSE_DEATH);
+					player.sendMessage(" ");
+					player.sendMessage(" §cVous ne pouvez pas Fly au hub.");
+					player.sendMessage(" §cVous devez acquérir un grade §6§lLegend §cpour fly au Hub.");
+					player.sendMessage(" ");
+					return;
+				}
+
+				DoubleJumpListener.fly.add(player.getName().toLowerCase());
+				
+				player.playSound(player.getLocation(), Sound.HORSE_GALLOP);
+				player.setAllowFlight(true);
+				player.sendMessage(" ");
+				player.sendMessage(" §aVotre mode SuperMaaan! a été activé.");
+				player.sendMessage(" §eL'élite, c'est les gens qui ont le grade §6§lLegend§e.");
+				player.sendMessage(" ");
+				player.sendMessage(" §dMentionnez @BadBlockGame sur Twitter pour demander un follow");
+				player.sendMessage(" §fID de votre demande = BDC-" + player.getName());
+				player.sendMessage(" ");
+			}
+		}, 20);
 	}
-	
+
 	public void use() {
 		long time = System.currentTimeMillis();
 		this.setAntiSpamClicked(time + 500);

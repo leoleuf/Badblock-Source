@@ -1,6 +1,8 @@
 package fr.badblock.bukkit.hub.v1.listeners.players;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Effect;
@@ -22,6 +24,8 @@ public class DoubleJumpListener extends _HubListener {
 	public Map<String, Integer> timesJumped = new HashMap<>();
 	public Map<String, Long>    lastTime    = new HashMap<>();
 
+	public static List<String> fly = new ArrayList<>();
+	
 	@EventHandler
 	public void join(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
@@ -35,6 +39,12 @@ public class DoubleJumpListener extends _HubListener {
 	@EventHandler
 	public void setFlyOnJump(PlayerToggleFlightEvent event) {
 		BadblockPlayer player = (BadblockPlayer) event.getPlayer();
+		
+		if (fly.contains(player.getName().toLowerCase()))
+		{
+			return;
+		}
+		
 		Vector jump = player.getLocation().getDirection().multiply(1.5).setY(1);
 
 		if(event.isFlying() && event.getPlayer().getGameMode() != GameMode.CREATIVE)

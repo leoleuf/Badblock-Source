@@ -17,7 +17,7 @@ public class BossBarTask extends CustomTask {
 	public boolean  reverse;
 	
 	public BossBarTask() {
-		super(0, 1);
+		super(0, 1, true);
 	}
 
 	@Override

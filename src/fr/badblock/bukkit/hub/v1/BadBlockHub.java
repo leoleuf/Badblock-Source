@@ -17,6 +17,7 @@ import fr.badblock.bukkit.hub.v1.commands.AuthRemoveCommand;
 import fr.badblock.bukkit.hub.v1.commands.HubGiveCommand;
 import fr.badblock.bukkit.hub.v1.commands.NPCCommand;
 import fr.badblock.bukkit.hub.v1.commands.RaceCommand;
+import fr.badblock.bukkit.hub.v1.commands.ReconnectCommand;
 import fr.badblock.bukkit.hub.v1.commands.SignCommand;
 import fr.badblock.bukkit.hub.v1.commands.SpawnCommand;
 import fr.badblock.bukkit.hub.v1.effectlib.EffectManager;
@@ -79,6 +80,8 @@ import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.BoosterUpdateListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.BungeeWorkerListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.DevPacketListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.HubPacketListener;
+import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.ReconnectionInvitationsListener;
+import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.RemoveReconnectionInvitationsListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.SEntryInfosListener;
 import fr.badblock.bukkit.hub.v1.rabbitmq.listeners.WorkerListener;
 import fr.badblock.bukkit.hub.v1.tasks.BossBarTask;
@@ -200,6 +203,8 @@ public class BadBlockHub extends BadblockPlugin {
 		new DevPacketListener();
 		new BoosterUpdateListener();
 		new BungeeWorkerListener();
+		new ReconnectionInvitationsListener();
+		new RemoveReconnectionInvitationsListener();
 		new WorkerListener();
 		// kamoulox
 		Bukkit.getScheduler().runTaskLater(BadBlockHub.getInstance(), new Runnable()
@@ -291,6 +296,7 @@ public class BadBlockHub extends BadblockPlugin {
 		this.setVipPushCuboid(new CuboidSelection(loc1, loc2));
 		// Commands
 		new SignCommand();
+		new ReconnectCommand();
 		new NPCCommand();
 		new HubGiveCommand();
 		new AdminCommand();

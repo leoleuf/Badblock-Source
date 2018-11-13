@@ -7,7 +7,7 @@ import org.bukkit.entity.EntityType;
 public class DropsTask extends CustomTask {
 
 	public DropsTask() {
-		super(0, 20);
+		super(0, 20, true);
 	}
 
 	@Override

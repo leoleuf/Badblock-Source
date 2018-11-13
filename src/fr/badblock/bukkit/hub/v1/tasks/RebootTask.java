@@ -1,6 +1,6 @@
 package fr.badblock.bukkit.hub.v1.tasks;
 
-import java.util.Random;
+import java.util.Calendar;
 
 import org.bukkit.Bukkit;
 
@@ -10,12 +10,15 @@ import fr.badblock.gameapi.utils.threading.TaskManager;
 
 public class RebootTask extends CustomTask {
 
-	private long	time  = -1;
-	private long	boot  = System.currentTimeMillis();
-	private long    max   = (new Random().nextInt(600) + 3600) * 1000;
+	private long	time  = 52;
 
 	public RebootTask() {
-		super(20, 20);
+		super(20, 20, true);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.set(Calendar.DATE, 1);
+		calendar.set(Calendar.HOUR_OF_DAY, 5);
+		time = (calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000;
 	}
 
 	@Override
@@ -50,7 +53,7 @@ public class RebootTask extends CustomTask {
 				}, 200);
 				return;
 			}
-			System.out.println(time + " / " + boot + " / " + System.currentTimeMillis() + " / " + max + " / " + (System.currentTimeMillis() - boot));
+			System.out.println(time + " / " + System.currentTimeMillis());
 			if (time != -1 && time > 0) time--;
 			if (time == 900 || time == 600 || time == 300 || time == 120 || time == 60 || time == 30 || time == 15
 					|| time == 10 || time == 5 || time == 4 || time == 3 || time == 2 || time == 1) {
@@ -68,9 +71,6 @@ public class RebootTask extends CustomTask {
 					GameAPI.i18n().broadcast("hub.reboot.reboot_second");
 				}
 				return;
-			}
-			if (System.currentTimeMillis() - boot >= max && time == -1) {
-				time = 905;
 			}
 	}
 

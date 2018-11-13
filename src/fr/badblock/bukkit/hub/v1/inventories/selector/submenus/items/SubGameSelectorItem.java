@@ -57,6 +57,10 @@ public abstract class SubGameSelectorItem extends CustomItem {
 				}
 				int waitingLinePlayersInt = GameSelectorItem.waitingLinePlayers.get(getGame());
 				int inGamePlayersInt = GameSelectorItem.inGamePlayers.get(getGame());
+				if (inGamePlayersInt < 50)
+				{
+					return;
+				}
 				if (lastRefresh < timestamp)
 				{
 					if (waitingLinePlayersInt == tempWaitingLinePlayers && inGamePlayersInt == tempInGamePlayers)

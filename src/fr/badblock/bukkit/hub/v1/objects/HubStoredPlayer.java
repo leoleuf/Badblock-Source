@@ -61,6 +61,7 @@ public class HubStoredPlayer implements GameData {
 	public Set<String> properties;
 	public String	   lastLocation;
 	public long		   maxLastLocationTime;
+	public boolean connectInventory;
 
 	public HubStoredPlayer() {
 		this.setHubChat(true);

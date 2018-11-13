@@ -1,7 +1,5 @@
 package fr.badblock.bukkit.hub.v1.listeners.players;
 
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -9,10 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import fr.badblock.bukkit.hub.v1.BadBlockHub;
-import fr.badblock.bukkit.hub.v1.inventories.LinkedInventoryEntity;
-import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
 import fr.badblock.bukkit.hub.v1.inventories.join.PlayerCustomInventory;
-import fr.badblock.bukkit.hub.v1.inventories.selector.SelectorInventory;
 import fr.badblock.bukkit.hub.v1.listeners._HubListener;
 import fr.badblock.bukkit.hub.v1.objects.HubPlayer;
 import fr.badblock.bukkit.hub.v1.objects.HubScoreboard;
@@ -41,7 +36,7 @@ public class PlayerJoinListener extends _HubListener {
 		player.setMaxHealth(20D);
 		player.setHealth(20D);
 		player.setWalkSpeed(0.4F);
-		player.setGameMode(GameMode.SURVIVAL);
+		player.setGameMode(GameMode.ADVENTURE);
 		//player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, Integer.MAX_VALUE, 0));
 		PlayerCustomInventory.give(player);
 		System.out.println("[HUB] Loaded " + player.getName() + ".");

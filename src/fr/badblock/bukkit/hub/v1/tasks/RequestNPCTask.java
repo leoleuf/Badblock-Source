@@ -28,7 +28,7 @@ public class RequestNPCTask extends CustomTask {
 	public static boolean work;
 
 	public RequestNPCTask() {
-		super(0, 20);
+		super(0, 20, false);
 	}
 
 	@Override

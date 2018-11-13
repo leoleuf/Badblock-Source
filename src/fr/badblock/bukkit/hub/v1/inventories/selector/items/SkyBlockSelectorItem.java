@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.actions.ItemAction;
+import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
+import fr.badblock.bukkit.hub.v1.inventories.selector.submenus.inventories.SkyBlockChooserInventory;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.run.BadblockGame;
 
@@ -15,6 +17,7 @@ public class SkyBlockSelectorItem extends GameSelectorItem {
 	public SkyBlockSelectorItem() {
 		// super("§bSkyBlock", Material.GRASS);
 		super("hub.items.skyblockselectoritem", Material.GRASS, "hub.items.skyblockselectoritem.lore");
+		this.setFakeEnchantment(true);
 	}
 
 	@Override
@@ -25,14 +28,15 @@ public class SkyBlockSelectorItem extends GameSelectorItem {
 
 	@Override
 	public List<String> getGames() {
-		return Arrays.asList("skyb");
+		return Arrays.asList("skyb", "skyb2");
 	}
 
 	@Override
 	public void onClick(BadblockPlayer player, ItemAction itemAction, Block clickedBlock) {
-		player.sendPlayer("skyb");
-		player.sendMessage("§b➤ §7Téléportation §7en §bSkyBlock§7...");
+		/*player.sendPlayer("skyb");
+		player.sendMessage("§b➤ §7Téléportation §7en §bSkyBlock§7...");*/
 		player.closeInventory();
+		CustomInventory.get(SkyBlockChooserInventory.class).open(player);
 	}
 
 	@Override

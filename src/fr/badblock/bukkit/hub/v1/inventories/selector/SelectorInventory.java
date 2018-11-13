@@ -1,6 +1,7 @@
 package fr.badblock.bukkit.hub.v1.inventories.selector;
 
 import fr.badblock.bukkit.hub.v1.inventories.abstracts.inventories.CustomInventory;
+import fr.badblock.bukkit.hub.v1.inventories.selector.items.BedWarsSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.FreeBuildSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.GoogleAuthSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.HubChangerSelectorItem;
@@ -12,7 +13,6 @@ import fr.badblock.bukkit.hub.v1.inventories.selector.items.SkyBlockSelectorItem
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.SpaceBallsSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.SpawnSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.SpeedUHCSelectorItem;
-import fr.badblock.bukkit.hub.v1.inventories.selector.items.TowerRunSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.TowerSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.selector.items.VIPZoneSelectorItem;
 import fr.badblock.bukkit.hub.v1.inventories.settings.items.BlueStainedGlassPaneItem;
@@ -28,7 +28,7 @@ public class SelectorInventory extends CustomInventory {
 		this.setItem(4, new GoogleAuthSelectorItem());
 		this.setItem(8, new VIPZoneSelectorItem());
 		//this.setItem(20, new ShootFlagSelectorItem());
-		this.setItem(20, new TowerRunSelectorItem());
+		this.setItem(20, new BedWarsSelectorItem());
 		this.setItem(21, new TowerSelectorItem());
 		this.setItem(22, new RushSelectorItem());
 		this.setItem(23, new SpeedUHCSelectorItem());

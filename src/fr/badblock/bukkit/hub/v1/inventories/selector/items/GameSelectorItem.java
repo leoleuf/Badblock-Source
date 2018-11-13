@@ -77,6 +77,10 @@ public abstract class GameSelectorItem extends CustomItem {
 						return;
 					}
 				}
+				if (inGamePlayersInt < 50)
+				{
+					return;
+				}
 				if (lastRefresh < timestamp)
 				{
 					if (waitingLinePlayersInt > tempWaitingLinePlayers) waitingLinePlayersInt--;
@@ -109,7 +113,7 @@ public abstract class GameSelectorItem extends CustomItem {
 					}
 				}
 			}
-		}, 1, 1);
+		}, 20 * 30, 20 * 30);
 	}
 
 	static <K,V extends Comparable<? super V>> List<Entry<K, V>> entriesSortedByValues(Map<K,V> map)

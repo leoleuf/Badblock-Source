@@ -22,7 +22,7 @@ public class RequestSignsTask extends CustomTask {
 	public static boolean work;
 
 	public RequestSignsTask() {
-		super(0, 20);
+		super(0, 20, false);
 	}
 
 	@Override

@@ -63,11 +63,12 @@ public class LinkedInventoryEntity {
 	}
 
 	public static void load() {
-		createAndAssign("gamepnj.tower", EntityType.ZOMBIE, WatcherVillager.class, "hub.gamepnj.tower", new ServerJoinerVillager(null, "tower"));
+		createAndAssign("gamepnj.tower", EntityType.ZOMBIE, WatcherVillager.class, "hub.gamepnj.tower", new ServerJoinerVillager(null, "tower2v2"));
 		createAndAssign("gamepnj.towerrun", EntityType.ZOMBIE, WatcherVillager.class, "hub.gamepnj.towerrun", new ServerJoinerVillager(null, "towerE"));
 		createAndAssign("gamepnj.rush", EntityType.VILLAGER, WatcherVillager.class, "hub.gamepnj.rush", new ServerJoinerVillager(null, "rush2v2"));
 		createAndAssign("gamepnj.spaceballs", EntityType.CREEPER, WatcherVillager.class, "hub.gamepnj.spaceballs", new ServerJoinerVillager(null, "sb4v4"));
 		createAndAssign("gamepnj.speeduhc", EntityType.BLAZE, WatcherVillager.class, "hub.gamepnj.speeduhc", new ServerJoinerVillager(null, "speeduhct"));
+		createAndAssign("gamepnj.bedwars", EntityType.VILLAGER, WatcherVillager.class, "hub.gamepnj.bedwars", new ServerJoinerVillager(null, "bedwars"));
 		createAndAssign("gamepnj.skyb", EntityType.VILLAGER, WatcherVillager.class, "hub.gamepnj.skyb", new ServerJoinerVillager("skyb", null));
 		createAndAssign("gamepnj.faction", EntityType.SKELETON, WatcherSkeleton.class, "hub.gamepnj.faction", new ServerJoinerVillager("faction", null));
 		createAndAssign("gamepnj.box", EntityType.CREEPER, WatcherCreeper.class, "hub.gamepnj.box", new ServerJoinerVillager("box", null));
