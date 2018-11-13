@@ -2,8 +2,10 @@ package fr.badblock.bukkit.games.bedwars.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,9 +40,10 @@ import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 
 public class DeathListener extends BadListener {
-	
+
 	List<Player> shears = new ArrayList<>();
-	
+	Map<ItemStack, Player> respawnItems = new HashMap<>();
+
 	@EventHandler
 	public void onDeath(NormalDeathEvent e){
 		death(e, e.getPlayer(), null, e.getLastDamageCause());
@@ -124,14 +127,166 @@ public class DeathListener extends BadListener {
 				respawnPlace = killer.getLocation();
 			}
 		} else {
-			
+
 			e.setTimeBeforeRespawn(3);
-			
+
 			if (!shears.contains(player) && player.getInventory().contains(Material.SHEARS))
 			{
 				shears.add(player);
 			}
+
+			if (player.getInventory().contains(Material.DIAMOND_PICKAXE))
+			{
+				respawnItems.put(new ItemStack(Material.IRON_PICKAXE, 1), player);
+				e.getDrops().remove(getItemStack(player, Material.DIAMOND_PICKAXE));
+			}
+			else if (player.getInventory().contains(Material.IRON_PICKAXE))
+			{
+				respawnItems.put(new ItemStack(Material.STONE_PICKAXE, 1), player);
+				e.getDrops().remove(getItemStack(player, Material.IRON_PICKAXE));
+			}
+			else if (player.getInventory().contains(Material.STONE_PICKAXE))
+			{
+				respawnItems.put(new ItemStack(Material.STONE_PICKAXE, 1), player);
+				e.getDrops().remove(getItemStack(player, Material.STONE_PICKAXE));
+			}
+
+			if (player.getInventory().contains(Material.WOOD_SWORD))
+			{
+				respawnItems.put(new ItemStack(Material.WOOD_SWORD, 1), player);
+				e.getDrops().remove(getItemStack(player, Material.WOOD_SWORD));
+			}
 			
+			if (player.getInventory().contains(Material.STONE_SWORD))
+			{
+				respawnItems.put(getItemStack(player, Material.STONE_SWORD).clone(), player);
+				e.getDrops().remove(getItemStack(player, Material.STONE_SWORD));
+			}
+			
+			if (player.getInventory().contains(Material.IRON_SWORD))
+			{
+				respawnItems.put(getItemStack(player, Material.IRON_SWORD).clone(), player);
+				e.getDrops().remove(getItemStack(player, Material.IRON_SWORD));
+			}
+			
+			if (player.getInventory().contains(Material.GOLD_SWORD))
+			{
+				respawnItems.put(getItemStack(player, Material.GOLD_SWORD).clone(), player);
+				e.getDrops().remove(getItemStack(player, Material.GOLD_SWORD));
+			}
+			
+			if (player.getInventory().contains(Material.DIAMOND_SWORD))
+			{
+				respawnItems.put(getItemStack(player, Material.DIAMOND_SWORD).clone(), player);
+				e.getDrops().remove(getItemStack(player, Material.DIAMOND_SWORD));
+			}
+
+			if (player.getInventory().contains(Material.DIAMOND_AXE))
+			{
+				respawnItems.put(new ItemStack(Material.IRON_AXE, 1), player);
+				e.getDrops().remove(getItemStack(player, Material.DIAMOND_AXE));
+			}
+			else if (player.getInventory().contains(Material.IRON_AXE))
+			{
+				respawnItems.put(new ItemStack(Material.STONE_AXE, 1), player);
+				e.getDrops().remove(getItemStack(player, Material.IRON_AXE));
+			}
+			else if (player.getInventory().contains(Material.STONE_AXE))
+			{
+				respawnItems.put(new ItemStack(Material.STONE_AXE, 1), player);
+				e.getDrops().remove(getItemStack(player, Material.STONE_AXE));
+			}
+
+			if (player.getInventory().contains(Material.COMPASS))
+			{
+				respawnItems.put(getItemStack(player, Material.COMPASS).clone(), player);
+				e.getDrops().remove(getItemStack(player, Material.COMPASS));
+			}
+
+			if (player.getInventory().getHelmet() != null && !player.getInventory().getHelmet().getType().equals(Material.AIR))
+			{
+				respawnItems.put(player.getInventory().getHelmet().clone(), player);
+				Iterator<ItemStack> iterator = e.getDrops().iterator();
+				while (iterator.hasNext())
+				{
+					ItemStack c = iterator.next();
+					if (c == null)
+					{
+						continue;
+					}
+
+					if (!player.getInventory().getHelmet().getType().equals(c.getType()))
+					{
+						continue;
+					}
+
+					iterator.remove();
+				}
+			}
+
+			if (player.getInventory().getChestplate() != null && !player.getInventory().getChestplate().getType().equals(Material.AIR))
+			{
+				respawnItems.put(player.getInventory().getChestplate().clone(), player);
+				Iterator<ItemStack> iterator = e.getDrops().iterator();
+				while (iterator.hasNext())
+				{
+					ItemStack c = iterator.next();
+					if (c == null)
+					{
+						continue;
+					}
+
+					if (!player.getInventory().getChestplate().getType().equals(c.getType()))
+					{
+						continue;
+					}
+
+					iterator.remove();
+				}
+			}
+
+			if (player.getInventory().getLeggings() != null && !player.getInventory().getLeggings().getType().equals(Material.AIR))
+			{
+				respawnItems.put(player.getInventory().getLeggings().clone(), player);
+				Iterator<ItemStack> iterator = e.getDrops().iterator();
+				while (iterator.hasNext())
+				{
+					ItemStack c = iterator.next();
+					if (c == null)
+					{
+						continue;
+					}
+
+					if (!player.getInventory().getLeggings().getType().equals(c.getType()))
+					{
+						continue;
+					}
+
+					iterator.remove();
+				}
+			}
+
+			if (player.getInventory().getBoots() != null && !player.getInventory().getBoots().getType().equals(Material.AIR))
+			{
+				respawnItems.put(player.getInventory().getBoots().clone(), player);
+				Iterator<ItemStack> iterator = e.getDrops().iterator();
+				while (iterator.hasNext())
+				{
+					ItemStack c = iterator.next();
+					if (c == null)
+					{
+						continue;
+					}
+
+					if (!player.getInventory().getBoots().getType().equals(c.getType()))
+					{
+						continue;
+					}
+
+					iterator.remove();
+				}
+			}
+
 			respawnPlace = player.getTeam().teamData(BedWarsTeamData.class).getRespawnLocation();
 
 			player.setMaxHealth(20 + player.getTeam().teamData(BedWarsTeamData.class).health);
@@ -145,6 +300,18 @@ public class DeathListener extends BadListener {
 
 		if(killer != null && killer.getType() == EntityType.PLAYER){
 			BadblockPlayer bKiller = (BadblockPlayer) killer;
+			if (last.equals(DamageCause.VOID))
+			{
+				for (ItemStack c : player.getInventory().getContents())
+				{
+					if (c != null && c.getType() != null && (c.getType().equals(Material.IRON_INGOT) || c.getType().equals(Material.GOLD_INGOT) ||
+							c.getType().equals(Material.DIAMOND) || c.getType().equals(Material.EMERALD)))
+					{
+						bKiller.getInventory().addItem(c);
+						e.getDrops().remove(c);
+					}
+				}
+			}
 			bKiller.getPlayerData().incrementStatistic("bedwars", BedWarsScoreboard.KILLS);
 			bKiller.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), BedWarsScoreboard.KILLS, 1);
 			bKiller.inGameData(BedWarsData.class).kills++;
@@ -156,43 +323,100 @@ public class DeathListener extends BadListener {
 		e.setRespawnPlace(respawnPlace);
 	}
 
+	public static ItemStack getItemStack(Player player, Material material)
+	{
+		for (ItemStack content : player.getInventory().getContents())
+		{
+			if (content != null && content.getType() != null && content.getType().equals(material))
+			{
+				return content;
+			}
+		}
+		return null;
+	}
+
 	@EventHandler
 	public void onRespawn(PlayerFakeRespawnEvent e){
 		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
 			e.getPlayer().getOpenInventory().setCursor(null);
 		PluginBedWars.getInstance().giveDefaultKit(e.getPlayer());
-		
+
 		if (shears.contains(e.getPlayer()))
 		{
 			e.getPlayer().getInventory().addItem(new ItemStack(Material.SHEARS, 1));
 		}
-		
+
 		BadblockTeam team = e.getPlayer().getTeam();
 		if (team == null)
 		{
 			return;
 		}
-		
+
 		BedWarsTeamData teamData = team.teamData(BedWarsTeamData.class);
-		
-		if (teamData.speed > 1)
+
+		if (teamData.speed > 0)
 		{
-			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, teamData.speed));
-		}
-		
-		if (teamData.speedMining > 1)
-		{
-			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, teamData.speedMining));
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, teamData.speed - 1));
 		}
 
-		if (teamData.strength > 1)
+		if (teamData.speedMining > 0)
 		{
-			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, teamData.strength));
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, teamData.speedMining - 1));
 		}
-		
-		if (teamData.protection > 1)
+
+		if (teamData.strength > 0)
 		{
-			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, teamData.protection));
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, teamData.strength - 1));
+		}
+
+		if (teamData.protection > 0)
+		{
+			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, teamData.protection - 1));
+		}
+
+		Iterator<Entry<ItemStack, Player>> iterator = respawnItems.entrySet().iterator();
+
+		while (iterator.hasNext())
+		{
+			Entry<ItemStack, Player> entry = iterator.next();
+
+			if (!entry.getValue().equals(e.getPlayer()))
+			{
+				continue;
+			}
+
+			iterator.remove();
+
+			boolean a = false;
+
+			if (entry.getKey().getType().name().toLowerCase().contains("helmet"))
+			{
+				a = true;
+				e.getPlayer().getInventory().setHelmet(entry.getKey());
+			}
+
+			if (entry.getKey().getType().name().toLowerCase().contains("chestplate"))
+			{
+				a = true;
+				e.getPlayer().getInventory().setChestplate(entry.getKey());
+			}
+
+			if (entry.getKey().getType().name().toLowerCase().contains("leggings"))
+			{
+				a = true;
+				e.getPlayer().getInventory().setLeggings(entry.getKey());
+			}
+
+			if (entry.getKey().getType().name().toLowerCase().contains("boots"))
+			{
+				a = true;
+				e.getPlayer().getInventory().setBoots(entry.getKey());
+			}
+
+			if (!a)
+			{
+				e.getPlayer().getInventory().addItem(entry.getKey());
+			}
 		}
 	}
 

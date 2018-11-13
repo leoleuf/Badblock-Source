@@ -32,6 +32,7 @@ public class BedWarsTeamData implements TeamData {
 	public int				  strengthenArmor;
 	public long			  slowDig;
 	public boolean	      trespassing;
+	public int				  sharpness;
 
 	public void load(BadConfiguration config){
 		firstBedPart 	    = config.getValue("bed", MapLocation.class, new MapLocation()).getHandle();

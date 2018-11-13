@@ -8,10 +8,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.badblock.bukkit.games.bedwars.BedWarsAchievementList;
@@ -42,9 +47,11 @@ import fr.badblock.gameapi.utils.general.TimeUnit;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 
 public class GameRunnable extends BukkitRunnable {
-	public static boolean damage = false;
 	public boolean forceEnd = false;
-	public static int    time 	= 0;
+	public static int    time 	= 60 * 30;
+	public static int	   size = 200;
+	public static int    doneTime = 0;
+	public static int    witherDeath = 60 * 3;
 
 	public GameRunnable(BedWarsMapConfiguration config){
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
@@ -53,32 +60,18 @@ public class GameRunnable extends BukkitRunnable {
 		Bukkit.getWorlds().forEach(world -> {
 			world.setTime(config.getTime());
 			world.getEntities().forEach(entity -> {
-				if(entity.getType() != EntityType.PLAYER)
+				if(entity.getType() != EntityType.PLAYER && !entity.getType().equals(EntityType.ARMOR_STAND))
 					entity.remove();
 			});
 		});
-		
-		for(SpawnableItem item : PluginBedWars.getInstance().getConfiguration().items){
-			new ItemSpawnRunnable(Material.matchMaterial(item.item), item.ticks).start();
-		}
 
 		if (!PluginBedWars.getInstance().getMapConfiguration().getAllowBows()) {
 			remove(Material.BOW);
 			remove(Material.ARROW);
 		}
 
-		new BlockRotationRunnable(PluginBedWars.getInstance().getMapConfiguration().getBlockRotations());
-
 		new TierRunnable();
 
-		for (MapFloatingText mapFloatingText : PluginBedWars.getInstance().getMapConfiguration().getFloatingTexts())
-		{
-			FloatingText floatingText = mapFloatingText.getHandle();
-			Location location = ConfigUtils.convertStringToLocation(floatingText.location);
-			String text = floatingText.text;
-			spawnNametag(location, text);
-		}
-		
 		LinkedInventoryEntity.load(PluginBedWars.getInstance().getMapConfiguration());
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
@@ -92,6 +85,8 @@ public class GameRunnable extends BukkitRunnable {
 
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
+		new TrackRunnable();
+
 	}
 
 	public static ArmorStand spawnNametag(Location location, String text) {
@@ -102,10 +97,10 @@ public class GameRunnable extends BukkitRunnable {
 		as.setCustomName(text); //Set this to the text you want
 		as.setCustomNameVisible(true); //This makes the text appear no matter if your looking at the entity or not
 		as.setVisible(false); //Makes the ArmorStand invisible
-		
+
 		return as;
-    }
-	
+	}
+
 	public static void handle(BadblockPlayer player) {
 		BadblockTeam team = player.getTeam();
 		if (team == null) return;
@@ -160,16 +155,28 @@ public class GameRunnable extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		GameAPI.setJoinable(GameRunnable.time < 900);
-		BukkitUtils.getPlayers().stream().filter(player -> player.getCustomObjective() != null).forEach(player -> player.getCustomObjective().generate());
-		if(time == 2){
-			damage = true;
+		doneTime++;
 
-			for(BadblockPlayer player : GameAPI.getAPI().getRealOnlinePlayers()){
-				if(player.getTeam() != null)
-					player.pseudoJail(player.getTeam().teamData(BedWarsTeamData.class).getRespawnLocation(), 300.0d);
+		if (doneTime == 2)
+		{
+
+			new BlockRotationRunnable(PluginBedWars.getInstance().getMapConfiguration().getBlockRotations());
+
+			for (MapFloatingText mapFloatingText : PluginBedWars.getInstance().getMapConfiguration().getFloatingTexts())
+			{
+				FloatingText floatingText = mapFloatingText.getHandle();
+				Location location = ConfigUtils.convertStringToLocation(floatingText.location);
+				String text = floatingText.text;
+				spawnNametag(location, text);
+			}
+
+			for(SpawnableItem item : PluginBedWars.getInstance().getConfiguration().items){
+				new ItemSpawnRunnable(Material.matchMaterial(item.item), item.ticks).start();
 			}
 		}
+
+		GameAPI.setJoinable(GameRunnable.time < 900);
+		BukkitUtils.getPlayers().stream().filter(player -> player.getCustomObjective() != null).forEach(player -> player.getCustomObjective().generate());
 
 		int size = GameAPI.getAPI().getTeams().size();
 
@@ -230,6 +237,7 @@ public class GameRunnable extends BukkitRunnable {
 									cancel();
 							}
 						}.runTaskTimer(GameAPI.getAPI(), 5L, 5L);
+						new TranslatableString("bedwars.team-win", winner.getChatName()).broadcast();
 						bp.sendTranslatedTitle("bedwars.title-win", winner.getChatName());
 						bp.getPlayerData().incrementStatistic("bedwars", BedWarsScoreboard.WINS);
 						bp.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), BedWarsScoreboard.WINS, 1);
@@ -320,7 +328,92 @@ public class GameRunnable extends BukkitRunnable {
 			return;
 		}
 
-		time++;
+		if (time > 0)
+		{
+			time--;
+			if (time == 0)
+			{
+				for (BadblockTeam team : GameAPI.getAPI().getTeams())
+				{
+					BedWarsTeamData td = team.teamData(BedWarsTeamData.class);
+					if (td == null)
+					{
+						continue;
+					}
+
+					if (td.getFirstBedPart() != null)
+					{
+						td.getFirstBedPart().getBlock().setType(Material.AIR);
+					}
+
+					if (td.getSecondBedPart() != null)
+					{
+						td.getSecondBedPart().getBlock().setType(Material.AIR);
+					}
+
+					td.broked(false, null);
+					WorldBorder wb = PluginBedWars.getInstance().getMapConfiguration().getSpawnLocation().getWorld().getWorldBorder();
+
+					wb.setCenter(PluginBedWars.getInstance().getMapConfiguration().getSpawnLocation());
+					wb.setWarningTime(3);
+					wb.setWarningDistance(2);
+					wb.setDamageAmount(0.5d);
+					wb.setSize(200 * 2, time);
+				}
+
+				BukkitUtils.getAllPlayers().forEach(player -> player.playSound(Sound.ENDERDRAGON_DEATH));
+				BukkitUtils.getAllPlayers().forEach(player -> player.sendTranslatedTitle("bedwars.suddendeath"));
+				BukkitUtils.getAllPlayers().forEach(player -> player.sendTranslatedMessage("bedwars.suddendeathchat"));
+			}
+		}
+		else
+		{
+			if (witherDeath > 0)
+			{
+				witherDeath--;
+			}
+			else
+			{
+				
+				if (witherDeath == 0)
+				{
+
+					// caca
+					for (BadblockPlayer poo : BukkitUtils.getAllPlayers())
+					{
+						poo.playSound(Sound.WITHER_DEATH);
+						BukkitUtils.getAllPlayers().forEach(player -> player.sendTranslatedTitle("bedwars.witherdeath"));
+						BukkitUtils.getAllPlayers().forEach(player -> player.sendTranslatedMessage("bedwars.witherdeathchat"));
+					}
+					
+					witherDeath = -1;
+				}
+				
+				for (BadblockPlayer po : BukkitUtils.getPlayers())
+				{
+					if (GameMode.SPECTATOR.equals(po.getGameMode()))
+					{
+						continue;
+					}
+
+					if (po.getTeam() == null)
+					{
+						continue;
+					}
+
+					po.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 20 * 10, 2));
+				}
+
+			}
+
+			WorldBorder wb = PluginBedWars.getInstance().getMapConfiguration().getSpawnLocation().getWorld().getWorldBorder();
+			wb.setCenter(PluginBedWars.getInstance().getMapConfiguration().getSpawnLocation());
+			wb.setWarningTime(3);
+			wb.setWarningDistance(2);
+			wb.setDamageAmount(0.5d);
+			size--;
+			wb.setSize(size * 2, 60);
+		}
 
 	}
 

@@ -76,12 +76,6 @@ public class BedListenerUtils {
 						BedWarsAchievementList.BEDWARS_BED_4,
 						BedWarsAchievementList.BEDWARS_BROKER);
 
-				player.getTeam().teamData(BedWarsTeamData.class).health+=4;
-				player.getTeam().getOnlinePlayers().forEach(pl -> {
-					pl.setMaxHealth(player.getMaxHealth() + 4);
-					pl.setHealth(player.getHealth() + 4);
-				});
-
 				for(Player bukkitPlayer : Bukkit.getOnlinePlayers()){
 					BadblockPlayer bPlayer = (BadblockPlayer) bukkitPlayer;
 					if (bPlayer.getCustomObjective() != null)

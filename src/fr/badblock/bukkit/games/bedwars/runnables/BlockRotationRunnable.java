@@ -28,16 +28,17 @@ public class BlockRotationRunnable extends BukkitRunnable {
 			BreakableBlock handle = block.getHandle();
 			Location location = ConfigUtils.convertStringToLocation(handle.location);
 			ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND); //Spawn the ArmorStands
-			
+
 			as.setGravity(false); //Make sure it doesn't fall
 			as.setCanPickupItems(false); //I'm not sure what happens if you leave this as it is, but you might as well disable it
 			as.setVisible(false); //Makes the ArmorStand invisible
-			
+
 			Material material = getMaterial(handle.material);
 			ItemStack item = new ItemStack(material, 1);
 			as.setHelmet(item);
-			
+
 			this.armorStands.put(as, material);
+			System.out.println("Spawn block rotation: " + location.toString());
 		}
 
 		this.runTaskTimer(GameAPI.getAPI(), 1, 1);
@@ -67,7 +68,17 @@ public class BlockRotationRunnable extends BukkitRunnable {
 			{
 				location.setYaw(-180);
 			}
-			location.setYaw(location.getYaw() + 4);
+			int speed = 3;
+			
+			if (entry.getValue().equals(Material.DIAMOND_BLOCK))
+			{
+				speed = 3 * TierRunnable.diamondTier;
+			}
+			else if (entry.getValue().equals(Material.EMERALD_BLOCK))
+			{
+				speed = 3 * TierRunnable.emeraldTier;
+			}
+			location.setYaw(location.getYaw() + speed);
 			armorStand.teleport(location);
 		}
 	}

@@ -19,12 +19,12 @@ import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 
 public class BedExplodeListener extends BadListener {
-	private Map<Block, UUID> placedTnts = new HashMap<>();
+	public static Map<Location, UUID> placedTnts = new HashMap<>();
 
 	@EventHandler
 	public void onPlaceBlock(BlockPlaceEvent e){
 		if(e.getBlock().getType() == Material.TNT){
-			placedTnts.put(e.getBlock(), e.getPlayer().getUniqueId());
+			placedTnts.put(e.getBlock().getLocation(), e.getPlayer().getUniqueId());
 		}
 		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
 		BadblockTeam team = player.getTeam();
@@ -42,10 +42,9 @@ public class BedExplodeListener extends BadListener {
 			if(e.blockList().get(i).getType() == Material.BED || e.blockList().get(i).getType() == Material.BED_BLOCK){
 				BadblockPlayer player = null;
 
-				for(Entry<Block, UUID> entries : placedTnts.entrySet()){
-					Block block = entries.getKey();
+				for(Entry<Location, UUID> entries : placedTnts.entrySet()){
 
-					Location blockLoc = block.getLocation().clone();
+					Location blockLoc = entries.getKey().clone();
 					Location tntLoc   = e.getEntity().getLocation().clone();
 
 					blockLoc.setY(0);
@@ -60,7 +59,7 @@ public class BedExplodeListener extends BadListener {
 				if(player == null){
 					e.setCancelled(true); return;
 				}
-				
+
 				if(!BedListenerUtils.onBreakBed(player, e.blockList().get(i), true)){
 					e.blockList().remove(i);
 					i--;
@@ -68,11 +67,36 @@ public class BedExplodeListener extends BadListener {
 
 			} else {
 				Block block = e.blockList().get(i);
+
 				boolean can = BedWarsMapProtector.breakableBlocks.contains(block.getLocation());
 				
-				if (block.getType().equals(Material.GLASS) && BedWarsMapProtector.glassBlocks.contains(block.getLocation()))
+				if (e.blockList().get(i).getType() == Material.GLASS && BedWarsMapProtector.glassBlocks.containsKey(block.getLocation()))
 				{
-					can = false;
+					BadblockPlayer player = null;
+
+					for(Entry<Location, UUID> entries : placedTnts.entrySet()){
+
+						Location blockLoc = entries.getKey().clone();
+						Location tntLoc   = e.getEntity().getLocation().clone();
+
+						blockLoc.setY(0);
+						tntLoc.setY(0);
+
+						if(blockLoc.distance(tntLoc) < 1.5d){
+							player = (BadblockPlayer) Bukkit.getPlayer(entries.getValue());
+							break;
+						}
+					}
+
+					if(player == null){
+						e.setCancelled(true); return;
+					}
+					
+					BadblockTeam t = BedWarsMapProtector.glassBlocks.get(block.getLocation());
+					if (t != null && !t.equals(player.getTeam()))
+					{
+						can = false;
+					}
 				}
 				
 				if(!can){

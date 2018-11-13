@@ -11,18 +11,18 @@ public class TierRunnable extends BukkitRunnable {
 	// TODO Config
 	private static final int diamondDefaultTierTime = 300;
 	private static final int emeraldDefaultTierTime = 510;
-	
+
 	public static int diamondTier		= 1;
 	public static int emeraldTier		= 1;
-	
+
 	public static int diamondTierTime	= diamondDefaultTierTime;
 	public static int emeraldTierTime	= emeraldDefaultTierTime;
-	
+
 	public TierRunnable()
 	{
 		this.runTaskTimer(GameAPI.getAPI(), 20, 20);
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -30,13 +30,20 @@ public class TierRunnable extends BukkitRunnable {
 		if (diamondTierTime == 0 && diamondTier < 3)
 		{
 			diamondTier++;
-			diamondTierTime = diamondDefaultTierTime;
 			String nextDiamondTier = TierRunnable.diamondTier == 2 ? "II" : TierRunnable.diamondTier == 3 ? "III" : "";
 			BukkitUtils.getPlayers().stream().forEach(player ->
 			{
 				player.sendTranslatedMessage("bedwars.upgradetierdiamond", nextDiamondTier);
 				player.playSound(Sound.LEVEL_UP);
 			});
+			if (diamondTier < 3)
+			{
+				diamondTierTime = diamondDefaultTierTime;
+			}
+			else
+			{
+				diamondTierTime = -1;
+			}
 		}
 		else if (diamondTierTime <= 0 && diamondTier >= 3)
 		{
@@ -46,7 +53,7 @@ public class TierRunnable extends BukkitRunnable {
 		{
 			diamondTierTime--;
 		}
-		
+
 		if (emeraldTierTime == 0 && emeraldTier < 3)
 		{
 			emeraldTier++;
@@ -56,7 +63,14 @@ public class TierRunnable extends BukkitRunnable {
 				player.sendTranslatedMessage("bedwars.upgradetieremerald", nextEmeraldTier);
 				player.playSound(Sound.LEVEL_UP);
 			});
-			emeraldTierTime = diamondDefaultTierTime;
+			if (emeraldTier < 3)
+			{
+				emeraldTierTime = emeraldDefaultTierTime;
+			}
+			else
+			{
+				emeraldTierTime = -1;
+			}
 		}
 		else if (emeraldTierTime <= 0 && emeraldTier >= 3)
 		{

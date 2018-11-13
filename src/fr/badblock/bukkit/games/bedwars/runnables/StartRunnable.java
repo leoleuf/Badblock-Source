@@ -65,7 +65,8 @@ public class StartRunnable extends BukkitRunnable {
 			sendTime(time);
 		}
 
-		if(time == 5){
+		if (time == 10)
+		{
 			String winner = GameAPI.getAPI().getBadblockScoreboard().getWinner().getInternalName();
 			File   file   = new File(PluginBedWars.MAP, winner + ".json");
 
@@ -78,10 +79,9 @@ public class StartRunnable extends BukkitRunnable {
 				new BedWarsScoreboard((BadblockPlayer) player);
 			}
 
-			GameAPI.getAPI().setEmptyChunks(config.getMapBounds(), true);
 			GameAPI.getAPI().loadChunks(config.getMapBounds(), time * 20);
 		}
-
+		
 		sendTimeHidden(time);
 
 		time--;

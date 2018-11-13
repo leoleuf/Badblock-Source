@@ -6,6 +6,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -19,6 +20,16 @@ import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
 
 public class MoveListener extends BadListener {
+
+	@EventHandler
+	public void onClick(PrepareItemCraftEvent e)
+	{
+		if ((e.getRecipe() == null) || (e.getRecipe().getResult() == null)) {
+			return;
+		}
+		e.getInventory().setItem(0, null);
+	}
+
 	@EventHandler
 	public void onMove(PlayerMoveEvent e){
 		if(e.getTo().getY() <= 0.0d && !inGame()){
@@ -55,12 +66,15 @@ public class MoveListener extends BadListener {
 			{
 				return;
 			}
-			
+
 			BedWarsTeamData tdo = team.teamData(BedWarsTeamData.class);
-			
-			if (tdo != null)
+
+			if (tdo != null && tdo.getSpawnSelection() != null && tdo.getSpawnSelection().isInSelection(player))
 			{
-				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 5, tdo.heal));
+				if (tdo.heal > 0)
+				{
+					player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 5, tdo.heal - 1));
+				}
 			}
 
 			for (BadblockTeam t : GameAPI.getAPI().getTeams())

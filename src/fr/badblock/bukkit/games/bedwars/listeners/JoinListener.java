@@ -54,8 +54,8 @@ public class JoinListener extends BadListener {
 
 		new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
 
-		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR)) {
-			player.setGameMode(GameMode.SURVIVAL);
+		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR) && !inGame()) {
+			player.setGameMode(GameMode.ADVENTURE);
 			player.sendTranslatedTitle("bedwars.join.title");
 			player.teleport(PluginBedWars.getInstance().getConfiguration().spawn.getHandle());
 			player.sendTimings(0, 80, 20);

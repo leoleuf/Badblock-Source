@@ -37,15 +37,21 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 
 		int i = 14;
 
-		objective.changeLine(i--,  i18n("bedwars.scoreboard.time-desc"));
+		if (GameRunnable.time > 0)
+		{
+			objective.changeLine(i--,  i18n("bedwars.scoreboard.time-desc"));
+		}
+		else
+		{
+			objective.changeLine(i--,  i18n("bedwars.scoreboard.time-desc-wither"));
+		}
 
 		String nextDiamondTier = TierRunnable.diamondTier == 1 ? "II " : TierRunnable.diamondTier == 2 ? "III " : " ";
 		String nextEmeraldTier = TierRunnable.emeraldTier == 1 ? "II " : TierRunnable.emeraldTier == 2 ? "III " : " ";
-		
-		objective.changeLine(i--,  i18n("bedwars.scoreboard.time", time(GameRunnable.time)));
-		
+
+		objective.changeLine(i--,  i18n("bedwars.scoreboard.time", time(GameRunnable.time > 0 ? GameRunnable.time : GameRunnable.witherDeath)));
 		objective.changeLine(i--, "");		
-		
+
 		objective.changeLine(i--,  i18n("bedwars.scoreboard.time-diamondtier", nextDiamondTier, time(TierRunnable.diamondTierTime)));
 		objective.changeLine(i--,  i18n("bedwars.scoreboard.time-emeraldtier", nextEmeraldTier, time(TierRunnable.emeraldTierTime)));
 
@@ -71,7 +77,7 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 		{
 			return "Max";
 		}
-		
+
 		String res = "m";
 		int    sec = time % 60;
 

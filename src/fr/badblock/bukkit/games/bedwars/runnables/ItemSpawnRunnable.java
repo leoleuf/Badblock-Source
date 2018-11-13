@@ -2,6 +2,7 @@ package fr.badblock.bukkit.games.bedwars.runnables;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 			armorStands1 = new HashMap<>();
 			armorStands2 = new HashMap<>();
 			armorStands3 = new HashMap<>();
-			
+
 			String key = material.equals(Material.DIAMOND) ? "bedwars.floatingdiamondtier" : "bedwars.floatingemeraldtier";
 			int tier = material.equals(Material.DIAMOND) ? TierRunnable.diamondTier : TierRunnable.emeraldTier;
 			String tierShown = tier == 1 ? "I" : tier == 2 ? "II" : tier == 3 ? "III" : " ";
@@ -58,7 +59,7 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 			}
 
 			key = material.equals(Material.DIAMOND) ? "bedwars.floatingdiamond" : "bedwars.floatingemerald";
-			
+
 			for(MapLocation location : locations)
 			{
 				Location loc = location.getHandle().clone();
@@ -68,14 +69,14 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 			}
 
 			key = material.equals(Material.DIAMOND) ? "bedwars.floatingdiamondtime" : "bedwars.floatingemeraldtime";
-			
+
 			for(MapLocation location : locations)
 			{
 				Location loc = location.getHandle();
 				ArmorStand as = GameRunnable.spawnNametag(loc, GameAPI.i18n().get(key, (int) (ticks / 20))[0]);
 				armorStands3.put(location.getHandle(), as);
 			}
-			
+
 			Bukkit.getScheduler().runTaskTimer(instance, new Runnable()
 			{
 
@@ -87,10 +88,10 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 					{
 						t = ticks / 20;
 					}
-					
+
 					int tier = material.equals(Material.DIAMOND) ? TierRunnable.diamondTier : TierRunnable.emeraldTier;
 					String tierShown = tier == 1 ? "I" : tier == 2 ? "II" : tier == 3 ? "III" : " ";
-					
+
 					String key = material.equals(Material.DIAMOND) ? "bedwars.floatingdiamondtier" : "bedwars.floatingemeraldtier";
 					for(ArmorStand as : armorStands1.values())
 					{
@@ -98,7 +99,7 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 					}
 
 					key = material.equals(Material.DIAMOND) ? "bedwars.floatingdiamondtime" : "bedwars.floatingemeraldtime";
-					
+
 					for(ArmorStand as : armorStands3.values())
 					{
 						as.setCustomName(GameAPI.i18n().get(key, t)[0]);
@@ -113,16 +114,25 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 
 	@Override
 	public void run(){
-		for(Item item : items){
-			if(!item.isDead()){
-				item.remove();
-			}
-		}
-
-		items.clear();
 
 		if (material.equals(Material.DIAMOND))
 		{
+			if (items.size() >= 15)
+			{
+				int o = items.size() - 15;
+				Iterator<Item> is = items.iterator();
+				while (is.hasNext())
+				{
+					Item item = is.next();
+					if (o <= 0)
+					{
+						continue;
+					}
+					o--;
+					item.remove();
+					is.remove();
+				}
+			}
 			for (int i = 0; i < TierRunnable.diamondTier; i++)
 			{
 				for(MapLocation location : PluginBedWars.getInstance().getMapConfiguration().getSpawnDiamonds())
@@ -136,6 +146,22 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 		}
 		else if (material.equals(Material.EMERALD))
 		{
+			if (items.size() >= 15)
+			{
+				int o = items.size() - 15;
+				Iterator<Item> is = items.iterator();
+				while (is.hasNext())
+				{
+					Item item = is.next();
+					if (o <= 0)
+					{
+						continue;
+					}
+					o--;
+					item.remove();
+					is.remove();
+				}
+			}
 			for (int i = 0; i < TierRunnable.emeraldTier; i++)
 			{
 				for(MapLocation location : PluginBedWars.getInstance().getMapConfiguration().getSpawnEmeralds())

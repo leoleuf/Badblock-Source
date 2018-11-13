@@ -29,11 +29,16 @@ public class InventoryListener extends BadListener
 		ItemAction itemAction = ItemAction.get(event.getAction());
 		InventoryActionType actionType = InventoryActionType.get(itemAction);
 		// Hub player
-		if (itemStack != null) {
+		if (!inGame())
+		{
+			return;
+		}
+		if (itemStack != null && bukkitInventory != null && bukkitInventory.getName() != null && !bukkitInventory.getName().isEmpty()) {
 			String inventoryName = InventoryActionManager.getInventory(player);
 			if (inventoryName != null && !inventoryName.isEmpty() && bukkitInventory.getType().equals(InventoryType.CHEST)) {
 				InventoryObject inventory = InventoriesLoader.getInventory(inventoryName);
-				if (inventory != null) {
+				if (inventory != null && inventory.getName() != null && !inventory.getName().isEmpty() && bukkitInventory.getName().length() >= 4
+						&& (bukkitInventory.getName().contains("§") || bukkitInventory.getName().contains("&"))) {
 					InventoryItemObject itemObject = null;
 					for (InventoryItemObject item : inventory.getItems()) {
 						if (event.getSlot() == item.getPlace()) {

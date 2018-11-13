@@ -10,7 +10,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.inventories.config.ItemLoader;
@@ -101,12 +100,13 @@ public class BukkitInventories {
 			{
 				if (itemStack.getType().equals(Material.WOOL))
 				{
-					itemStack.setData(new MaterialData(team.getDyeColor().getWoolData())); 
+					itemStack = new ItemStack(type, inventoryItemObject.getAmount(), team.getDyeColor().getWoolData());
 				}
 			}
 
 			if (inventoryItemObject.isFakeEnchant()) itemStack = ItemLoader.fakeEnchant(itemStack);
 			ItemMeta itemMeta = itemStack.getItemMeta();
+			
 			if (itemStack.getType().equals(Material.SKULL_ITEM)) {
 				SkullMeta skullMeta = (SkullMeta) itemMeta;
 				skullMeta.setOwner(player.getName());

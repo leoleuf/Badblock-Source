@@ -1,7 +1,9 @@
 package fr.badblock.bukkit.games.bedwars.listeners;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,7 +13,10 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
@@ -25,7 +30,7 @@ import fr.badblock.gameapi.servers.MapProtector;
 public class BedWarsMapProtector implements MapProtector {
 
 	public static List<Location> breakableBlocks = new ArrayList<>();
-	public static List<Location> glassBlocks = new ArrayList<>();
+	public static Map<Location, BadblockTeam> glassBlocks = new HashMap<>();
 
 	private boolean inGame(){
 		return GameAPI.getAPI().getGameServer().getGameState() == GameState.RUNNING;
@@ -36,13 +41,85 @@ public class BedWarsMapProtector implements MapProtector {
 
 		boolean can = inGame() || player.hasAdminMode();
 
+		for (BadblockTeam t : GameAPI.getAPI().getTeams())
+		{
+			if (t == null)
+			{
+				continue;
+			}
+			
+			BedWarsTeamData td = t.teamData(BedWarsTeamData.class);
+			
+			if (td == null)
+			{
+				continue;
+			}
+			
+			if (td.getRespawnLocation() != null && td.getRespawnLocation().distance(block.getLocation()) >= 3)
+			{
+				continue;
+			}
+			
+			player.sendTranslatedMessage("bedwars.cantplacethere");
+			return false;
+		}
+		
+		if (can && block.getType() != null && block.getType().equals(Material.TNT))
+		{
+			int amount = 1;
+
+			for (int i = 0; i < player.getInventory().getContents().length; i++)
+			{
+				ItemStack item = player.getInventory().getContents()[i];
+				if (amount <= 0)
+				{
+					break;
+				}
+
+				if (item == null || item.getType() == null)
+				{
+					continue;
+				}
+
+				if (!item.getType().equals(Material.TNT))
+				{
+					continue;
+				}
+
+				int a = item.getAmount();
+
+				if (a > amount && amount > 0)
+				{
+					a -= amount;
+					amount = 0;
+					item.setAmount(a);
+					player.getInventory().setItem(i, item);
+				}
+				else if (amount > 0)
+				{
+					amount -= a;
+					player.getInventory().setItem(i, new ItemStack(Material.AIR, 1));
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			player.updateInventory();
+			
+			BedExplodeListener.placedTnts.put(block.getLocation(), player.getUniqueId());
+			block.getLocation().getWorld().spawn(block.getLocation(), TNTPrimed.class);
+			return false;
+		}
+
 		if (can)
 		{
 			breakableBlocks.add(block.getLocation());
 
 			if (block.getType().equals(Material.GLASS))
 			{
-				glassBlocks.add(block.getLocation());
+				glassBlocks.put(block.getLocation(), player.getTeam());
 			}
 		}
 
@@ -57,22 +134,23 @@ public class BedWarsMapProtector implements MapProtector {
 
 		boolean can = false;
 
-		if (BedListenerUtils.onBreakBed(player, block, false))
+		if (block.getType() != null && block.getType().name().toLowerCase().contains("bed")
+				&& BedListenerUtils.onBreakBed(player, block, false))
 		{
 			can = true;
 		}
-
+		
 		if (breakableBlocks.contains(block.getLocation()))
 		{
 			can = true;
 			breakableBlocks.remove(block.getLocation());
-
-			if (block.getType().equals(Material.GLASS))
-			{
-				glassBlocks.remove(block.getLocation());
-			}
 		}
 
+		if (block.getType() != null && block.getType().name().toLowerCase().contains("leaves"))
+		{
+			can = true;
+		}
+		
 		return can || player.hasAdminMode();
 	}
 
@@ -122,13 +200,13 @@ public class BedWarsMapProtector implements MapProtector {
 			boolean cancel = false;
 
 			switch(block.getType()){
-			case CHEST: case TRAPPED_CHEST: case ENDER_CHEST: case FURNACE: case ENCHANTMENT_TABLE: case WORKBENCH:
+			case CHEST: case TRAPPED_CHEST: case FURNACE: case ENCHANTMENT_TABLE: case WORKBENCH:
 				cancel = true;
 				break;
-			case BARRIER:
+			/*case BARRIER:
 				cancel = true;
 				player.sendTranslatedMessage("bedwars.youcantplaceablockthere");
-				return false;
+				return false;*/
 			default: break;
 			}
 
@@ -141,7 +219,7 @@ public class BedWarsMapProtector implements MapProtector {
 					}
 				}
 		}
-
+		
 		if(block != null && block.getType() == Material.BED_BLOCK && inGame() && action == Action.RIGHT_CLICK_BLOCK){
 			BadblockTeam team = BedListenerUtils.parseBedTeam(block);
 
@@ -188,15 +266,22 @@ public class BedWarsMapProtector implements MapProtector {
 	public boolean canBeingDamaged(BadblockPlayer player) {
 		if (player.getActivePotionEffects() != null)
 		{
-			if (player.getActivePotionEffects().parallelStream().filter(effect ->
-			effect.getType().equals(PotionEffectType.INVISIBILITY)).count() > 0)
+			int count = 0;
+			for (PotionEffect pe : player.getActivePotionEffects())
+			{
+				if (pe.getType().equals(PotionEffectType.INVISIBILITY))
+				{
+					count++;
+				}
+			}
+			if (count > 0)
 			{
 				player.removePotionEffect(PotionEffectType.INVISIBILITY);
 				player.playSound(Sound.ENDERMAN_HIT);
 				player.sendTranslatedMessage("bedwars.invisibilitystop");
 			}
 		}
-		return GameRunnable.damage;
+		return inGame() && GameRunnable.doneTime > 5;
 	}
 
 	@Override
@@ -211,7 +296,7 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean allowFire(Block block) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -265,8 +350,7 @@ public class BedWarsMapProtector implements MapProtector {
 		{
 			return true;
 		}
-		System.out.println("Creature spawn : " + creature.getType());
-		return isPlugin || creature.getType().equals(EntityType.IRON_GOLEM);
+		return (creature.getType().equals(EntityType.IRON_GOLEM) || creature.getType().equals(EntityType.SILVERFISH)) && isPlugin;
 	}
 
 	@Override
@@ -286,7 +370,7 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean allowInteract(Entity entity) {
-		return false;
+		return inGame();
 	}
 
 	@Override
@@ -296,7 +380,7 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean canEntityBeingDamaged(Entity entity) {
-		return !inGame();
+		return inGame();
 	}
 
 	@Override
@@ -306,7 +390,19 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean canEntityBeingDamaged(Entity entity, BadblockPlayer badblockPlayer) {
-		return false;
+		if (entity.getType().equals(EntityType.PLAYER))
+		{
+			BadblockPlayer target = (BadblockPlayer) entity;
+			if (target.getTeam() != null && badblockPlayer.getTeam() != null)
+			{
+				if (target.getTeam().equals(badblockPlayer.getTeam()))
+				{
+					return false;
+				}
+			}
+		}
+		return entity.getType().equals(EntityType.SILVERFISH) || entity.getType().equals(EntityType.ARMOR_STAND) || entity.getType().equals(EntityType.PLAYER)
+				|| entity.getType().equals(EntityType.IRON_GOLEM);
 	}
 
 }
