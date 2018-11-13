@@ -1,22 +1,24 @@
 package fr.badblock.common.shoplinker.bukkit.listeners.bukkit;
 
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
-import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
-import fr.badblock.common.shoplinker.bukkit.database.Request;
-import fr.badblock.common.shoplinker.bukkit.database.Request.RequestType;
 import fr.badblock.common.shoplinker.bukkit.inventories.utils.ChatColorUtils;
+import fr.badblock.common.shoplinker.mongodb.MongoService;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -26,46 +28,60 @@ public class PlayerJoinListener implements Listener {
 
 	@EventHandler
 	public void onJoinEvent(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		BadblockDatabase.getInstance().addRequest(new Request("SELECT COUNT(command) AS count FROM cachedShop WHERE serverName = '" + ShopLinkerAPI.CURRENT_SERVER_NAME + "' AND playerName = '" + player.getName() + "'", RequestType.GETTER) {
+		new Thread()
+		{
 			@Override
-			public void done(ResultSet resultSet) {
-				try {
-					int count = 0;
-					if (resultSet.next()) {
-						count = resultSet.getInt("count");
-						if (count == 0) return;
+			public void run()
+			{
+				Player player = event.getPlayer();
 
-						ShopLinker shopLinker = ShopLinker.getInstance();
+				ShopLinker shopLinker = ShopLinker.getInstance();
+				MongoService mongoService = shopLinker.getMongoService();
 
-						Map<String, String> replace = new HashMap<>();
-						replace.put("%0", Integer.toString(count));
+				String serverName = ShopLinkerAPI.CURRENT_SERVER_NAME;
+				String playerName = player.getName().toLowerCase();
 
-						List<String> messageKey = count > 1 ? shopLinker.getPluralPendingMessage() : shopLinker.getSinglePendingMessage();
-						String[] messageArray = messageKey.toArray(new String[messageKey.size()]);
-						List<String> messages = ChatColorUtils.getTranslatedMessages(messageArray, replace);
-						String hoverMessage = count > 1 ? shopLinker.getPluralHoverMessage().replace("%0", Integer.toString(count)) : shopLinker.getSingleHoverMessage();
+				DB db = mongoService.getDb();
+				DBCollection collection = db.getCollection("cachedShop");
 
-						// Fix colors
-						for (String message : messages)
+				BasicDBObject object = new BasicDBObject();
+				object.put("playerName", playerName);
+				object.put("serverName", serverName);
+
+				long count = collection.count(object);
+
+				if (count > 0)
+				{
+					Bukkit.getScheduler().runTask(ShopLinker.getInstance(), new Runnable()
+					{
+						@Override
+						public void run()
 						{
-							TextComponent textComponent = new TextComponent();
+							Map<String, String> replace = new HashMap<>();
+							replace.put("%0", Long.toString(count));
 
-							message = fixMessage(message);
+							List<String> messageKey = count > 1 ? shopLinker.getPluralPendingMessage() : shopLinker.getSinglePendingMessage();
+							String[] messageArray = messageKey.toArray(new String[messageKey.size()]);
+							List<String> messages = ChatColorUtils.getTranslatedMessages(messageArray, replace);
+							String hoverMessage = count > 1 ? shopLinker.getPluralHoverMessage().replace("%0", Long.toString(count)) : shopLinker.getSingleHoverMessage();
 
-							textComponent.setText(message);
-							textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sl shopexecute"));
-							textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverMessage).create()));
-							player.sendMessage(textComponent);
+							// Fix colors
+							for (String message : messages)
+							{
+								TextComponent textComponent = new TextComponent();
+
+								message = fixMessage(message);
+
+								textComponent.setText(message);
+								textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sl shopexecute"));
+								textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverMessage).create()));
+								player.sendMessage(textComponent);
+							}
 						}
-					}
-				}catch(Exception error) {
-					error.printStackTrace();
-					ShopLinker shopLinker = ShopLinker.getInstance();
-					player.sendMessage(shopLinker.getErrorMessage());
+					});
 				}
 			}
-		});
+		}.start();
 	}
 
 	private String fixMessage(String text)
@@ -77,7 +93,7 @@ public class PlayerJoinListener implements Listener {
 		for (int index = 0; index < length; index++){
 			char character = text.charAt(index);
 			boolean b = false;
-			if (character == '&' || character == 'ง') {
+			if (character == '&' || character == 'ยง') {
 				wasColor = true;
 				b = true;
 			}
@@ -96,7 +112,7 @@ public class PlayerJoinListener implements Listener {
 		int length = input.length();
 		for (int index = length - 1; index > -1; index--){
 			char section = input.charAt(index);
-			if ((section == 'ง' || section == '&') && (index < length - 1)){
+			if ((section == 'ยง' || section == '&') && (index < length - 1)){
 				char c = input.charAt(index + 1);
 				ChatColor color = ChatColor.getByChar(c);
 				if (color != null) {

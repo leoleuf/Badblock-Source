@@ -11,7 +11,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 
 import com.google.gson.reflect.TypeToken;
-
 import fr.badblock.api.common.tech.rabbitmq.RabbitConnector;
 import fr.badblock.api.common.tech.rabbitmq.RabbitService;
 import fr.badblock.api.common.tech.rabbitmq.setting.RabbitSettings;
@@ -24,7 +23,6 @@ import fr.badblock.common.shoplinker.bukkit.clickers.managers.ArmorStandManager;
 import fr.badblock.common.shoplinker.bukkit.clickers.managers.SignManager;
 import fr.badblock.common.shoplinker.bukkit.commands.ShopLinkerCommand;
 import fr.badblock.common.shoplinker.bukkit.commands.StoreCommand;
-import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
 import fr.badblock.common.shoplinker.bukkit.inventories.InventoriesLoader;
 import fr.badblock.common.shoplinker.bukkit.inventories.utils.ChatColorUtils;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.EntityDamageByEntityListener;
@@ -34,6 +32,10 @@ import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInteractListe
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInventoryClickListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerJoinListener;
 import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
+import fr.badblock.common.shoplinker.mongodb.MongoConnector;
+import fr.badblock.common.shoplinker.mongodb.MongoService;
+import fr.badblock.common.shoplinker.mongodb.setting.MongoSettings;
+import fr.badblock.common.shoplinker.workers.WorkerManager;
 
 public class ShopLinkerLoader {
 
@@ -52,7 +54,7 @@ public class ShopLinkerLoader {
 		loadArmorStands(shopLinker);
 		loadInventories(shopLinker);
 		loadRabbitMQ(shopLinker);
-		loadDatabase(shopLinker);
+		loadShopLinker(shopLinker);
 		loadListeners(shopLinker);
 		loadCommands(shopLinker);
 		saveConfiguration(shopLinker);
@@ -168,10 +170,26 @@ public class ShopLinkerLoader {
 		shopLinker.setRabbitService(RabbitConnector.getInstance().registerService(new RabbitService("default", rabbitSettings)));
 	}
 
-	private void loadDatabase(ShopLinker shopLinker) {
+	private void loadShopLinker(ShopLinker shopLinker) {
 		FileConfiguration configuration = shopLinker.getConfig();
-		BadblockDatabase.getInstance().connect(getString(configuration, "db.host"), getInt(configuration, "db.port"), 
-				getString(configuration, "db.user"), getString(configuration, "db.pass"), getString(configuration, "db.db"));
+		List<String> hosts = getStringList(configuration, "mongodb.hostname");
+		int port = getInt(configuration, "mongodb.port");
+		String username = getString(configuration, "mongodb.username");
+		String password = getString(configuration, "mongodb.password");
+		String database = getString(configuration, "mongodb.database");
+		int workerThreads = getInt(configuration, "mongodb.workerThreads");
+		
+		String[] hostArray = new String[hosts.size()];
+		hostArray = hosts.toArray(hostArray);
+		
+		MongoConnector mongoConnector = MongoConnector.getInstance();
+		MongoSettings mongoSettings = new MongoSettings(hostArray, port, username, password, database, workerThreads);
+		
+		MongoService mongoService = new MongoService("default", mongoSettings);
+		mongoConnector.registerService(mongoService);
+		
+		shopLinker.setMongoService(mongoService);
+		WorkerManager.load();
 	}
 
 	private void loadListeners(ShopLinker shopLinker) {

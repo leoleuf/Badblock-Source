@@ -1,8 +1,14 @@
 package fr.badblock.common.shoplinker.bukkit;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 
 import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacket;
 import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketEncoder;
@@ -10,12 +16,18 @@ import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketMessage;
 import fr.badblock.api.common.tech.rabbitmq.packet.RabbitPacketType;
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.api.objects.ShopData;
-import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
-import fr.badblock.common.shoplinker.bukkit.database.Request;
-import fr.badblock.common.shoplinker.bukkit.database.Request.RequestType;
+import fr.badblock.common.shoplinker.bukkit.utils.Callback;
 import fr.badblock.common.shoplinker.bukkit.utils.Flags;
+import fr.badblock.common.shoplinker.mongodb.MongoService;
+import fr.badblock.common.shoplinker.workers.WorkerManager;
+import fr.badblock.common.shoplinker.workers.objects.GetPlayerShopPoints;
 
 public class ShopLinkWorker {
+
+	public static void getShopPoints(UUID uuid, Callback<Integer> callback)
+	{
+		WorkerManager.send(new GetPlayerShopPoints(uuid, callback));
+	}
 
 	public static void workCommand(ShopData shopData, boolean onlyIfOnline) {
 		if (shopData.getCommand().equals("-"))
@@ -63,11 +75,31 @@ public class ShopLinkWorker {
 		{
 			return;
 		}
-		BadblockDatabase.getInstance().addSyncRequest(
-				new Request("INSERT INTO cachedShop(serverName, playerName, displayName, command, type, ingame, price) VALUES('" + ShopLinkerAPI.CURRENT_SERVER_NAME 
-						+ "', '" + shopData.getPlayerName() + "', '" + shopData.getDisplayName() + "', '" + shopData.getCommand() + "', '" + shopData.getDataType() + "', '" + shopData.isIngame() + "', '" + shopData.getPrice() + "')", RequestType.SETTER));
-		ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RESET + "Added cached action to " + shopData.getPlayerName());
-		ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RESET + "Data: " + shopData.getCommand());
+
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				BasicDBObject obj = new BasicDBObject();
+				obj.put("serverName", ShopLinkerAPI.CURRENT_SERVER_NAME);
+				obj.put("playerName", shopData.getPlayerName().toLowerCase());
+				obj.put("displayName", shopData.getDisplayName());
+				obj.put("command", shopData.getCommand());
+				obj.put("type", shopData.getDataType().name());
+				obj.put("ingame", shopData.isIngame());
+				obj.put("price", shopData.getPrice());
+
+				ShopLinker shopLinker = ShopLinker.getInstance();
+				MongoService mongoService = shopLinker.getMongoService();
+				DB db = mongoService.getDb();
+				DBCollection collection = db.getCollection("cachedShop");
+				collection.insert(obj);
+
+				ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RESET + "Added cached action to " + shopData.getPlayerName());
+				ShopLinker.getConsole().sendMessage(ChatColor.GOLD + "[ShopLinker] " + ChatColor.RESET + "Data: " + shopData.getCommand());
+			}
+		}.start();
 	}
 
 	public static void broadcastCommand(ShopData shopData) {

@@ -1,18 +1,24 @@
 package fr.badblock.common.shoplinker.bukkit.commands;
 
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 import fr.badblock.common.shoplinker.api.ShopLinkerAPI;
 import fr.badblock.common.shoplinker.api.objects.ShopData;
@@ -22,19 +28,17 @@ import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.common.shoplinker.bukkit.ShopLinkerLoader;
 import fr.badblock.common.shoplinker.bukkit.clickers.ClickableObject;
 import fr.badblock.common.shoplinker.bukkit.clickers.managers.SignManager;
-import fr.badblock.common.shoplinker.bukkit.database.BadblockDatabase;
-import fr.badblock.common.shoplinker.bukkit.database.Request;
-import fr.badblock.common.shoplinker.bukkit.database.Request.RequestType;
 import fr.badblock.common.shoplinker.bukkit.inventories.BukkitInventories;
 import fr.badblock.common.shoplinker.bukkit.inventories.InventoriesLoader;
 import fr.badblock.common.shoplinker.bukkit.listeners.bukkit.PlayerInteractListener;
+import fr.badblock.common.shoplinker.mongodb.MongoService;
 import net.md_5.bungee.api.ChatColor;
 
 public class ShopLinkerCommand implements CommandExecutor {
 
 	public static Map<UUID, String> armorSet = new HashMap<>();
 	public static Map<UUID, String> removeArmor = new HashMap<>();
-	
+
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
 			help(sender, args);
@@ -137,7 +141,7 @@ public class ShopLinkerCommand implements CommandExecutor {
 		signManager.removeSign(b.getLocation());
 		signManager.save();
 	}
-	
+
 	private void addSign(CommandSender sender, String[] args) {
 		if (neededPlayer(sender)) return;
 		if (notEnoughPermissions(sender)) return;
@@ -165,40 +169,68 @@ public class ShopLinkerCommand implements CommandExecutor {
 		signManager.save();
 		sender.sendMessage(ChatColor.GREEN + "[ShopLinker] You set the sign as an inventory opener.");
 	}
-	
+
 	private void shopExecute(CommandSender sender, String[] args) {
 		if (neededPlayer(sender)) return;
 		Player player = (Player) sender;
-		ShopLinker shopLinker = ShopLinker.getInstance();
-		BadblockDatabase.getInstance().addRequest(new Request("SELECT * FROM cachedShop WHERE serverName = '" + ShopLinkerAPI.CURRENT_SERVER_NAME + "' AND playerName = '" + player.getName() + "'", RequestType.GETTER) {
+
+		new Thread()
+		{
 			@Override
-			public void done(ResultSet resultSet) {
-				try {
-					int count = 0;
-					while (resultSet.next()) {
-						count++;
-						String type = resultSet.getString("type");
-						String playerName = resultSet.getString("playerName");
-						String command = resultSet.getString("command");
-						String displayName = resultSet.getString("displayName");
-						boolean ingame = Boolean.parseBoolean(resultSet.getString("ingame").toUpperCase());
-						double price = resultSet.getDouble("price");
-						ShopLinkWorker.workCommand(new ShopData(ShopType.getFrom(type), playerName, command, displayName, new int[] {}, false, ingame, price, false), true);
-					}
-					String message = count > 1 ? shopLinker.getPluralClaimMessage().replace("%0", Integer.toString(count)) : shopLinker.getSingleClaimMessage();
-					if (count > 0) {
-						BadblockDatabase.getInstance().addRequest(new Request("DELETE FROM cachedShop WHERE serverName = '" + ShopLinkerAPI.CURRENT_SERVER_NAME + "' AND playerName = '" + player.getName() + "'", RequestType.SETTER));
-						player.sendMessage(message);
-					}else player.sendMessage(ShopLinker.getInstance().getNothingToClaimMessage());
-				}catch(Exception error) {
-					error.printStackTrace();
-					ShopLinker shopLinker = ShopLinker.getInstance();
-					player.sendMessage(shopLinker.getErrorMessage());
+			public void run()
+			{
+				ShopLinker shopLinker = ShopLinker.getInstance();
+				MongoService mongoService = shopLinker.getMongoService();
+
+				String serverName = ShopLinkerAPI.CURRENT_SERVER_NAME;
+				String playerName = player.getName().toLowerCase();
+
+				DB db = mongoService.getDb();
+				DBCollection collection = db.getCollection("cachedShop");
+
+				BasicDBObject object = new BasicDBObject();
+				object.put("playerName", playerName);
+				object.put("serverName", serverName);
+
+				Cursor cursor = collection.find(object);
+
+				int count = 0;
+				while (cursor.hasNext())
+				{
+					count++;
+					
+					DBObject obj = cursor.next();
+					collection.remove(obj);
+
+					String type = (String) obj.get("type");
+					String playerNm = (String) obj.get("playerName");
+					String command = (String) obj.get("command");
+					String displayName = (String) obj.get("displayName");
+					boolean ingame = (boolean) obj.get("ingame");
+					double price = (double) obj.get("price");
+
+					Bukkit.getScheduler().runTask(shopLinker, new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							ShopLinkWorker.workCommand(new ShopData(ShopType.getFrom(type), playerNm, command, displayName, new int[] {}, false, ingame, price, false), true);
+						}
+					});
 				}
+
+				String message = count > 1 ? shopLinker.getPluralClaimMessage().replace("%0", Integer.toString(count)) : shopLinker.getSingleClaimMessage();
+				if (count > 0)
+				{
+					player.sendMessage(message);
+					return;
+				}
+				
+				player.sendMessage(ShopLinker.getInstance().getNothingToClaimMessage());
 			}
-		});
+		}.start();
 	}
-	
+
 	private void armorSet(CommandSender sender, String[] args) {
 		if (neededPlayer(sender)) return;
 		if (notEnoughPermissions(sender)) return;
@@ -216,7 +248,7 @@ public class ShopLinkerCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.RED + "[ShopLinker] You cancelled this operation.");
 		}
 	}
-	
+
 	private void removeArmor(CommandSender sender, String[] args) {
 		if (neededPlayer(sender)) return;
 		if (notEnoughPermissions(sender)) return;

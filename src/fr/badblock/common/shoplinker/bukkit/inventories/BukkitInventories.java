@@ -13,7 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import fr.badblock.common.shoplinker.api.objects.TempBuyObject;
-import fr.badblock.common.shoplinker.bukkit.CrystalsBuyManager;
+import fr.badblock.common.shoplinker.bukkit.BuyManager;
+import fr.badblock.common.shoplinker.bukkit.ShopLinkWorker;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.common.shoplinker.bukkit.inventories.config.ItemLoader;
 import fr.badblock.common.shoplinker.bukkit.inventories.objects.CustomItemAction;
@@ -52,7 +53,7 @@ public class BukkitInventories {
 		shopPlayer.setBuy(new TempBuyObject(action, shopObject, inventoryItemObject, itemOffer));
 		ShopLinker shopLinker = ShopLinker.getInstance();
 		Inventory inventory = Bukkit.createInventory(null, 9, shopLinker.getConfirmInventoryName().replace("%0", inventoryItemObject.getName()));
-		CrystalsBuyManager.getAsyncNeededCoins(shopObject.getOfferId(), new Callback<Double>()
+		BuyManager.getAsyncNeededCoins(shopObject.getOfferId(), new Callback<Double>()
 		{
 			@Override
 			public void done(Double integer, Throwable throwable)
@@ -74,7 +75,7 @@ public class BukkitInventories {
 				Map<String, String> replace = new HashMap<>();
 				replace.put("%0", ChatColorUtils.translate(inventoryItemObject.getName()));
 				replace.put("%1", Double.toString(integer.doubleValue()));
-				
+
 				// 7 : redstone no
 				itemStack = new ItemStack(Material.REDSTONE_BLOCK);
 				itemMeta = itemStack.getItemMeta();
@@ -90,7 +91,7 @@ public class BukkitInventories {
 				itemStack = new ItemStack(Material.EMERALD_BLOCK);
 				itemMeta = itemStack.getItemMeta();
 				itemMeta.setDisplayName(ChatColorUtils.getTranslatedMessages(new String[] { shopLinker.getConfirmName() }, replace).get(0));
-				
+
 				// lore
 				stockArr = shopLinker.getConfirmLore().toArray(new String[shopLinker.getConfirmLore().size()]);
 				itemMeta.setLore(ChatColorUtils.getTranslatedMessages(stockArr, replace));
@@ -128,18 +129,25 @@ public class BukkitInventories {
 		Map<String, String> replace = new HashMap<>();
 		replace.put("%0", player.getName());
 		replace.put("%1", AbstractPermissions.getPermissions().getPrefix(player.getName()));
-		
-		CrystalsBuyManager.getCrystals(player.getName(), new Callback<Double>()
+
+		ShopLinkWorker.getShopPoints(player.getUniqueId(), new Callback<Integer>()
 		{
 			@Override
-			public void done(Double shopPoints, Throwable throwable)
+			public void done(Integer shopPoints, Throwable throwable)
 			{
-				replace.put("%2", Double.toString(shopPoints.doubleValue()));
+				if (shopPoints != null && shopPoints > 0)
+				{
+					replace.put("%2", shopPoints.toString());
+				}
+				else
+				{
+					replace.put("%2", "0 points");
+				}
 				for (InventoryItemObject inventoryItemObject : inventoryObject.getItems()) {
 					for (InventoryAction inventoryAction : inventoryItemObject.getActions())
 					{
 						InventoryShopObject shopData = inventoryAction.getShopData();
-						double price = shopData != null ? CrystalsBuyManager.getNeededCoins(shopData.getOfferId()) : -1;
+						double price = shopData != null ? BuyManager.getNeededCoins(shopData.getOfferId()) : -1;
 						String[] splitter = inventoryItemObject.getType().split(":");
 						String material = splitter[0];
 						byte data = 0;

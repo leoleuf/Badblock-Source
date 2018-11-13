@@ -11,7 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import fr.badblock.common.shoplinker.api.objects.TempBuyObject;
-import fr.badblock.common.shoplinker.bukkit.CrystalsBuyManager;
+import fr.badblock.common.shoplinker.bukkit.BuyManager;
 import fr.badblock.common.shoplinker.bukkit.ShopLinker;
 import fr.badblock.common.shoplinker.bukkit.inventories.InventoriesLoader;
 import fr.badblock.common.shoplinker.bukkit.inventories.objects.InventoryActionManager;
@@ -77,7 +77,7 @@ public class PlayerInventoryClickListener implements Listener {
 					if (buyObject != null)
 					{
 						player.closeInventory();
-						CrystalsBuyManager.buy(player, buyObject);
+						BuyManager.buy(player, buyObject);
 					}
 					else
 					{

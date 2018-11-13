@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import fr.badblock.api.common.tech.rabbitmq.RabbitService;
 import fr.badblock.common.shoplinker.bukkit.listeners.rabbitmq.ReceiveCommandListener;
+import fr.badblock.common.shoplinker.mongodb.MongoService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ import lombok.Setter;
 	@Getter@Setter   private static ConsoleCommandSender console;
 	
 	private RabbitService								 rabbitService;
+	private MongoService							     mongoService;
 	
 	private ReceiveCommandListener			receiveCommandListener;
 	private boolean										unloaded;

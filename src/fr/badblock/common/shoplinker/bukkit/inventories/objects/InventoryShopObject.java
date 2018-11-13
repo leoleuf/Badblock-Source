@@ -7,6 +7,6 @@ import lombok.Data;
 
 public class InventoryShopObject {
 
-	private int	offerId;
+	private String	offerId;
 	
 }
