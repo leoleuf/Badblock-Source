@@ -309,13 +309,13 @@ public class BadBlockHub extends BadblockPlugin {
 		// World manage
 		Bukkit.getWorlds().forEach(world -> {
 			world.getEntitiesByClasses(Animals.class, Creature.class).forEach(entity -> entity.remove());
-			world.setFullTime(600);
+			world.setFullTime(13000);
 			world.setPVP(false);
 			world.setStorm(false);
 			world.setThunderDuration(0);
 			world.setThundering(false);
 			world.setWeatherDuration(0);
-			world.setTime(600);
+			world.setTime(13000);
 		});
 
 		// API compatibility
