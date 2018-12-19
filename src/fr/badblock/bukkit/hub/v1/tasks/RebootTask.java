@@ -1,6 +1,7 @@
 package fr.badblock.bukkit.hub.v1.tasks;
 
 import java.util.Calendar;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 
@@ -16,9 +17,9 @@ public class RebootTask extends CustomTask {
 		super(20, 20, true);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.set(Calendar.DATE, 1);
+		calendar.add(Calendar.DATE, 1);
 		calendar.set(Calendar.HOUR_OF_DAY, 5);
-		time = (calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000;
+		time = 2700 + new Random().nextInt(2700);
 	}
 
 	@Override
