@@ -14,6 +14,6 @@ public class GetPlayerShopPoints extends WorkerObject
 {
 	
 	private UUID								player;
-	private Callback<Integer>		callback;
+	private Callback<Double>		callback;
 	
 }

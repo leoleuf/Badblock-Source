@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import fr.badblock.api.common.utils.general.MathUtils;
 import fr.badblock.common.shoplinker.api.objects.TempBuyObject;
 import fr.badblock.common.shoplinker.bukkit.BuyManager;
 import fr.badblock.common.shoplinker.bukkit.ShopLinkWorker;
@@ -130,14 +131,14 @@ public class BukkitInventories {
 		replace.put("%0", player.getName());
 		replace.put("%1", AbstractPermissions.getPermissions().getPrefix(player.getName()));
 
-		ShopLinkWorker.getShopPoints(player.getUniqueId(), new Callback<Integer>()
+		ShopLinkWorker.getShopPoints(player.getUniqueId(), new Callback<Double>()
 		{
 			@Override
-			public void done(Integer shopPoints, Throwable throwable)
+			public void done(Double shopPoints, Throwable throwable)
 			{
 				if (shopPoints != null && shopPoints > 0)
 				{
-					replace.put("%2", shopPoints.toString());
+					replace.put("%2", Double.toString(MathUtils.round(shopPoints, 2)));
 				}
 				else
 				{

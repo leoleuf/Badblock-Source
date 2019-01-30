@@ -24,7 +24,7 @@ import fr.badblock.common.shoplinker.workers.objects.GetPlayerShopPoints;
 
 public class ShopLinkWorker {
 
-	public static void getShopPoints(UUID uuid, Callback<Integer> callback)
+	public static void getShopPoints(UUID uuid, Callback<Double> callback)
 	{
 		WorkerManager.send(new GetPlayerShopPoints(uuid, callback));
 	}

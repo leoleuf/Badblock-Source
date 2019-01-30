@@ -54,7 +54,7 @@ public class ShopLinkerAsyncWorker extends Thread
 					if (cursor.hasNext())
 					{
 						DBObject obj = cursor.next();
-						int funds = (int) obj.get("points");
+						double funds = (double) obj.get("points");
 						getter.getCallback().done(funds, null);
 						continue;
 					}
