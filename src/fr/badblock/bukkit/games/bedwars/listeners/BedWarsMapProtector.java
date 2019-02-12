@@ -306,7 +306,7 @@ public class BedWarsMapProtector implements MapProtector {
 
 	@Override
 	public boolean allowBlockFormChange(Block block) {
-		return true; //TODO test
+		return true;
 	}
 
 	@Override

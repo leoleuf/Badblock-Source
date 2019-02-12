@@ -22,8 +22,8 @@ import fr.badblock.gameapi.configuration.values.MapLocation;
 import fr.badblock.gameapi.players.BadblockTeam;
 
 public class ItemSpawnRunnable extends BukkitRunnable {
-	private final Material   material;
-	private final long	     ticks;
+	private final Material material;
+	private final long ticks;
 
 	private Map<Location, ArmorStand>	armorStands1;
 	private Map<Location, ArmorStand>	armorStands2;
@@ -114,7 +114,6 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 
 	@Override
 	public void run(){
-
 		if (material.equals(Material.DIAMOND))
 		{
 			if (items.size() >= 15)
@@ -143,6 +142,9 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 					items.add(item);
 				}
 			}
+			for(Item item : items){
+				if(!item.isDead()) item.remove();
+			}
 		}
 		else if (material.equals(Material.EMERALD))
 		{
@@ -161,39 +163,48 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 					item.remove();
 					is.remove();
 				}
-			}
-			for (int i = 0; i < TierRunnable.emeraldTier; i++)
-			{
-				for(MapLocation location : PluginBedWars.getInstance().getMapConfiguration().getSpawnEmeralds())
-				{
-					Item item = location.getHandle().getWorld().dropItem(location.getHandle(), new ItemStack(material, 1));
-					item.setVelocity(new Vector(0, 0, 0));
-
-					items.add(item);
-				}
-			}
-		}
-		else
-		{
-			for (BadblockTeam team : GameAPI.getAPI().getTeams())
-			{
-				BedWarsTeamData teamData = team.teamData(BedWarsTeamData.class);
-				for (Location location : teamData.getItemSpawnLocations())
-				{
-					for (int i = 0; i < teamData.resourceSpeedLevel; i++)
-					{
+				items.clear();
+				for(BadblockTeam team : GameAPI.getAPI().getTeams()){
+					for(Location location : team.teamData(BedWarsTeamData.class).getItemSpawnLocations()){
 						Item item = location.getWorld().dropItem(location, new ItemStack(material, 1));
 						item.setVelocity(new Vector(0, 0, 0));
-
 						items.add(item);
+					}
+					for (int i = 0; i < TierRunnable.emeraldTier; i++)
+					{
+						for(MapLocation location : PluginBedWars.getInstance().getMapConfiguration().getSpawnEmeralds())
+						{
+							Item item = location.getHandle().getWorld().dropItem(location.getHandle(), new ItemStack(material, 1));
+							item.setVelocity(new Vector(0, 0, 0));
+
+							items.add(item);
+						}
+					}
+				}
+			}
+			else
+			{
+				for (BadblockTeam team : GameAPI.getAPI().getTeams())
+				{
+					BedWarsTeamData teamData = team.teamData(BedWarsTeamData.class);
+					for (Location location : teamData.getItemSpawnLocations())
+					{
+						for (int i = 0; i < teamData.resourceSpeedLevel; i++)
+						{
+							Item item = location.getWorld().dropItem(location, new ItemStack(material, 1));
+							item.setVelocity(new Vector(0, 0, 0));
+
+							items.add(item);
+						}
 					}
 				}
 			}
 		}
-
 	}
 
-	public void start(){
+	void start()
+	{
 		runTaskTimer(GameAPI.getAPI(), ticks, ticks);
 	}
+	
 }

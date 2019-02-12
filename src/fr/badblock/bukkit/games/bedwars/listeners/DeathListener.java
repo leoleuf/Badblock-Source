@@ -18,6 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.google.common.collect.Maps;
+
 import fr.badblock.bukkit.games.bedwars.BedWarsAchievementList;
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
@@ -54,9 +56,9 @@ public class DeathListener extends BadListener {
 	public void onDeath(FightingDeathEvent e){
 		death(e, e.getPlayer(), e.getKiller(), e.getLastDamageCause());
 		e.setDeathMessage(GameMessages.deathEventMessage(e));
-
-		if(e.getKiller().getType() == EntityType.PLAYER){
+		if(e.getKiller().getType() == EntityType.PLAYER) {
 			BadblockPlayer killer = (BadblockPlayer) e.getKiller();
+			
 			incrementAchievements(killer, BedWarsAchievementList.BEDWARS_KILL_1,
 					BedWarsAchievementList.BEDWARS_KILL_2,
 					BedWarsAchievementList.BEDWARS_KILL_3,
@@ -71,9 +73,9 @@ public class DeathListener extends BadListener {
 		}
 	}
 
-	private Map<String, Long> lastDeath = new HashMap<>();
+	private Map<String, Long> lastDeath = Maps.newHashMap();
 
-	private void death(FakeDeathEvent e, BadblockPlayer player, Entity killer, DamageCause last){
+    private void death(FakeDeathEvent e, BadblockPlayer player, Entity killer, DamageCause last){
 		if(player.getTeam() == null) return; //WTF
 		if (lastDeath.containsKey(player.getName())) {
 			if (lastDeath.get(player.getName()) > System.currentTimeMillis()) {
@@ -93,7 +95,7 @@ public class DeathListener extends BadListener {
 		player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), BedWarsScoreboard.DEATHS, 1);
 		player.inGameData(BedWarsData.class).deaths++;
 		player.getCustomObjective().generate();
-
+		
 		if(player.getTeam().teamData(BedWarsTeamData.class).getFirstBedPart() == null){
 			player.getPlayerData().incrementStatistic("bedwars", BedWarsScoreboard.LOOSES);
 			player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), BedWarsScoreboard.LOOSES, 1);
@@ -104,28 +106,18 @@ public class DeathListener extends BadListener {
 			player.sendTranslatedTitle("bedwars.player-loose-title");
 			player.sendTimings(20, 80, 20);
 			e.setLightning(true);
-
 			team.leaveTeam(player);
-
 			if(team.getOnlinePlayers().size() == 0){
 				GameAPI.getAPI().getGameServer().cancelReconnectionInvitations(team);
 				GameAPI.getAPI().unregisterTeam(team);
 
-				GameAPI.getAPI().getOnlinePlayers().forEach(p -> {
-
-				});
-
-				new TranslatableString("bedwars.team-loose", team.getChatName()).broadcast();;
+				new TranslatableString("bedwars.team-loose", team.getChatName()).broadcast();
 			}
-
 			player.setBadblockMode(BadblockMode.SPECTATOR);
 			e.setTimeBeforeRespawn(0);
 			player.postResult(null);
-			if(killer == null){
-				respawnPlace = PluginBedWars.getInstance().getMapConfiguration().getSpawnLocation();
-			} else {
-				respawnPlace = killer.getLocation();
-			}
+			if(killer == null) respawnPlace = PluginBedWars.getInstance().getMapConfiguration().getSpawnLocation();
+			else respawnPlace = killer.getLocation();
 		} else {
 
 			e.setTimeBeforeRespawn(3);
@@ -297,9 +289,9 @@ public class DeathListener extends BadListener {
 				e.setWhileRespawnPlace(respawnPlace);
 			}
 		}
-
 		if(killer != null && killer.getType() == EntityType.PLAYER){
 			BadblockPlayer bKiller = (BadblockPlayer) killer;
+			
 			if (last.equals(DamageCause.VOID))
 			{
 				for (ItemStack c : player.getInventory().getContents())
@@ -312,13 +304,12 @@ public class DeathListener extends BadListener {
 					}
 				}
 			}
+			
 			bKiller.getPlayerData().incrementStatistic("bedwars", BedWarsScoreboard.KILLS);
 			bKiller.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), BedWarsScoreboard.KILLS, 1);
 			bKiller.inGameData(BedWarsData.class).kills++;
-			if (bKiller.getCustomObjective() != null)
-				bKiller.getCustomObjective().generate();
+			if (bKiller.getCustomObjective() != null) bKiller.getCustomObjective().generate();
 		}
-
 		player.getCustomObjective().generate();
 		e.setRespawnPlace(respawnPlace);
 	}
@@ -337,8 +328,7 @@ public class DeathListener extends BadListener {
 
 	@EventHandler
 	public void onRespawn(PlayerFakeRespawnEvent e){
-		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
-			e.getPlayer().getOpenInventory().setCursor(null);
+		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null) e.getPlayer().getOpenInventory().setCursor(null);
 		PluginBedWars.getInstance().giveDefaultKit(e.getPlayer());
 
 		if (shears.contains(e.getPlayer()))

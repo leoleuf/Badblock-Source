@@ -1,21 +1,5 @@
 package fr.badblock.bukkit.games.bedwars.listeners;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Sheep;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.players.BedWarsScoreboard;
 import fr.badblock.bukkit.games.bedwars.runnables.BossBarRunnable;
@@ -35,6 +19,21 @@ import fr.badblock.gameapi.utils.entities.CustomCreature.CreatureBehaviour;
 import fr.badblock.gameapi.utils.entities.CustomCreature.CreatureFlag;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Sheep;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JoinListener extends BadListener {
 	public static final List<Sheep> sheeps = new ArrayList<>();
@@ -42,7 +41,6 @@ public class JoinListener extends BadListener {
 	@EventHandler
 	public void onSpectatorJoin(SpectatorJoinEvent e){
 		e.getPlayer().teleport(PluginBedWars.getInstance().getMapConfiguration().getSpawnLocation());
-
 		new BedWarsScoreboard(e.getPlayer());
 		e.getPlayer().changePlayerDimension(BukkitUtils.getEnvironment( PluginBedWars.getInstance().getMapConfiguration().getDimension() ));
 	}
@@ -51,7 +49,6 @@ public class JoinListener extends BadListener {
 	public void onJoin(PlayerJoinEvent e) {
 		e.setJoinMessage(null);
 		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
-
 		new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
 
 		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR) && !inGame()) {
@@ -87,8 +84,9 @@ public class JoinListener extends BadListener {
 				}
 			}
 		}
+		
 		PreStartRunnable.doJob();
-		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), PluginBedWars.getInstance().getMaxPlayers());
+		StartRunnable.joinNotify(Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers());
 	}
 
 	@EventHandler
@@ -96,24 +94,19 @@ public class JoinListener extends BadListener {
 		GameRunnable.handle(event.getPlayer());
 	}
 
-	@EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGHEST)
 	public void onJoinHighest(PlayerJoinEvent e){
 		if(sheeps.isEmpty()){
 
 			for(MapLocation sheepLocation : PluginBedWars.getInstance().getConfiguration().sheeps){
 				CustomCreature custom = GameAPI.getAPI().spawnCustomEntity(sheepLocation.getHandle(), EntityType.SHEEP);
-				Sheep 		   sheep  = (Sheep) custom.getBukkit();
-
-
+				Sheep sheep = (Sheep) custom.getBukkit();
 				sheep.setAdult();
 				sheep.setMaxHealth(0.20d);
-
 				custom.addCreatureFlags(CreatureFlag.RIDEABLE);
 				custom.setCreatureBehaviour(CreatureBehaviour.NORMAL);
-
 				sheeps.add(sheep);
 			}
-
 		}
 	}
 
@@ -126,9 +119,7 @@ public class JoinListener extends BadListener {
 	public void craftItem(PrepareItemCraftEvent e) {
 		if (!PluginBedWars.getInstance().getMapConfiguration().getAllowBows()) {
 			Material itemType = e.getRecipe().getResult().getType();
-			if (itemType == Material.BOW || itemType == Material.ARROW) {
-				e.getInventory().setResult(new ItemStack(Material.AIR));
-			}
+			if (itemType == Material.BOW || itemType == Material.ARROW) e.getInventory().setResult(new ItemStack(Material.AIR));
 		}
 	}
 

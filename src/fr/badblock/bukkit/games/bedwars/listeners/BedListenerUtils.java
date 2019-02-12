@@ -20,12 +20,10 @@ import fr.badblock.gameapi.players.data.PlayerAchievementState;
 public class BedListenerUtils {
 	public static BadblockTeam parseBedTeam(Block bed){
 		if(bed.getType() != Material.BED_BLOCK) return null;
-
 		BadblockTeam result = null;
-
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			Location teamBed = team.teamData(BedWarsTeamData.class).getFirstBedPart();
-
+			
 			if(teamBed == null) continue;
 
 			Location teamBed2  = team.teamData(BedWarsTeamData.class).findOtherBedPart();
@@ -36,19 +34,16 @@ public class BedListenerUtils {
 			if(teamBed.distance(bed.getLocation()) == 0 || teamBed2.distance(bed.getLocation()) == 0)
 				result = team;
 		}
-
 		return result;
 	}
 
-	public static boolean onBreakBed(BadblockPlayer player, Block block, boolean explosion){
+    public static boolean onBreakBed(BadblockPlayer player, Block block, boolean explosion){
 		BadblockTeam team = parseBedTeam(block);
-
 		if(team != null && player.getTeam() != null){
 			if(team.equals(player.getTeam())){
 				if(!explosion)
 					player.sendTranslatedTitle("bedwars.yourebed");
 			} else {
-
 				team.die();
 
 				Block other = team.teamData(BedWarsTeamData.class).findOtherBedPart().getBlock();
@@ -62,6 +57,7 @@ public class BedListenerUtils {
 				team.teamData(BedWarsTeamData.class).broked(explosion, player.getName());
 
 				player.getPlayerData().incrementStatistic("bedwars", BedWarsScoreboard.BROKENBEDS);
+				
 				player.getPlayerData().incrementTempRankedData(RankedManager.instance.getCurrentRankedGameName(), BedWarsScoreboard.BROKENBEDS, 1);
 				player.inGameData(BedWarsData.class).brokedBeds++;
 
@@ -76,6 +72,12 @@ public class BedListenerUtils {
 						BedWarsAchievementList.BEDWARS_BED_4,
 						BedWarsAchievementList.BEDWARS_BROKER);
 
+				player.getTeam().teamData(BedWarsTeamData.class).health+=4;
+				player.getTeam().getOnlinePlayers().forEach(pl -> {
+                    pl.setMaxHealth(player.getMaxHealth() + 4);
+					pl.setHealth(player.getHealth() + 4);
+				});
+				
 				for(Player bukkitPlayer : Bukkit.getOnlinePlayers()){
 					BadblockPlayer bPlayer = (BadblockPlayer) bukkitPlayer;
 					if (bPlayer.getCustomObjective() != null)
@@ -88,10 +90,8 @@ public class BedListenerUtils {
 				}
 
 			}
-
 			return false;
 		}
-
 		return false;
 	}
 

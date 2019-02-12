@@ -34,9 +34,7 @@ public class MoveListener extends BadListener {
 	public void onMove(PlayerMoveEvent e){
 		if(e.getTo().getY() <= 0.0d && !inGame()){
 			Location spawn = PluginBedWars.getInstance().getConfiguration().spawn.getHandle();
-
 			Entity vehicle = null;
-
 			if(e.getPlayer().isInsideVehicle()){
 				vehicle = e.getPlayer().getVehicle();
 				vehicle.eject();

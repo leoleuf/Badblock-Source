@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
@@ -61,19 +62,19 @@ public class PluginBedWars extends BadblockPlugin {
 	private static final String CONFIG 		   		   = "config.json";
 	private static final String TEAMS_CONFIG 		   = "teams.yml";
 	private static final String TEAMS_CONFIG_INVENTORY = "teamsInventory.yml";
-	private static final String VOTES_CONFIG 		   = "votes.json";
+	private static final String VOTES_CONFIG = "votes.json";
 	private static final String KITS_CONFIG_INVENTORY  = "kitInventory.yml";
-	private static final String MAPS_CONFIG_FOLDER     = "maps";
-	private static final String SHOP_FOLDER     	   = "shops";
-
-
+	private static final String MAPS_CONFIG_FOLDER = "maps";
+	private static final String SHOP_FOLDER = "shops";
+	
 	@Getter@Setter
-	private int 			     maxPlayers;
+	private int maxPlayers;
 	@Getter
-	private BedWarsConfiguration    configuration;
+	
+	private BedWarsConfiguration configuration;
 	@Getter@Setter
 	private BedWarsMapConfiguration mapConfiguration;
-
+	
 	@Getter
 	private Map<String, PlayerKit> kits;
 
@@ -94,32 +95,26 @@ public class PluginBedWars extends BadblockPlugin {
 			return;
 
 		try {
-			if(!getDataFolder().exists()) getDataFolder().mkdir();
-
-			/**
-			 * Chargement de la configuration du jeu
-			 */
-
-			// Modification des GameRules
+            BadblockGame.BEDWARS.setGameData(() -> list);
+            instance = this;
+			if(!getDataFolder().exists()) if (!getDataFolder().mkdir()) return;
+            File votesFile = new File(getDataFolder(), VOTES_CONFIG);
+            if(!votesFile.exists()) if (!votesFile.createNewFile()) return;
+            File configFile = new File(getDataFolder(), CONFIG);
 			GameRules.doDaylightCycle.setGameRule(false);
 			GameRules.spectatorsGenerateChunks.setGameRule(false);
 			GameRules.doFireTick.setGameRule(false);
-
-			// Lecture de la configuration du jeu
-
 			BadblockGame.BEDWARS.use();
-
-			File configFile    = new File(getDataFolder(), CONFIG);
+	
 			this.configuration = JsonUtils.load(configFile, BedWarsConfiguration.class);
 
 			JsonUtils.save(configFile, configuration, true);
 
 			File 			  teamsFile 	= new File(getDataFolder(), TEAMS_CONFIG);
-			FileConfiguration teams 		= YamlConfiguration.loadConfiguration(teamsFile);
-
+			FileConfiguration teams = YamlConfiguration.loadConfiguration(teamsFile);
 			getAPI().registerTeams(configuration.maxPlayersInTeam, teams);
 			getAPI().setDefaultKitContentManager(false);
-
+			
 			maxPlayers = getAPI().getTeams().size() * configuration.maxPlayersInTeam;
 			try {
 				BukkitUtils.setMaxPlayers(maxPlayers);
@@ -132,14 +127,15 @@ public class PluginBedWars extends BadblockPlugin {
 
 			// Chargement des fonctionnalités de l'API non utilisées par défaut
 
+            BukkitUtils.setMaxPlayers(maxPlayers);
+			kits = getAPI().loadKits(GameAPI.getInternalGameName());
+            teams.save(teamsFile);
 			getAPI().getBadblockScoreboard().doBelowNameHealth();
 			getAPI().getBadblockScoreboard().doTabListHealth();
 			getAPI().getBadblockScoreboard().doTeamsPrefix();
 			getAPI().getBadblockScoreboard().doOnDamageHologram();
-
 			getAPI().formatChat(true, true);
 			getAPI().manageShops(new File(getDataFolder(), SHOP_FOLDER));
-
 			getAPI().getJoinItems().registerKitItem(0, kits, new File(getDataFolder(), KITS_CONFIG_INVENTORY));
 			getAPI().getJoinItems().registerTeamItem(3, new File(getDataFolder(), TEAMS_CONFIG_INVENTORY));
 			getAPI().getJoinItems().registerAchievementsItem(4, BadblockGame.BEDWARS);
@@ -153,6 +149,7 @@ public class PluginBedWars extends BadblockPlugin {
 
 			InventoriesLoader.loadInventories(this);
 
+			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.SPECTATOR);
 			new MoveListener();
 			new DeathListener();
 			new JoinListener();
@@ -166,11 +163,11 @@ public class PluginBedWars extends BadblockPlugin {
 			new SilverfishListener();
 			new BedExplodeListener();	// 
 			new SheepListener();		// Gère les moutons en début de partie :3
+			new BedExplodeListener();
+			new SheepListener();
 			new FakeEntityInteractListener();
 
 			new PathwayHandler();
-
-			File votesFile = new File(getDataFolder(), VOTES_CONFIG);
 
 			if (!votesFile.exists())
 			{
@@ -185,16 +182,14 @@ public class PluginBedWars extends BadblockPlugin {
 
 			new BedWarsCommand(MAP);
 			new GameCommand();
-
 			Bukkit.getWorlds().forEach(world -> {
 				world.setTime(16000L);
-				world.getEntities().forEach(entity -> entity.remove());
+				world.getEntities().forEach(Entity::remove);
 			});
 
 			// Ranked
 			RankedManager.instance.initialize(RankedManager.instance.getCurrentRankedGameName(), 
 					BedWarsScoreboard.KILLS, BedWarsScoreboard.DEATHS, BedWarsScoreboard.BROKENBEDS, BedWarsScoreboard.WINS, BedWarsScoreboard.LOOSES);
-
 		} catch(Throwable e){
 			e.printStackTrace();
 		}
@@ -260,8 +255,9 @@ public class PluginBedWars extends BadblockPlugin {
 		}
 
 		PlayerKit kit = kits.get(configuration.defaultKit);
-
-		if(kit == null){
+		
+		if(kit == null) {
+			player.clearInventory();
 			return;
 		}
 
@@ -273,5 +269,4 @@ public class PluginBedWars extends BadblockPlugin {
 		if (!configuration.enabledAutoTeamManager) return configuration.minPlayers;
 		return configuration.minPlayersAutoTeam * getAPI().getTeams().size();
 	}
-
 }
