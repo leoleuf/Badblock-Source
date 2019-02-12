@@ -129,7 +129,8 @@ public class StartRunnable extends BukkitRunnable {
 	}
 
 	public static void joinNotify(int currentPlayers, int maxPlayers){
-		if(currentPlayers + 1 < PluginBedWars.getInstance().getConfiguration().minPlayers) return;
+		if ((!GameAPI.getAPI().isHostedGame() && currentPlayers + 1 < PluginBedWars.getInstance().getMinPlayers())
+				|| (GameAPI.getAPI().isHostedGame() && currentPlayers + 1 < PluginBedWars.getInstance().getMaxPlayers())) return;
 		
 		startGame(false);
 		if (time >= 5 && Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers()) time = 5;

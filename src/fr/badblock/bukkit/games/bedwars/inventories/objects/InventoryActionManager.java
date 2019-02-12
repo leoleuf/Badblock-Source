@@ -710,7 +710,7 @@ public class InventoryActionManager
 				continue;
 			}
 
-			plo.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 10, 1));
+			plo.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 10, 2));
 			plo.playSound(Sound.ENDERMAN_TELEPORT);
 			plo.sendTranslatedMessage("bedwars.slowdig", player.getTeam().getChatPrefix().getAsLine(plo), player.getName());
 		}

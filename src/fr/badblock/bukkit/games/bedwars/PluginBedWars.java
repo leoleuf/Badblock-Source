@@ -24,6 +24,7 @@ import fr.badblock.bukkit.games.bedwars.listeners.DeathListener;
 import fr.badblock.bukkit.games.bedwars.listeners.FakeEntityInteractListener;
 import fr.badblock.bukkit.games.bedwars.listeners.FireballListener;
 import fr.badblock.bukkit.games.bedwars.listeners.GolemListener;
+import fr.badblock.bukkit.games.bedwars.listeners.HostListener;
 import fr.badblock.bukkit.games.bedwars.listeners.InventoryListener;
 import fr.badblock.bukkit.games.bedwars.listeners.JoinListener;
 import fr.badblock.bukkit.games.bedwars.listeners.MoveListener;
@@ -160,6 +161,7 @@ public class PluginBedWars extends BadblockPlugin {
 			new QuitListener();
 			new InventoryListener();
 			new PartyJoinListener();
+			new HostListener();
 			new GolemListener();
 			new SilverfishListener();
 			new BedExplodeListener();	// 
