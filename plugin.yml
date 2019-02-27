@@ -1,0 +1,4 @@
+name: PvPBox
+author: BadBlock
+main: fr.badblock.bukkit.games.pvpbox.PvPBox
+version: 1.0
