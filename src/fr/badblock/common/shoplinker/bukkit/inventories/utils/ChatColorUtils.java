@@ -26,15 +26,28 @@ public class ChatColorUtils {
 	public static List<String> getTranslatedMessages(String[] messages, Map<String, String> replace) {
 		List<String> result = new ArrayList<>();
 		for (String message : messages) {
-			message = translate(message);
-			for (Entry<String, String> entry : replace.entrySet())
-				message = message.replace(entry.getKey(), entry.getValue());
-			result.add(message);
+			if (message == null || message.isEmpty())
+			{
+				result.add("");
+			}
+			else
+			{
+				message = translate(message);
+				for (Entry<String, String> entry : replace.entrySet())
+				{
+					message = message.replace(entry.getKey(), entry.getValue());
+				}
+				result.add(message);
+			}
 		}
 		return result;
 	}
 
 	public static String translate(String message) {
+		if (message == null || message.isEmpty())
+		{
+			return message;
+		}
 		return ChatColor.translateAlternateColorCodes(CHAR, message);
 	}
 

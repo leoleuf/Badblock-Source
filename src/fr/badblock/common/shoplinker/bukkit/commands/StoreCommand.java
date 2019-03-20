@@ -17,7 +17,7 @@ public class StoreCommand implements CommandExecutor
 			return true;
 		}
 		
-		BukkitInventories.openInventory((Player) sender, "default");
+		BukkitInventories.openInventory((Player) sender, "5c729b9a1e474027d4598774");
 		
 		return true;
 	}

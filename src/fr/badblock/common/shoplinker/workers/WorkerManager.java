@@ -15,7 +15,7 @@ public class WorkerManager
 	public static void load()
 	{
 		workers = new ArrayList<>();
-		for (int i = 0; i < 32; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			workers.add(new ShopLinkerAsyncWorker(i));
 		}

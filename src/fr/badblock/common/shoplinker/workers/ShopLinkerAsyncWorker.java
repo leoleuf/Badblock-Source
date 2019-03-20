@@ -49,12 +49,23 @@ public class ShopLinkerAsyncWorker extends Thread
 					dbObject.put("uniqueId", getter.getPlayer().toString());
 
 					Cursor cursor = dbCollection.find(dbObject);
-					System.out.println("Get funds for " + getter.getPlayer() + " / " + getter.getCallback());
 					
 					if (cursor.hasNext())
 					{
 						DBObject obj = cursor.next();
-						double funds = (double) obj.get("points");
+						
+						Object ob = obj.get("points");
+						double funds = 0;
+						
+						if 	(ob instanceof Double)
+						{
+							funds = (double) ob;
+						}
+						else
+						{
+							funds = (int) ob;
+						}
+						
 						getter.getCallback().done(funds, null);
 						continue;
 					}

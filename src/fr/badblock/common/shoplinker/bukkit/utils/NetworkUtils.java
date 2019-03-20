@@ -63,6 +63,11 @@ public class NetworkUtils
 				io = urlConnection.getInputStream();
 				bo = toString(io);
 			}
+			else
+			{
+				io = urlConnection.getErrorStream();
+				bo = toString(io);
+			}
 		}
 
 		return new AbstractMap.SimpleEntry<Integer, String>(urlConnection.getResponseCode(), bo);

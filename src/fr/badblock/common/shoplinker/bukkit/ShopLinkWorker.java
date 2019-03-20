@@ -34,9 +34,12 @@ public class ShopLinkWorker {
 		{
 			return;
 		}
-		String playerName = shopData.getPlayerName();
+		
+		String playerName = shopData.getPlayerName().trim();
 		Player player = Bukkit.getPlayer(playerName);
-		System.out.println(player + " / " + shopData.isForceCommand());
+		
+		System.out.println("[ShopLinker] Player " + shopData.getPlayerName() + " is "+ (player == null ? "offline" : "online")); 
+		
 		if (player == null && !shopData.isForceCommand()) 
 			if (onlyIfOnline) return;
 			else cacheAction(shopData);

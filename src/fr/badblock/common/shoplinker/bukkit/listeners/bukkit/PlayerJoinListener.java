@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -75,7 +76,7 @@ public class PlayerJoinListener implements Listener {
 								textComponent.setText(message);
 								textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sl shopexecute"));
 								textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverMessage).create()));
-								player.sendMessage(textComponent);
+								player.spigot().sendMessage(textComponent);
 							}
 						}
 					});

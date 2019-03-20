@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 
 import com.google.gson.reflect.TypeToken;
+
 import fr.badblock.api.common.tech.rabbitmq.RabbitConnector;
 import fr.badblock.api.common.tech.rabbitmq.RabbitService;
 import fr.badblock.api.common.tech.rabbitmq.setting.RabbitSettings;
@@ -21,6 +22,7 @@ import fr.badblock.common.shoplinker.api.utils.JsonUtils;
 import fr.badblock.common.shoplinker.bukkit.clickers.ClickableObject;
 import fr.badblock.common.shoplinker.bukkit.clickers.managers.ArmorStandManager;
 import fr.badblock.common.shoplinker.bukkit.clickers.managers.SignManager;
+import fr.badblock.common.shoplinker.bukkit.commands.CodeCommand;
 import fr.badblock.common.shoplinker.bukkit.commands.ShopLinkerCommand;
 import fr.badblock.common.shoplinker.bukkit.commands.StoreCommand;
 import fr.badblock.common.shoplinker.bukkit.inventories.InventoriesLoader;
@@ -52,11 +54,11 @@ public class ShopLinkerLoader {
 		loadFields(shopLinker);
 		loadSigns(shopLinker);
 		loadArmorStands(shopLinker);
-		loadInventories(shopLinker);
 		loadRabbitMQ(shopLinker);
 		loadShopLinker(shopLinker);
 		loadListeners(shopLinker);
 		loadCommands(shopLinker);
+		loadInventories(shopLinker);
 		saveConfiguration(shopLinker);
 	}
 
@@ -166,7 +168,7 @@ public class ShopLinkerLoader {
 		 */
 		RabbitSettings rabbitSettings = new RabbitSettings(stockArr, getInt(configuration, "rabbit.port"),
 				getString(configuration, "rabbit.username"), getString(configuration, "rabbit.virtualhost"),
-				getString(configuration, "rabbit.password"), true, 30000, 60, 32);
+				getString(configuration, "rabbit.password"), true, 30000, 60, 2);
 		shopLinker.setRabbitService(RabbitConnector.getInstance().registerService(new RabbitService("default", rabbitSettings)));
 	}
 
@@ -231,6 +233,7 @@ public class ShopLinkerLoader {
 	private void loadCommands(ShopLinker shopLinker) {
 		shopLinker.getCommand("shoplinker").setExecutor(new ShopLinkerCommand());
 		shopLinker.getCommand("store").setExecutor(new StoreCommand());
+		shopLinker.getCommand("code").setExecutor(new CodeCommand());
 	}
 
 	private void saveConfiguration(ShopLinker shopLinker) {

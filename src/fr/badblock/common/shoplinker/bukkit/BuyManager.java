@@ -4,6 +4,8 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import com.mongodb.BasicDBObject;
@@ -19,7 +21,9 @@ import fr.badblock.common.shoplinker.bukkit.inventories.objects.InventoryShopObj
 import fr.badblock.common.shoplinker.bukkit.utils.Callback;
 import fr.badblock.common.shoplinker.bukkit.utils.Flags;
 import fr.badblock.common.shoplinker.bukkit.utils.NetworkUtils;
+import fr.badblock.common.shoplinker.bukkit.utils.RandomFireWorks;
 import fr.badblock.common.shoplinker.mongodb.MongoService;
+import fr.badblock.gameapi.players.BadblockPlayer;
 
 public class BuyManager {
 
@@ -46,7 +50,7 @@ public class BuyManager {
 				try
 				{
 					Entry<Integer, String> entry = NetworkUtils.getURLSource("https://badblock.fr/shop/achat/" + offerId, player.getName());
-					
+
 					if (entry == null)
 					{
 						player.sendMessage("§cUn problème est survenu lors de votre achat. Code d'erreur #1");
@@ -73,6 +77,20 @@ public class BuyManager {
 							return;
 						}
 						player.sendMessage("§aVous avez obtenu cette offre.");
+
+						Bukkit.getScheduler().runTask(ShopLinker.getInstance(), 
+								new Runnable()
+						{
+
+							@Override
+							public void run() 
+							{
+								player.playSound(player.getLocation(), Sound.FUSE, 1, 1);
+								RandomFireWorks.getManager().launchRandomFirework(player.getLocation());
+								((BadblockPlayer) player).refreshShopPoints();
+							}
+
+						});
 						return;
 					}
 
@@ -132,7 +150,7 @@ public class BuyManager {
 		DBObject obj = cursor.next();
 
 		String proc = (String) obj.get("price");
-		
+
 		return Integer.parseInt(proc);
 	}
 

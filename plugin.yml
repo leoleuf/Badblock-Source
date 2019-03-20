@@ -11,3 +11,5 @@ commands:
    store:
      description: Store main command
      aliases: [shop, boutique]
+   code:
+     description: Code command

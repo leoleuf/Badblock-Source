@@ -1,6 +1,7 @@
 package fr.badblock.common.shoplinker.bukkit.inventories;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -68,14 +69,26 @@ public class BukkitInventories {
 				inventory.setItem(0, itemStack);
 
 				// 4 : item offer
-				inventory.setItem(4, itemOffer);
+				ItemStack i = itemOffer.clone();
+				ItemMeta m = i.getItemMeta();
+				List<String> l = m.getLore();
+				
+				l.remove(l.size() - 1);
+				
+				l.add("§dUtilise les boutons à droite pour");
+				l.add("§dannuler ou confirmer l'achat");
+				
+				m.setLore(l);
+				i.setItemMeta(m);
+				
+				inventory.setItem(4, i);
 
 				// Format
 
 				// Replace
 				Map<String, String> replace = new HashMap<>();
 				replace.put("%0", ChatColorUtils.translate(inventoryItemObject.getName()));
-				replace.put("%1", Double.toString(integer.doubleValue()));
+				replace.put("%1", Integer.toString(integer.intValue()));
 
 				// 7 : redstone no
 				itemStack = new ItemStack(Material.REDSTONE_BLOCK);
@@ -128,8 +141,8 @@ public class BukkitInventories {
 		String name = ChatColorUtils.translate(inventoryObject.getName());
 		Inventory inventory = Bukkit.createInventory(null, 9 * inventoryObject.getLines(), name);
 		Map<String, String> replace = new HashMap<>();
-		replace.put("%0", player.getName());
-		replace.put("%1", AbstractPermissions.getPermissions().getPrefix(player.getName()));
+		replace.put("%0", player.getName() + "");
+		replace.put("%1", AbstractPermissions.getPermissions().getPrefix(player.getName()) + "");
 
 		ShopLinkWorker.getShopPoints(player.getUniqueId(), new Callback<Double>()
 		{
@@ -138,7 +151,7 @@ public class BukkitInventories {
 			{
 				if (shopPoints != null && shopPoints > 0)
 				{
-					replace.put("%2", Double.toString(MathUtils.round(shopPoints, 2)));
+					replace.put("%2", Double.toString(MathUtils.round(shopPoints, 2)) + "");
 				}
 				else
 				{
@@ -167,7 +180,7 @@ public class BukkitInventories {
 							SkullMeta skullMeta = (SkullMeta) itemMeta;
 							skullMeta.setOwner(player.getName());
 						}
-						replace.put("%3", Double.toString(price));
+						replace.put("%3", Double.toString(price) + "");
 						if (inventoryItemObject.getName() != null && !inventoryItemObject.getName().isEmpty())
 							itemMeta.setDisplayName(ChatColorUtils.translate(inventoryItemObject.getName().replace("%0", replace.get("%0")).replace("%1", replace.get("%1")).replace("%2", replace.get("%2"))));
 						if (inventoryItemObject.getLore() != null && inventoryItemObject.getLore().length != 0)
