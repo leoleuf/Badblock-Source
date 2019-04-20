@@ -36,7 +36,6 @@ public class TowerMapConfiguration {
 	/**
 	 * La map est autorisé en arcs
 	 */
-	private Boolean			  allowBows;
 	private Boolean			  lottery;
 	
 	private BadConfiguration  config;
@@ -53,7 +52,6 @@ public class TowerMapConfiguration {
 		maxY			= config.getValue("maxY", MapNumber.class, new MapNumber(0)).getHandle().intValue();
 		//mapBounds 	    = config.getValue("mapBounds", MapSelection.class, new MapSelection()).getHandle();
 		spawnLocation   = config.getValue("spawnLocation", MapLocation.class, new MapLocation()).getHandle();
-		allowBows		= config.getValue("allowBows", MapBoolean.class, new MapBoolean(true)).getHandle();
 		lottery		= config.getValue("lottery", MapBoolean.class, new MapBoolean(false)).getHandle();
 		beacon		= config.getValue("beacon", MapLocation.class, new MapLocation()).getHandle();
 

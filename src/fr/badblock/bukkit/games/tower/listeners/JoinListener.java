@@ -269,15 +269,6 @@ public class JoinListener extends BadListener {
 		e.setQuitMessage(null);
 	}
 
-	@EventHandler
-	public void craftItem(PrepareItemCraftEvent e) {
-		if (!PluginTower.getInstance().getMapConfiguration().getAllowBows()) {
-			Material itemType = e.getRecipe().getResult().getType();
-			if (itemType == Material.BOW || itemType == Material.ARROW) {
-				e.getInventory().setResult(new ItemStack(Material.AIR));
-			}
-		}
-	}
 
 	public static void handle(BadblockPlayer player) {
 		BadblockTeam team = player.getTeam();
@@ -317,11 +308,6 @@ public class JoinListener extends BadListener {
 		PlayerKit kit = player.inGameData(InGameKitData.class).getChoosedKit();
 
 		if(kit != null){
-			if (PluginTower.getInstance().getMapConfiguration().getAllowBows())
-				kit.giveKit(player);
-			else
-				kit.giveKit(player, Material.BOW, Material.ARROW);
-		} else {
 			PluginTower.getInstance().giveDefaultKit(player);
 		}
 	}
