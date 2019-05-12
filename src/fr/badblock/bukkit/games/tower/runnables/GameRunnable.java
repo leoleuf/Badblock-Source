@@ -57,6 +57,12 @@ public class GameRunnable extends BukkitRunnable {
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
 		GameAPI.getAPI().getGameServer().saveTeamsAndPlayersForResult();
 
+		if (config != null && !config.getAllowBows()) {
+			remove(Material.BOW);
+			remove(Material.ARROW);
+		}
+
+		
 		Bukkit.getWorlds().forEach(world -> {
 			world.setTime(config.getTime());
 		});
