@@ -4,14 +4,16 @@ import org.bukkit.command.CommandSender;
 
 import fr.badblock.bukkit.games.survivalgames.PluginSurvival;
 import fr.badblock.bukkit.games.survivalgames.runnables.StartRunnable;
+import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.command.AbstractCommand;
 import fr.badblock.gameapi.players.BadblockPlayer;
+import fr.badblock.gameapi.players.BadblockPlayer.GamePermission;
 import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 
 public class GameCommand extends AbstractCommand {
 	public GameCommand() {
-		super("game", new TranslatableString("commands.gsurvival.usage"), "animation.gamecommand");
+		super("game", new TranslatableString("commands.gsurvival.usage"), GamePermission.PLAYER);
 		allowConsole(false);
 	}
 
@@ -24,47 +26,37 @@ public class GameCommand extends AbstractCommand {
 		BadblockPlayer player = (BadblockPlayer) sender;
 
 		switch(args[0].toLowerCase()){
-			case "start":
+		case "start":
+			if (GameAPI.getAPI().isHoster(player))
+			{
 				String msg = "commands.grush.start";
-				
+
 				if(!StartRunnable.started()){
 					StartRunnable.startGame();
 				} else msg += "-fail";
-				
+
 				player.sendTranslatedMessage(msg);
+			}
+			else
+			{
+				player.sendMessage("§cVous n'avez pas la permission de faire cela.");
+			}
 			break;
-			case "stop":
-				msg = "commands.grush.stop";
-				
+		case "stop":
+			if (player.hasPermission(GamePermission.ADMIN))
+			{
+				String msg = "commands.grush.stop";
+
 				if(StartRunnable.started()){
 					StartRunnable.stopGame();
 				} else msg += "-fail";
-				
+
 				player.sendTranslatedMessage(msg);
-			break;
-			case "players":
-				if(args.length != 2)
-					return false;
-				
-				int maxPlayers = 24;
-				
-				try {
-					maxPlayers = Integer.parseInt(args[1]);
-				} catch(Exception e){
-					return false;
-				}
-				
-				PluginSurvival plug = PluginSurvival.getInstance();
-				plug.getConfiguration().maxPlayers = maxPlayers;
-				plug.getConfiguration().minPlayers = maxPlayers / 2;
-				plug.setMaxPlayers(maxPlayers);
-				try {
-					BukkitUtils.setMaxPlayers(maxPlayers);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				player.sendTranslatedMessage("commands.grush.modifycount");
+			}
+			else
+			{
+				player.sendMessage("§cVous n'avez pas la permission de faire cela.");
+			}
 			break;
 			default: return false;
 		}

@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StartRunnable extends BukkitRunnable {
-	public    static final int 		     TIME_BEFORE_START = 120;
+	public    static final int 		     TIME_BEFORE_START = 30;
 	protected static 	   StartRunnable task 		       = null;
 	public    static 	   GameRunnable  gameTask		   = null;
 
@@ -109,12 +109,13 @@ public class StartRunnable extends BukkitRunnable {
 	}
 
 	public static void joinNotify(int currentPlayers, int maxPlayers){
-		if(currentPlayers < PluginSurvival.getInstance().getConfiguration().minPlayers) return;
+		if ((!GameAPI.getAPI().isHostedGame() && currentPlayers + 1 < PluginSurvival.getInstance().getConfiguration().minPlayers)
+				|| (GameAPI.getAPI().isHostedGame() && currentPlayers + 1 < PluginSurvival.getInstance().getMaxPlayers())) return;
 		
 		startGame();
 		int a = time - (TIME_BEFORE_START / Bukkit.getMaxPlayers());
-		if (time >= 120 && (a <= 120 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 120;
-		else if (time >= 120) time = a;
+		if (time >= 30 && (a <= 30 || Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())) time = 30;
+		else if (time >= 30) time = a;
 	}
 
 	public static void startGame(){

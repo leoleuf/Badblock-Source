@@ -12,6 +12,7 @@ import fr.badblock.bukkit.games.survivalgames.configuration.SurvivalMapConfigura
 import fr.badblock.bukkit.games.survivalgames.listeners.CraftListener;
 import fr.badblock.bukkit.games.survivalgames.listeners.DamageListener;
 import fr.badblock.bukkit.games.survivalgames.listeners.DeathListener;
+import fr.badblock.bukkit.games.survivalgames.listeners.HostListener;
 import fr.badblock.bukkit.games.survivalgames.listeners.JoinListener;
 import fr.badblock.bukkit.games.survivalgames.listeners.MoveListener;
 import fr.badblock.bukkit.games.survivalgames.listeners.SurvivalMapProtector;
@@ -127,6 +128,7 @@ public class PluginSurvival extends BadblockPlugin {
 			new JoinListener();
 			new DamageListener();
 			new CraftListener();
+			new HostListener();
 			new ZombieListener();
 			
 			File votesFile = new File(getDataFolder(), VOTES_CONFIG);

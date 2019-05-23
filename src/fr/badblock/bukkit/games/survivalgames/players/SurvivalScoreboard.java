@@ -1,5 +1,7 @@
 package fr.badblock.bukkit.games.survivalgames.players;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 
 import fr.badblock.bukkit.games.survivalgames.PluginSurvival;
@@ -32,7 +34,8 @@ public class SurvivalScoreboard extends BadblockScoreboardGenerator {
 	private BadblockPlayer  player;
 
 	public SurvivalScoreboard(BadblockPlayer player){
-		this.objective = GameAPI.getAPI().buildCustomObjective("survival");
+		String rand = UUID.randomUUID().toString().substring(0, 6);
+		this.objective = GameAPI.getAPI().buildCustomObjective("sg" + rand);
 		this.player    = player;
 
 		objective.showObjective(player);
