@@ -1,5 +1,5 @@
-name: BadblockSpeedUHC
-main: fr.badblock.bukkit.games.speeduhc.PluginUHC
+name: UHCDoubleRun
+main: fr.badblock.bukkit.games.uhc.doublerun.PluginUHC
 version: 2.0
 depends: ['BadblockGameAPI']
-authors: ['LeLanN']
+authors: ['xMalware']
