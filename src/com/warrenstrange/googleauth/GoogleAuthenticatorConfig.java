@@ -37,7 +37,7 @@ public class GoogleAuthenticatorConfig {
     private int windowSize = 3;
     private int codeDigits = 6;
     private int keyModulus = (int) Math.pow(10, codeDigits);
-    private KeyRepresentation keyRepresentation = KeyRepresentation.BASE32;
+    public KeyRepresentation keyRepresentation = KeyRepresentation.BASE32;
 
     /**
      * Returns the key module.

@@ -30,16 +30,24 @@
 
 package com.warrenstrange.googleauth;
 
-import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Base64;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.ServiceLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Base64;
+
+import com.google.common.io.BaseEncoding;
 
 /**
  * This class implements the functionality described in RFC 6238 (TOTP: Time
@@ -338,11 +346,9 @@ public final class GoogleAuthenticator implements IGoogleAuthenticator
         switch (config.getKeyRepresentation())
         {
             case BASE32:
-                Base32 codec32 = new Base32();
-                return codec32.decode(secret);
+                return BaseEncoding.base32().decode(secret);
             case BASE64:
-                Base64 codec64 = new Base64();
-                return codec64.decode(secret);
+                return Base64.decodeBase64(secret);
             default:
                 throw new IllegalArgumentException("Unknown key representation type.");
         }
