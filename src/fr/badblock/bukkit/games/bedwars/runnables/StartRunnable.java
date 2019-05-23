@@ -71,8 +71,6 @@ public class StartRunnable extends BukkitRunnable {
 				new BedWarsScoreboard((BadblockPlayer) player);
 			}
 
-			GameAPI.getAPI().setEmptyChunks(config.getMapBounds(), true);
-			GameAPI.getAPI().loadChunks(config.getMapBounds(), time * 20);
 		}
 		
 		sendTimeHidden(time);

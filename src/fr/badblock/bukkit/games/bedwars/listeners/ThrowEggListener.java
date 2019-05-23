@@ -23,6 +23,7 @@ import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
 import fr.badblock.bukkit.games.bedwars.entities.Pathway;
 import fr.badblock.bukkit.games.bedwars.entities.PathwayHandler;
 import fr.badblock.gameapi.BadListener;
+import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 
@@ -113,6 +114,7 @@ public class ThrowEggListener extends BadListener {
 					for (int y = -5; y <= 5; y++) {
 						for (int z = -5; z <= 5; z++) {
 							Block block = event.getEntity().getLocation().getBlock().getRelative(x, y, z);
+							
 							if (BedWarsMapProtector.breakableBlocks.contains(block.getLocation()) && (block.getType().equals(Material.WOOL) || block.getType().equals(Material.WOOD)))
 							{
 								if (td.getSpawnSelection() != null && td.getSpawnSelection().isInSelection(block))

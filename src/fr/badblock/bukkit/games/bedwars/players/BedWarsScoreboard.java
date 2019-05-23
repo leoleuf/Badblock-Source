@@ -1,5 +1,7 @@
 package fr.badblock.bukkit.games.bedwars.players;
 
+import java.util.UUID;
+
 import fr.badblock.bukkit.games.bedwars.PluginBedWars;
 import fr.badblock.bukkit.games.bedwars.entities.BedWarsTeamData;
 import fr.badblock.bukkit.games.bedwars.runnables.GameRunnable;
@@ -17,7 +19,8 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 	private BadblockPlayer  player;
 
 	public BedWarsScoreboard(BadblockPlayer player){
-		this.objective = GameAPI.getAPI().buildCustomObjective("bedwars");
+		String rand = UUID.randomUUID().toString().substring(0, 6);
+		this.objective = GameAPI.getAPI().buildCustomObjective("bw" + rand);
 		this.player    = player;
 
 		objective.showObjective(player);
@@ -34,9 +37,6 @@ public class BedWarsScoreboard extends BadblockScoreboardGenerator {
 
 		if (GameRunnable.time > 0)
 		{
-			objective.changeLine(i--,  i18n("bedwars.scoreboard.time-desc"));
-			objective.changeLine(i--,  i18n("bedwars.scoreboard.time-desc"));
-			objective.changeLine(i--,  i18n("bedwars.scoreboard.time", time(GameRunnable.time)));
 			if (PluginBedWars.getInstance().getMapConfiguration() != null) {
 				objective.changeLine(i,  ""); i--;
 				if (!PluginBedWars.getInstance().getMapConfiguration().getAllowBows()) objective.changeLine(i--,  i18n("bedwars.scoreboard.nobows"));

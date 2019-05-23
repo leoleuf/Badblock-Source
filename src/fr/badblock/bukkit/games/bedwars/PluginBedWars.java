@@ -74,9 +74,6 @@ public class PluginBedWars extends BadblockPlugin {
 	private BedWarsConfiguration configuration;
 	@Getter@Setter
 	private BedWarsMapConfiguration mapConfiguration;
-	
-	@Getter
-	private Map<String, PlayerKit> kits;
 
 	@Override
 	public void onEnable(RunType runType){
@@ -121,14 +118,13 @@ public class PluginBedWars extends BadblockPlugin {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			kits	   = getAPI().loadKits(GameAPI.getInternalGameName());
 
 			try { teams.save(teamsFile); } catch (IOException unused){}
 
 			// Chargement des fonctionnalités de l'API non utilisées par défaut
 
             BukkitUtils.setMaxPlayers(maxPlayers);
-			kits = getAPI().loadKits(GameAPI.getInternalGameName());
+		//	kits = getAPI().loadKits(GameAPI.getInternalGameName());
             teams.save(teamsFile);
 			getAPI().getBadblockScoreboard().doBelowNameHealth();
 			getAPI().getBadblockScoreboard().doTabListHealth();
@@ -136,7 +132,6 @@ public class PluginBedWars extends BadblockPlugin {
 			getAPI().getBadblockScoreboard().doOnDamageHologram();
 			getAPI().formatChat(true, true);
 			getAPI().manageShops(new File(getDataFolder(), SHOP_FOLDER));
-			getAPI().getJoinItems().registerKitItem(0, kits, new File(getDataFolder(), KITS_CONFIG_INVENTORY));
 			getAPI().getJoinItems().registerTeamItem(3, new File(getDataFolder(), TEAMS_CONFIG_INVENTORY));
 			getAPI().getJoinItems().registerAchievementsItem(4, BadblockGame.BEDWARS);
 			getAPI().getJoinItems().registerVoteItem(5);
@@ -250,19 +245,7 @@ public class PluginBedWars extends BadblockPlugin {
 
 				player.getInventory().setBoots(boots);
 			}
-			
-			player.getInventory().addItem(new ItemStack(Material.WOOD_SWORD, 1));
 		}
-
-		PlayerKit kit = kits.get(configuration.defaultKit);
-		
-		if(kit == null) {
-			player.clearInventory();
-			return;
-		}
-
-		player.getPlayerData().unlockNextLevel(kit);
-		kit.giveKit(player);
 	}
 
 	public int getMinPlayers() {

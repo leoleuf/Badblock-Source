@@ -36,9 +36,7 @@ import fr.badblock.gameapi.game.rankeds.RankedManager;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
-import fr.badblock.gameapi.players.data.InGameKitData;
 import fr.badblock.gameapi.players.data.PlayerAchievementState;
-import fr.badblock.gameapi.players.kits.PlayerKit;
 import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.ConfigUtils;
 import fr.badblock.gameapi.utils.general.TimeUnit;
@@ -79,6 +77,8 @@ public class GameRunnable extends BukkitRunnable {
 
 			for(BadblockPlayer p : team.getOnlinePlayers()){
 				handle(p);
+
+				PluginBedWars.getInstance().giveDefaultKit(p);
 			}
 
 		}
@@ -229,7 +229,7 @@ public class GameRunnable extends BukkitRunnable {
 				new BedWarsResults(TimeUnit.SECOND.toShort(time, TimeUnit.SECOND, TimeUnit.HOUR), winner);
 			if (winner != null)
 				new EndEffectRunnable(winnerLocation, winner).runTaskTimer(GameAPI.getAPI(), 0, 1L);
-			
+
 			new KickRunnable().runTaskTimer(GameAPI.getAPI(), 0, 20L);
 		} else if(size == 0){
 			cancel();
@@ -348,23 +348,6 @@ public class GameRunnable extends BukkitRunnable {
 		player.setGameMode(GameMode.SURVIVAL);
 		if (player.getCustomObjective() == null) new BedWarsScoreboard(player);
 		player.getCustomObjective().generate();
-		boolean good = true;
-		for(PlayerKit toUnlock : PluginBedWars.getInstance().getKits().values()) if(!toUnlock.isVIP()) {
-			if(player.getPlayerData().getUnlockedKitLevel(toUnlock) < 2) good = false;
-			break;
-		}
-
-		if(good && !player.getPlayerData().getAchievementState(BedWarsAchievementList.BEDWARS_ALLKITS).isSucceeds()){
-			player.getPlayerData().getAchievementState(BedWarsAchievementList.BEDWARS_ALLKITS).succeed();
-			BedWarsAchievementList.BEDWARS_ALLKITS.reward(player);
-		}
-		PlayerKit kit = player.inGameData(InGameKitData.class).getChoosedKit();
-		if(kit != null){
-			if (PluginBedWars.getInstance().getMapConfiguration().getAllowBows()) kit.giveKit(player);
-			else kit.giveKit(player, Material.BOW, Material.ARROW);
-		} else {
-			PluginBedWars.getInstance().giveDefaultKit(player);
-		}
 	}
 
 	private void remove(Material m) {

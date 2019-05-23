@@ -55,7 +55,7 @@ public class PathwayHandler
 						{
 							Pathway pathway = PathwayHandler.pathways.get(proj);
 							byte data = pathway.getData();
-							
+
 							setMaterial(player, loc.clone().subtract(0.0D, 2.0D, 0.0D), pathway.getMaterial());
 
 							setData(player, loc.clone().subtract(0.0D, 2.0D, 0.0D), data);
@@ -88,23 +88,33 @@ public class PathwayHandler
 				continue;
 			}
 
-			if (td.getSpawnSelection() != null && td.getSpawnSelection().isInSelection(location))
+			if (td.getRespawnLocation().distance(location) <= 5)
+			{
+				return;
+			}
+			
+			if ((td.getSecondBedPart() != null && td.getSecondBedPart().distance(location) < 2) || (td.getFirstBedPart() != null && td.getFirstBedPart().distance(location) < 2))
 			{
 				return;
 			}
 		}
-		
+
 		BadblockTeam team = player.getTeam();
 		if (team == null) return;
 		Location lc = team.teamData(BedWarsTeamData.class).getRespawnLocation();
 		if (location.getY() - lc.getY() >= 30) {
 			return;
 		}
+		
+		if (location.getBlock().getType().equals(Material.BED) || location.getBlock().getType().equals(Material.BED_BLOCK))
+		{
+			return;
+		}
 
 		location.getBlock().setType(material);
 		BedWarsMapProtector.breakableBlocks.add(location.getBlock().getLocation());
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static void setData(BadblockPlayer player, Location location, byte data)
 	{
@@ -116,7 +126,12 @@ public class PathwayHandler
 				continue;
 			}
 
-			if (td.getSpawnSelection() != null && td.getSpawnSelection().isInSelection(location))
+			if (td.getRespawnLocation().distance(location) <= 5)
+			{
+				return;
+			}
+
+			if ((td.getSecondBedPart() != null && td.getSecondBedPart().distance(location) < 2) || (td.getFirstBedPart() != null && td.getFirstBedPart().distance(location) < 2))
 			{
 				return;
 			}
@@ -126,6 +141,11 @@ public class PathwayHandler
 		if (team == null) return;
 		Location lc = team.teamData(BedWarsTeamData.class).getRespawnLocation();
 		if (location.getY() - lc.getY() >= 30) {
+			return;
+		}
+		
+		if (location.getBlock().getType().equals(Material.BED) || location.getBlock().getType().equals(Material.BED_BLOCK))
+		{
 			return;
 		}
 

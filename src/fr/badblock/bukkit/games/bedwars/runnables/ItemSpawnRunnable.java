@@ -163,39 +163,38 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 					item.remove();
 					is.remove();
 				}
-				items.clear();
-				for(BadblockTeam team : GameAPI.getAPI().getTeams()){
-					for(Location location : team.teamData(BedWarsTeamData.class).getItemSpawnLocations()){
-						Item item = location.getWorld().dropItem(location, new ItemStack(material, 1));
-						item.setVelocity(new Vector(0, 0, 0));
-						items.add(item);
-					}
-					for (int i = 0; i < TierRunnable.emeraldTier; i++)
+			}
+			for(BadblockTeam team : GameAPI.getAPI().getTeams()){
+				for(Location location : team.teamData(BedWarsTeamData.class).getItemSpawnLocations()){
+					Item item = location.getWorld().dropItem(location, new ItemStack(material, 1));
+					item.setVelocity(new Vector(0, 0, 0));
+					items.add(item);
+				}
+				for (int i = 0; i < TierRunnable.emeraldTier; i++)
+				{
+					for(MapLocation location : PluginBedWars.getInstance().getMapConfiguration().getSpawnEmeralds())
 					{
-						for(MapLocation location : PluginBedWars.getInstance().getMapConfiguration().getSpawnEmeralds())
-						{
-							Item item = location.getHandle().getWorld().dropItem(location.getHandle(), new ItemStack(material, 1));
-							item.setVelocity(new Vector(0, 0, 0));
+						Item item = location.getHandle().getWorld().dropItem(location.getHandle(), new ItemStack(material, 1));
+						item.setVelocity(new Vector(0, 0, 0));
 
-							items.add(item);
-						}
+						items.add(item);
 					}
 				}
 			}
-			else
+		}
+		else
+		{
+			for (BadblockTeam team : GameAPI.getAPI().getTeams())
 			{
-				for (BadblockTeam team : GameAPI.getAPI().getTeams())
+				BedWarsTeamData teamData = team.teamData(BedWarsTeamData.class);
+				for (Location location : teamData.getItemSpawnLocations())
 				{
-					BedWarsTeamData teamData = team.teamData(BedWarsTeamData.class);
-					for (Location location : teamData.getItemSpawnLocations())
+					for (int i = 0; i < teamData.resourceSpeedLevel; i++)
 					{
-						for (int i = 0; i < teamData.resourceSpeedLevel; i++)
-						{
-							Item item = location.getWorld().dropItem(location, new ItemStack(material, 1));
-							item.setVelocity(new Vector(0, 0, 0));
+						Item item = location.getWorld().dropItem(location, new ItemStack(material, 1));
+						item.setVelocity(new Vector(0, 0, 0));
 
-							items.add(item);
-						}
+						items.add(item);
 					}
 				}
 			}
@@ -206,5 +205,5 @@ public class ItemSpawnRunnable extends BukkitRunnable {
 	{
 		runTaskTimer(GameAPI.getAPI(), ticks, ticks);
 	}
-	
+
 }

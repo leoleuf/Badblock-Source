@@ -145,7 +145,7 @@ public class DeathListener extends BadListener {
 
 			if (player.getInventory().contains(Material.WOOD_SWORD))
 			{
-				respawnItems.put(new ItemStack(Material.WOOD_SWORD, 1), player);
+				respawnItems.put(getItemStack(player, Material.WOOD_SWORD).clone(), player);
 				e.getDrops().remove(getItemStack(player, Material.WOOD_SWORD));
 			}
 			
