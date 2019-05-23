@@ -13,13 +13,14 @@ import fr.badblock.gameapi.command.AbstractCommand;
 import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
+import fr.badblock.gameapi.players.BadblockPlayer.GamePermission;
 import fr.badblock.gameapi.utils.BukkitUtils;
 import fr.badblock.gameapi.utils.general.StringUtils;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
 
 public class GameCommand extends AbstractCommand {
 	public GameCommand() {
-		super("game", new TranslatableString("commands.gsb.usage"), "animation.gamecommand");
+		super("game", new TranslatableString("commands.gsb.usage"), GamePermission.PLAYER);
 		allowConsole(false);
 	}
 
@@ -32,26 +33,34 @@ public class GameCommand extends AbstractCommand {
 		BadblockPlayer player = (BadblockPlayer) sender;
 		PluginSB plug = PluginSB.getInstance();
 
+
 		switch(args[0].toLowerCase()){
-			case "start":
+		case "start":
+			if (GameAPI.getAPI().isHoster(player))
+			{
 				String msg = "commands.gsb.start";
-				
-				if(!StartRunnable.started()){
-					StartRunnable.startGame(true);
-				} else msg += "-fail";
-				
+
+				StartRunnable.startGame(true);
 				player.sendTranslatedMessage(msg);
+			}
 			break;
-			case "stop":
-				msg = "commands.gsb.stop";
-				
+		case "stop":
+			if (player.hasPermission(GamePermission.ADMIN))
+			{
+				String msg = "commands.gsb.stop";
+
 				if(StartRunnable.started()){
 					StartRunnable.stopGame();
 				} else msg += "-fail";
-				
+
 				player.sendTranslatedMessage(msg);
+			}
+			else
+			{
+				player.sendMessage("§cVous n'avez pas la permission de faire cela.");
+			}
 			break;
-			case "playersperteam":
+			/*case "playersperteam":
 				if(args.length != 2)
 					return false;
 				
@@ -119,7 +128,7 @@ public class GameCommand extends AbstractCommand {
 					else
 						player.sendTranslatedMessage("commands.gsb.given");
 				}
-			break;
+			break;*/
 			default: return false;
 		}
 		

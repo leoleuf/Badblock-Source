@@ -14,6 +14,7 @@ import fr.badblock.bukkit.games.spaceballs.configuration.SpaceConfiguration;
 import fr.badblock.bukkit.games.spaceballs.configuration.SpaceKitContentManager;
 import fr.badblock.bukkit.games.spaceballs.configuration.SpaceMapConfiguration;
 import fr.badblock.bukkit.games.spaceballs.listeners.DeathListener;
+import fr.badblock.bukkit.games.spaceballs.listeners.HostListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.JoinListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.MoveListener;
 import fr.badblock.bukkit.games.spaceballs.listeners.PartyJoinListener;
@@ -148,6 +149,7 @@ public class PluginSB extends BadblockPlugin {
 			
 			new MoveListener();
 			new DeathListener();
+			new HostListener();
 			new PartyJoinListener();
 			new JoinListener();
 			new QuitListener();

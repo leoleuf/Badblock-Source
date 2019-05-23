@@ -1,5 +1,7 @@
 package fr.badblock.bukkit.games.spaceballs.players;
 
+import java.util.UUID;
+
 import fr.badblock.bukkit.games.spaceballs.entities.SpaceTeamData;
 import fr.badblock.bukkit.games.spaceballs.runnables.StartRunnable;
 import fr.badblock.gameapi.GameAPI;
@@ -20,7 +22,8 @@ public class SpaceScoreboard extends BadblockScoreboardGenerator {
 	private BadblockPlayer  player;
 
 	public SpaceScoreboard(BadblockPlayer player){
-		this.objective = GameAPI.getAPI().buildCustomObjective("spaceballs");
+		String rand = UUID.randomUUID().toString().substring(0, 6);
+		this.objective = GameAPI.getAPI().buildCustomObjective("sb" + rand);
 		this.player    = player;
 
 		objective.showObjective(player);

@@ -96,7 +96,7 @@ public class JoinListener extends BadListener {
 
 		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
 
-		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR)) {
+		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR) && !inGame()) {
 			new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
 
 			player.setGameMode(GameMode.SURVIVAL);
