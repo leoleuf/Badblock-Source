@@ -2,9 +2,12 @@ package fr.badblock.bukkit.games.rush;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -15,6 +18,8 @@ import fr.badblock.bukkit.games.rush.configuration.RushMapConfiguration;
 import fr.badblock.bukkit.games.rush.listeners.BedExplodeListener;
 import fr.badblock.bukkit.games.rush.listeners.DeathListener;
 import fr.badblock.bukkit.games.rush.listeners.FakeEntityInteractListener;
+import fr.badblock.bukkit.games.rush.listeners.HostListener;
+import fr.badblock.bukkit.games.rush.listeners.InventoryListener;
 import fr.badblock.bukkit.games.rush.listeners.JoinListener;
 import fr.badblock.bukkit.games.rush.listeners.MoveListener;
 import fr.badblock.bukkit.games.rush.listeners.PartyJoinListener;
@@ -22,6 +27,7 @@ import fr.badblock.bukkit.games.rush.listeners.QuitListener;
 import fr.badblock.bukkit.games.rush.listeners.RushMapProtector;
 import fr.badblock.bukkit.games.rush.listeners.SheepListener;
 import fr.badblock.bukkit.games.rush.players.RushScoreboard;
+import fr.badblock.bukkit.games.rush.runnables.ChunkLoaderRunnable;
 import fr.badblock.bukkit.games.rush.runnables.PreStartRunnable;
 import fr.badblock.gameapi.BadblockPlugin;
 import fr.badblock.gameapi.GameAPI;
@@ -51,7 +57,6 @@ public class PluginRush extends BadblockPlugin {
 	private static final String VOTES_CONFIG 		   = "votes.json";
 	private static final String KITS_CONFIG_INVENTORY  = "kitInventory.yml";
 	private static final String MAPS_CONFIG_FOLDER     = "maps";
-	private static final String SHOP_FOLDER     	   = "shops";
 
 	
 	@Getter@Setter
@@ -98,6 +103,22 @@ public class PluginRush extends BadblockPlugin {
 
 			File configFile    = new File(getDataFolder(), CONFIG);
 			this.configuration = JsonUtils.load(configFile, RushConfiguration.class);
+
+			HashSet<Chunk> chunks = new HashSet<>();
+			Location location = configuration.spawn.getHandle();
+			int mapSize = 100;
+			for (int x = -(mapSize / 2); x < (mapSize / 2); x += 2)
+				for (int z = -(mapSize / 2); z < (mapSize / 2); z += 2)
+				{
+					Location l = location.clone().add(x, 0, z);
+					Chunk c = l.getChunk();
+					if (!chunks.contains(c))
+					{
+						chunks.add(c);
+					}
+				}
+			
+			ChunkLoaderRunnable.put(chunks);
 			
 			JsonUtils.save(configFile, configuration, true);
 			
@@ -125,7 +146,6 @@ public class PluginRush extends BadblockPlugin {
 			getAPI().getBadblockScoreboard().doOnDamageHologram();
 
 			getAPI().formatChat(true, true);
-			getAPI().manageShops(new File(getDataFolder(), SHOP_FOLDER));
 			
 			getAPI().getJoinItems().registerKitItem(0, kits, new File(getDataFolder(), KITS_CONFIG_INVENTORY));
 			getAPI().getJoinItems().registerTeamItem(3, new File(getDataFolder(), TEAMS_CONFIG_INVENTORY));
@@ -135,17 +155,19 @@ public class PluginRush extends BadblockPlugin {
 			
 			getAPI().setMapProtector(new RushMapProtector());
 			getAPI().enableAntiSpawnKill();
-			
+
 			getAPI().getGameServer().whileRunningConnection(WhileRunningConnectionTypes.SPECTATOR);
 			
 			new MoveListener();
 			new DeathListener();
 			new JoinListener();
+			new HostListener();
 			new QuitListener();
 			new PartyJoinListener();
 			new BedExplodeListener();	// 
 			new SheepListener();		// Gère les moutons en début de partie :3
 			new FakeEntityInteractListener();
+			new InventoryListener();
 			
 			File votesFile = new File(getDataFolder(), VOTES_CONFIG);
 

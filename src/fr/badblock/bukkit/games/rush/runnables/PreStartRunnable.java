@@ -10,6 +10,12 @@ import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 
 public class PreStartRunnable extends BukkitRunnable {
+	
+	public PreStartRunnable()
+	{
+		new ChunkLoaderRunnable().runTaskTimer(PluginRush.getInstance(), 5L, 5L);
+	}
+	
 	@Override
 	public void run(){
 		if(StartRunnable.task != null){

@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.badblock.bukkit.games.rush.PluginRush;
 import fr.badblock.bukkit.games.rush.players.RushScoreboard;
-import fr.badblock.bukkit.games.rush.runnables.BossBarRunnable;
 import fr.badblock.bukkit.games.rush.runnables.GameRunnable;
 import fr.badblock.bukkit.games.rush.runnables.PreStartRunnable;
 import fr.badblock.bukkit.games.rush.runnables.StartRunnable;
@@ -26,6 +26,7 @@ import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.configuration.values.MapLocation;
 import fr.badblock.gameapi.events.PlayerGameInitEvent;
+import fr.badblock.gameapi.events.api.PlayerLoadedEvent;
 import fr.badblock.gameapi.events.api.SpectatorJoinEvent;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
@@ -34,7 +35,6 @@ import fr.badblock.gameapi.utils.entities.CustomCreature;
 import fr.badblock.gameapi.utils.entities.CustomCreature.CreatureBehaviour;
 import fr.badblock.gameapi.utils.entities.CustomCreature.CreatureFlag;
 import fr.badblock.gameapi.utils.i18n.TranslatableString;
-import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 
 public class JoinListener extends BadListener {
 	public static final List<Sheep> sheeps = new ArrayList<>();
@@ -50,18 +50,31 @@ public class JoinListener extends BadListener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		e.setJoinMessage(null);
-		BadblockPlayer player = (BadblockPlayer) e.getPlayer();
+	}
+	
+	@EventHandler
+	public void onLoad(PlayerLoadedEvent e)
+	{
+		BadblockPlayer player = e.getPlayer();
 
-		new BossBarRunnable(player.getUniqueId()).runTaskTimer(GameAPI.getAPI(), 0, 20L);
-
-		if (!player.getBadblockMode().equals(BadblockMode.SPECTATOR)) {
+		if (player.getBadblockMode().equals(BadblockMode.SPECTATOR))
+		{
+			return;
+		}
+		
+		if (!inGame()) {
 			player.setGameMode(GameMode.SURVIVAL);
 			player.sendTranslatedTitle("rush.join.title");
 			player.teleport(PluginRush.getInstance().getConfiguration().spawn.getHandle());
 			player.sendTimings(0, 80, 20);
 			player.sendTranslatedTabHeader(new TranslatableString("rush.tab.header"), new TranslatableString("rush.tab.footer"));
 
-			GameMessages.joinMessage(GameAPI.getGameName(), player.getTabGroupPrefix().getAsLine(player) + player.getName(), Bukkit.getOnlinePlayers().size(), PluginRush.getInstance().getMaxPlayers()).broadcast();
+			String display = player.getTabGroupPrefix().getAsLine(player) + player.getName();
+			BukkitUtils.getAllPlayers().forEach(plo ->
+			{
+				plo.sendTranslatedMessage("rush.joined", display, Bukkit.getOnlinePlayers().size(), PluginRush.getInstance().getMaxPlayers());
+				plo.playSound(Sound.CLICK);
+			});
 		}
 	}
 	

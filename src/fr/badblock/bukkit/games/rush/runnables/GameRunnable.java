@@ -1,16 +1,21 @@
 package fr.badblock.bukkit.games.rush.runnables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.badblock.bukkit.games.rush.PluginRush;
@@ -18,6 +23,8 @@ import fr.badblock.bukkit.games.rush.RushAchievementList;
 import fr.badblock.bukkit.games.rush.configuration.RushConfiguration.SpawnableItem;
 import fr.badblock.bukkit.games.rush.configuration.RushMapConfiguration;
 import fr.badblock.bukkit.games.rush.entities.RushTeamData;
+import fr.badblock.bukkit.games.rush.inventories.InventoriesLoader;
+import fr.badblock.bukkit.games.rush.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.games.rush.players.RushData;
 import fr.badblock.bukkit.games.rush.players.RushScoreboard;
 import fr.badblock.bukkit.games.rush.result.RushResults;
@@ -26,6 +33,7 @@ import fr.badblock.gameapi.achievements.PlayerAchievement;
 import fr.badblock.gameapi.game.GameState;
 import fr.badblock.gameapi.game.rankeds.RankedCalc;
 import fr.badblock.gameapi.game.rankeds.RankedManager;
+import fr.badblock.gameapi.particles.ParticleEffectType;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
@@ -40,6 +48,7 @@ public class GameRunnable extends BukkitRunnable {
 	public static boolean damage = false;
 	public boolean forceEnd = false;
 	public static int    time 	= 0;
+	public static Map<BadblockPlayer, Location> freezeOnBlocks = new HashMap<>();
 
 	public GameRunnable(RushMapConfiguration config){
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
@@ -49,7 +58,7 @@ public class GameRunnable extends BukkitRunnable {
 			new ItemSpawnRunnable(Material.matchMaterial(item.item), item.ticks).start();
 		}
 
-		if (!PluginRush.getInstance().getMapConfiguration().getAllowBows()) {
+		if (!config.getAllowBows()) {
 			remove(Material.BOW);
 			remove(Material.ARROW);
 		}
@@ -62,14 +71,46 @@ public class GameRunnable extends BukkitRunnable {
 			});
 		});
 
-		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
+		Bukkit.getScheduler().runTaskLater(PluginRush.getInstance(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 
+					for(BadblockPlayer p : team.getOnlinePlayers()){
+						handle(p);
 
-			for(BadblockPlayer p : team.getOnlinePlayers()){
-				handle(p);
+						if (team != null)
+						{
+							Location location = team.teamData(RushTeamData.class).getRespawnLocation();
+							Location f = location;
+
+							int max = 10;
+							int i = 0;
+
+							while (i < max)
+							{
+								i++;
+								Location l = location.clone().add(0, -i, 0);
+
+								if (!l.getBlock().getType().equals(Material.AIR))
+								{
+									break;
+								}
+
+								f = l;
+							}
+
+							location = f;
+
+							freezeOnBlocks.put(p, location);
+						}
+					}
+
+				}
 			}
-
-		}
+		}, 21 * 2L);
 
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
@@ -80,6 +121,7 @@ public class GameRunnable extends BukkitRunnable {
 		if (team == null) return;
 		Location location = team.teamData(RushTeamData.class).getRespawnLocation();
 		player.changePlayerDimension(BukkitUtils.getEnvironment( PluginRush.getInstance().getMapConfiguration().getDimension() ));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 4, 5));
 		player.teleport(location);
 		player.setGameMode(GameMode.SURVIVAL);
 		if (player.getCustomObjective() == null)
@@ -129,6 +171,28 @@ public class GameRunnable extends BukkitRunnable {
 
 	@Override
 	public void run() {
+		if (time == 0)
+		{
+			InventoriesLoader.loadInventories(PluginRush.getInstance());
+			LinkedInventoryEntity.load(PluginRush.getInstance().getMapConfiguration());
+			for (Player player : Bukkit.getOnlinePlayers())
+			{
+				BadblockPlayer bPlayer = (BadblockPlayer) player;
+
+				bPlayer.sendMessage(" §a§lGo !");
+				bPlayer.sendTitle("§a§lGo!", "");
+				bPlayer.sendTimings(0, 30, 0);
+			}
+
+			freezeOnBlocks.clear();
+			for(Player player : Bukkit.getOnlinePlayers()){
+				BadblockPlayer bPlayer = (BadblockPlayer) player;
+				bPlayer.sendParticle(bPlayer.getLocation(), GameAPI.getAPI().createParticleEffect(ParticleEffectType.EXPLOSION_NORMAL));
+				bPlayer.removePotionEffect(PotionEffectType.BLINDNESS);
+				bPlayer.playSound(Sound.EXPLODE);
+			}
+		}
+		
 		GameAPI.setJoinable(GameRunnable.time < 900);
 		BukkitUtils.getPlayers().stream().filter(player -> player.getCustomObjective() != null).forEach(player -> player.getCustomObjective().generate());
 		if(time == 2){

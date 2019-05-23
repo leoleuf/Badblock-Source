@@ -1,14 +1,18 @@
 package fr.badblock.bukkit.games.rush.players;
 
-import fr.badblock.bukkit.games.rush.PluginRush;
+import java.util.UUID;
+
+import org.bukkit.ChatColor;
+
 import fr.badblock.bukkit.games.rush.entities.RushTeamData;
 import fr.badblock.bukkit.games.rush.runnables.GameRunnable;
+import fr.badblock.bukkit.games.rush.runnables.StartRunnable;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.players.BadblockPlayer;
-import fr.badblock.gameapi.players.BadblockPlayer.BadblockMode;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.players.scoreboard.BadblockScoreboardGenerator;
 import fr.badblock.gameapi.players.scoreboard.CustomObjective;
+import fr.badblock.gameapi.utils.BukkitUtils;
 
 public class RushScoreboard extends BadblockScoreboardGenerator {
 	public static final String WINS 	  = "wins",
@@ -17,60 +21,103 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 			LOOSES 	  = "looses",
 			BROKENBEDS = "brokenbeds";
 
+	private static String hoster = null;
+	
 	private CustomObjective objective;
 	private BadblockPlayer  player;
 
 	public RushScoreboard(BadblockPlayer player){
-		this.objective = GameAPI.getAPI().buildCustomObjective("rush");
+		String rand = UUID.randomUUID().toString().substring(0, 6);
+		this.objective = GameAPI.getAPI().buildCustomObjective("rush" + rand);
 		this.player    = player;
 
 		objective.showObjective(player);
-		objective.setDisplayName("&b&o" + GameAPI.getGameName());
+		objective.setDisplayName("§l§6» §b§lRush §l§6«");
 		objective.setGenerator(this);
 
 		objective.generate();
-		doBadblockFooter(objective);
 	}
 
 	@Override
 	public void generate(){
-		objective.changeLine(15, "&8&m----------------------");
+		int i = 16;
+		String groupColor = player.getGroupPrefix().getAsLine(player);
+		groupColor = groupColor.replace(ChatColor.stripColor(groupColor), "");
+		i--;
+		objective.changeLine(i, "§6┌ " + groupColor + "&n" + player.getName());
+		i--;
+		objective.changeLine(i, "§6│");
+		i--;
+		objective.changeLine(i, "§6├§7 Rang: &f" + player.getGroupPrefix().getAsLine(player));
+		i--;
+		objective.changeLine(i, "§6├§7 Niveau: §f" + player.getPlayerData().getLevel());
+		i--;
+		
+		if (GameAPI.getAPI().isHostedGame())
+		{
+			String by = "";
+			if (hoster == null)
+			{
+				for (BadblockPlayer plo : BukkitUtils.getAllPlayers())
+				{
+					if (GameAPI.getAPI().isHoster(plo))
+					{
+						String realName = plo.getRealName() != null && !plo.getRealName().isEmpty() ? plo.getRealName() : plo.getName();
+						hoster = realName;
+						by = " par §e" + realName;
+						break;
+					}
+				}
+			}
+			else
+			{
+				by = " par §e" + hoster;
+			}
 
-		int i = 14;
-
-		objective.changeLine(i--,  i18n("rush.scoreboard.time-desc"));
-		objective.changeLine(i--,  i18n("rush.scoreboard.time", time(GameRunnable.time)));
-		if (PluginRush.getInstance().getMapConfiguration() != null) {
-			objective.changeLine(i,  ""); i--;
-			if (!PluginRush.getInstance().getMapConfiguration().getAllowBows())
-				objective.changeLine(i--,  i18n("rush.scoreboard.nobows"));
-			else objective.changeLine(i--,  i18n("rush.scoreboard.withbows"));
+			objective.changeLine(i, "§6├§f Hosté" + by);
+			i--;
 		}
-
-		objective.changeLine(i--, "");		
+		
+		objective.changeLine(i, "§6│");
+		i--;
+		BadblockTeam currentTeam = player.getTeam();
+		String teamName = "§7Inconnu";
+		if (currentTeam != null)
+		{
+			teamName = currentTeam.getChatPrefix().getAsLine(player).replace("[", "").replace("]", "");
+		}
+		objective.changeLine(i, "§6├§7 Map: " + GameAPI.getAPI().getBadblockScoreboard().getWinner().getDisplayName());
+		i--;
+		objective.changeLine(i, "§6├§7 Équipe: " + teamName);
+		i--;
+		
+		if (StartRunnable.gameTask != null && GameRunnable.time > 0)
+		{
+			objective.changeLine(i, "§6├§7 En cours: §f" + time(GameRunnable.time));
+		}
+		else
+		{
+			objective.changeLine(i, "§6├§f Lancement...");
+		}
+		
+		i--;
+		objective.changeLine(i, "§6│  ");
 
 		for(BadblockTeam team : GameAPI.getAPI().getTeams()){
 			RushTeamData data = team.teamData(RushTeamData.class);
 
-			if(!data.hasBed())
-				objective.changeLine(i, team.getChatName().getAsLine(player) + " > &c✘");
-			else objective.changeLine(i, team.getChatName().getAsLine(player) + " > &a✔");
 			i--;
+			if(data.hasBed())
+				objective.changeLine(i, "§6├§f Team " + team.getChatName().getAsLine(player) + "§f> §aLit ✔");
+			else
+				objective.changeLine(i, "§6├§f Team " + team.getChatName().getAsLine(player) + "§f> §cLit ✘");
 		}
-
-		if(player.getBadblockMode() != BadblockMode.SPECTATOR){
-			objective.changeLine(i,  ""); i--;
-
-			objective.changeLine(i,  i18n("rush.scoreboard.wins", stat(WINS))); i--;
-			objective.changeLine(i,  i18n("rush.scoreboard.kills", stat(KILLS))); i--;
-			objective.changeLine(i,  i18n("rush.scoreboard.deaths", stat(DEATHS))); i--;
-			objective.changeLine(i,  i18n("rush.scoreboard.brokenbeds", stat(BROKENBEDS))); i--;
-		}
-
-		for(int a=3;a<=i;a++)
-			objective.removeLine(a);
-
-		objective.changeLine(2,  "&8&m----------------------");
+		
+		i--;
+		objective.changeLine(i, "§6│");
+		i--;
+		objective.changeLine(i, "§6└ §bBad§6Block§f§o.fr");
+		i--;
 	}
 
 	private String time(int time){
@@ -85,11 +132,4 @@ public class RushScoreboard extends BadblockScoreboardGenerator {
 		return res + sec + "s";
 	}
 
-	private int stat(String name){
-		return (int) player.getPlayerData().getStatistics("rush", name);
-	}
-
-	private String i18n(String key, Object... args){
-		return GameAPI.i18n().get(player.getPlayerData().getLocale(), key, args)[0];
-	}
 }

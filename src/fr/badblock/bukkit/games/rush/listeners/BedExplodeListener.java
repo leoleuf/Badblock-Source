@@ -73,7 +73,7 @@ public class BedExplodeListener extends BadListener {
 				boolean can = false;
 				
 				for(MapMaterial material : PluginRush.getInstance().getMapConfiguration().getBreakableBlocks()){
-					if(material.match(block)){
+					if(block.getType() == material.getHandle()){
 						can = true;
 						break;
 					}
