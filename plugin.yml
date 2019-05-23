@@ -1,0 +1,5 @@
+name: UHCBiomes
+main: fr.badblock.bukkit.games.uhc.biomes.UHCBiomes
+author: xMalware
+version: 1.0
+load: STARTUP
