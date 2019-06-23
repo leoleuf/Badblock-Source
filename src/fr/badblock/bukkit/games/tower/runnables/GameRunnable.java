@@ -57,6 +57,13 @@ public class GameRunnable extends BukkitRunnable {
 		GameAPI.getAPI().getGameServer().setGameState(GameState.RUNNING);
 		GameAPI.getAPI().getGameServer().saveTeamsAndPlayersForResult();
 
+		if (config != null && config.getIron() != null && config.getXpbottle() != null)
+		{
+			new ItemSpawnRunnable(Material.IRON_INGOT, 60, config.getIron()).start();
+			new ItemSpawnRunnable(Material.DIAMOND, 800, config.getIron()).start();
+			new ItemSpawnRunnable(Material.EXP_BOTTLE, 30, config.getXpbottle()).start();
+		}
+
 		if (config != null && !config.getAllowBows()) {
 			remove(Material.BOW);
 			remove(Material.ARROW);
