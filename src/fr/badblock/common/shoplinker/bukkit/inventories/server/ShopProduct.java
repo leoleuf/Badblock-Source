@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -42,12 +43,12 @@ public class ShopProduct
 		this.description = object.getString("description");
 		this.price = Integer.parseInt(object.getString("price"));
 
-		if (object.containsField("ig_material"))
+		if (object.containsField("ig_material") && object.get("ig_material") != null)
 		{
 			this.ig_material = object.getString("ig_material");
 		}
 
-		if (object.containsField("ig_data"))
+		if (object.containsField("ig_data") && object.get("ig_data") != null)
 		{
 			this.ig_data = (byte) object.getInt("ig_data");
 		}
