@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import fr.badblock.bukkit.games.rush.PluginRush;
 import fr.badblock.bukkit.games.rush.inventories.BukkitInventories;
+import fr.badblock.game.core18R3.gameserver.GameServerMessages;
 import fr.badblock.gameapi.players.BadblockPlayer;
 import fr.badblock.gameapi.players.BadblockTeam;
 import fr.badblock.gameapi.utils.general.Callback;
@@ -136,7 +137,7 @@ public class InventoryActionManager
 		// If the player has the needed items
 		if (!player.getInventory().contains(exchanger.getMaterial(), exchanger.getAmount()))
 		{
-			TranslatableWord word = GameMessages.material(exchanger.getMaterial(), exchanger.getAmount() > 1, WordDeterminant.UNDEFINED);
+			TranslatableWord word = GameMessages.material(exchanger.getMaterial(), exchanger.getAmount() > 1, WordDeterminant.SIMPLE);
 			player.sendTranslatedMessage("rush.youmusthave", exchanger.getAmount(), word.getWord(player.getPlayerData().getLocale()));
 			return;
 		}

@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 
+import fr.badblock.bukkit.games.rush.PluginRush;
 import fr.badblock.bukkit.games.rush.configuration.RushMapConfiguration;
 import fr.badblock.bukkit.games.rush.inventories.npc.InventoryNPC;
 import fr.badblock.bukkit.games.rush.inventories.npc.MapInventoryNPC;
@@ -53,7 +54,7 @@ public class LinkedInventoryEntity {
 			createAndAssign(loc, EntityType.VILLAGER, WatcherVillager.class, inventoryNPC.inventoryName);
 		}
 	}
-	
+
 	public static Location convertStringToLocation(String string) {
 		if (string == null)
 			return null;

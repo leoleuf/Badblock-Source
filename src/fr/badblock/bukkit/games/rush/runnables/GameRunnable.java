@@ -28,6 +28,7 @@ import fr.badblock.bukkit.games.rush.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.games.rush.players.RushData;
 import fr.badblock.bukkit.games.rush.players.RushScoreboard;
 import fr.badblock.bukkit.games.rush.result.RushResults;
+import fr.badblock.game.core18R3.fakeentities.GameFakeEntity;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.PlayerAchievement;
 import fr.badblock.gameapi.game.GameState;
@@ -112,6 +113,19 @@ public class GameRunnable extends BukkitRunnable {
 			}
 		}, 21 * 2L);
 
+		Bukkit.getScheduler().runTaskTimer(PluginRush.getInstance(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				GameAPI.getAPI().getOnlinePlayers().forEach(player ->
+				LinkedInventoryEntity.fakeEntities.keySet().forEach(e -> 
+				{
+					((GameFakeEntity<?>) e).show0(player);
+				}));
+			}
+		}, 20 * 10L, 20 * 10L);
+
 		GameAPI.getAPI().getJoinItems().doClearInventory(false);
 		GameAPI.getAPI().getJoinItems().end();
 	}
@@ -192,7 +206,7 @@ public class GameRunnable extends BukkitRunnable {
 				bPlayer.playSound(Sound.EXPLODE);
 			}
 		}
-		
+
 		GameAPI.setJoinable(GameRunnable.time < 900);
 		BukkitUtils.getPlayers().stream().filter(player -> player.getCustomObjective() != null).forEach(player -> player.getCustomObjective().generate());
 		if(time == 2){

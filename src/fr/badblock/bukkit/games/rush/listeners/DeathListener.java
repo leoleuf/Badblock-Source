@@ -3,6 +3,7 @@ package fr.badblock.bukkit.games.rush.listeners;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -12,8 +13,10 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import fr.badblock.bukkit.games.rush.PluginRush;
 import fr.badblock.bukkit.games.rush.RushAchievementList;
 import fr.badblock.bukkit.games.rush.entities.RushTeamData;
+import fr.badblock.bukkit.games.rush.inventories.LinkedInventoryEntity;
 import fr.badblock.bukkit.games.rush.players.RushData;
 import fr.badblock.bukkit.games.rush.players.RushScoreboard;
+import fr.badblock.game.core18R3.fakeentities.GameFakeEntity;
 import fr.badblock.gameapi.BadListener;
 import fr.badblock.gameapi.GameAPI;
 import fr.badblock.gameapi.achievements.PlayerAchievement;
@@ -31,8 +34,10 @@ import fr.badblock.gameapi.utils.i18n.TranslatableString;
 import fr.badblock.gameapi.utils.i18n.messages.GameMessages;
 
 public class DeathListener extends BadListener {
+
 	@EventHandler
-	public void onDeath(NormalDeathEvent e){
+	public void onDeath(NormalDeathEvent e)
+	{
 		death(e, e.getPlayer(), null, e.getLastDamageCause());
 		e.setDeathMessage(GameMessages.deathEventMessage(e));
 	}
@@ -65,8 +70,6 @@ public class DeathListener extends BadListener {
 			}
 		}
 		lastDeath.put(player.getName(), System.currentTimeMillis() + 1000L);
-		if (player.getOpenInventory() != null && player.getOpenInventory().getCursor() != null)
-			player.getOpenInventory().setCursor(null);
 
 		Location respawnPlace = null;
 
@@ -92,10 +95,6 @@ public class DeathListener extends BadListener {
 				GameAPI.getAPI().getGameServer().cancelReconnectionInvitations(team);
 				GameAPI.getAPI().unregisterTeam(team);
 
-				GameAPI.getAPI().getOnlinePlayers().forEach(p -> {
-
-				});
-
 				new TranslatableString("rush.team-loose", team.getChatName()).broadcast();;
 			}
 
@@ -108,16 +107,7 @@ public class DeathListener extends BadListener {
 				respawnPlace = killer.getLocation();
 			}
 		} else {
-			e.setTimeBeforeRespawn(3);
 			respawnPlace = player.getTeam().teamData(RushTeamData.class).getRespawnLocation();
-
-			player.setMaxHealth(20 + player.getTeam().teamData(RushTeamData.class).health);
-			player.setHealth(20 + player.getTeam().teamData(RushTeamData.class).health);
-			if(killer != null){
-				e.setWhileRespawnPlace(killer.getLocation());
-			} else if(last == DamageCause.VOID){
-				e.setWhileRespawnPlace(respawnPlace);
-			}
 		}
 
 		if(killer != null && killer.getType() == EntityType.PLAYER){
@@ -135,9 +125,24 @@ public class DeathListener extends BadListener {
 
 	@EventHandler
 	public void onRespawn(PlayerFakeRespawnEvent e){
+		BadblockPlayer player = e.getPlayer();
 		if (e.getPlayer().getOpenInventory() != null && e.getPlayer().getOpenInventory().getCursor() != null)
 			e.getPlayer().getOpenInventory().setCursor(null);
+		player.setMaxHealth(20 + player.getTeam().teamData(RushTeamData.class).health);
+		player.setHealth(20 + player.getTeam().teamData(RushTeamData.class).health);
 		PluginRush.getInstance().giveDefaultKit(e.getPlayer());
+
+		Bukkit.getScheduler().runTaskLater(PluginRush.getInstance(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				LinkedInventoryEntity.fakeEntities.keySet().forEach(e -> 
+				{
+					((GameFakeEntity<?>) e).show0(player);
+				});
+			}
+		}, 20);
 	}
 
 	private void incrementAchievements(BadblockPlayer player, PlayerAchievement... achievements){
